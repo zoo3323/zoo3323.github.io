@@ -219,6 +219,8 @@ def pack(app):
       {app["pack_html"]}
       <div class="label label--{app.get("label", "sticker")}">{barcode(code(app))}<span class="label__id">{esc(code(app))}</span><span class="label__ver">{esc(line)}</span><span class="label__go" aria-hidden="true">뒷면 보기 {ICON_GO}</span></div>
     </div>
+    <span class="pack__holo" aria-hidden="true"></span>
+    <span class="pack__glare" aria-hidden="true"></span>
     <a class="pack__cover" href="/{app_id}/" tabindex="-1" aria-hidden="true"></a>
   </article>
   {TIP.format(style="")}
@@ -237,7 +239,7 @@ def write(path, text):
 names = ", ".join(app["name"] for app in APPS[:6]) + (" 등" if len(APPS) > 6 else "")
 write(
     "index.html",
-    head(f"{DEV} · {SITE['tagline']}", f"{DEV} · {SITE['tagline']}. {names}.", "/", ["wall.js"])
+    head(f"{DEV} · {SITE['tagline']}", f"{DEV} · {SITE['tagline']}. {names}.", "/", ["wall.js", "light.js"])
     + f"""<body>
 <a class="skip" href="#apps">목록으로 건너뛰기</a>
 <div class="wall">
@@ -326,7 +328,7 @@ for app in APPS:
     features = "\n        ".join(f"<li>{esc(text)}</li>" for text in app["features"])
     write(
         f"{app_id}/index.html",
-        head(f'{app["name"]} · {app["line"]} | {DEV}', app["lead"], f"/{app_id}/", app.get("scripts", []))
+        head(f'{app["name"]} · {app["line"]} | {DEV}', app["lead"], f"/{app_id}/", [*app.get("scripts", []), "light.js"])
         + f"""<body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
 <div class="wall">
@@ -392,7 +394,7 @@ for app in APPS:
 
 write(
     "404.html",
-    head(f"빈 고리 | {DEV}", "찾는 페이지가 여기에는 걸려 있지 않습니다.", "/404.html", ["wall.js"], index=False)
+    head(f"빈 고리 | {DEV}", "찾는 페이지가 여기에는 걸려 있지 않습니다.", "/404.html", ["wall.js", "light.js"], index=False)
     + f"""<body>
 <div class="wall">
 {sign(False)}
@@ -405,6 +407,8 @@ write(
         <p>찾는 페이지가 여기에는 걸려 있지 않습니다.</p>
         <a class="btn" href="/">{ICON_BACK} 진열대로</a>
       </div>
+      <span class="pack__holo" aria-hidden="true"></span>
+      <span class="pack__glare" aria-hidden="true"></span>
     </div>
     {TIP.format(style="")}
   </div>

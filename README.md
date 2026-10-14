@@ -15,7 +15,8 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `tool/build.py` | 위 파일들로 HTML을 만든다 |
 | `index.html`, `<앱>/index.html`, `404.html` | 만들어진 결과. 직접 고치지 않는다 |
 | `assets/site.css` | 화면 전체의 모양 |
-| `assets/wall.js`, `pet.js`, `closet.js` | 봉지의 흔들림, 포켓펫 꺼내 보기, 옷 분류 딱지 |
+| `assets/wall.js`, `light.js` | 봉지의 흔들림, 마우스를 따르는 빛(벽의 등빛, 봉지의 반사·무지개 결) |
+| `assets/pet.js`, `closet.js` | 포켓펫 꺼내 보기, 옷 분류 딱지 |
 | `assets/img/`, `assets/fonts/` | 그림과 글꼴 |
 
 첫 화면은 고리에 건 봉지들이고, 봉지를 누르면 나오는 앱 페이지는 앱 장터의 앱 화면처럼 짜여 있습니다.
