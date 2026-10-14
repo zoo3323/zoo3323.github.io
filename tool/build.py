@@ -3,7 +3,7 @@
     python3 tool/build.py
 
 읽는 것
-  tool/site.json            개발자 이름, 주소, 앱 순서
+  tool/site.json            개발자 이름, 이름 아래 소개 한 줄, 주소, 앱 순서
   tool/apps/<앱>/app.json   앱 한 개의 정보
   tool/apps/<앱>/pack.html  진열대의 봉지 속에 넣을 물건
   tool/apps/<앱>/preview.html  앱 페이지의 「미리보기」에 넣을 내용
@@ -78,7 +78,6 @@ ICON_OUT = icon("M3 11 11 3M4.5 3H11v6.5")
 ICON_GO = icon("M2 7h9.5M7.5 3l4 4-4 4")
 ICON_BACK = icon("M12 7H2.5M6.5 3 2.5 7l4 4")
 
-COUNT = {1: "한", 2: "두", 3: "세", 4: "네", 5: "다섯", 6: "여섯", 7: "일곱", 8: "여덟", 9: "아홉", 10: "열"}
 STORE = {"Android": "Google Play", "iOS": "App Store"}
 
 
@@ -98,11 +97,6 @@ def load(app_id):
 
 
 APPS = [load(app_id) for app_id in SITE["apps"]]
-
-
-def count_line():
-    n = len(APPS)
-    return f"혼자 만든 앱 {COUNT[n]} 개" if n in COUNT else f"혼자 만든 앱 {n}개"
 
 
 def name_lines(app):
@@ -182,11 +176,9 @@ def sign(home):
         who = f'<p class="sign__name"><a href="/">{esc(DEV)}</a></p>'
         link = f'<a class="btn" href="/">{ICON_BACK} 진열대</a>'
     return f"""<header class="sign">
-  <div>
-    {who}
-    <p class="sign__line">{count_line()}</p>
-  </div>
+  {who}
   {link}
+  <p class="sign__line">{esc(SITE["tagline"])}</p>
 </header>"""
 
 
@@ -240,7 +232,7 @@ def write(path, text):
 names = ", ".join(app["name"] for app in APPS[:6]) + (" 등" if len(APPS) > 6 else "")
 write(
     "index.html",
-    head(f"{DEV} · 혼자 만든 앱", f"{DEV}의 앱 포트폴리오. {names}.", "/", ["wall.js"])
+    head(f"{DEV} · {SITE['tagline']}", f"{SITE['tagline']} {DEV}의 포트폴리오. {names}.", "/", ["wall.js"])
     + f"""<body>
 <a class="skip" href="#apps">앱 목록으로 건너뛰기</a>
 <div class="wall">

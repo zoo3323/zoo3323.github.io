@@ -1,6 +1,6 @@
 # zoo3323.github.io
 
-NamJuKim이 혼자 만든 앱을 걸어 둔 진열대입니다. <https://zoo3323.github.io>
+앱을 기획하고 만드는 1인 개발자 NamJuKim의 포트폴리오입니다. <https://zoo3323.github.io>
 
 `main`에 올린 파일을 GitHub Pages가 그대로 내보냅니다. HTML은 `tool/build.py`가 앱 정보 파일에서 만들어 내고, 만든 결과를 함께 올립니다.
 
@@ -8,7 +8,7 @@ NamJuKim이 혼자 만든 앱을 걸어 둔 진열대입니다. <https://zoo3323
 
 | 경로 | 내용 |
 |---|---|
-| `tool/site.json` | 개발자 이름, 주소, 진열대에 거는 앱 순서 |
+| `tool/site.json` | 개발자 이름, 이름 아래 소개 한 줄, 주소, 진열대에 거는 앱 순서 |
 | `tool/apps/<앱>/app.json` | 앱 한 개의 정보(이름, 색, 버전, 플랫폼, 설명) |
 | `tool/apps/<앱>/pack.html` | 진열대의 봉지 속에 넣을 물건 |
 | `tool/apps/<앱>/preview.html` | 앱 페이지의 「미리보기」 |
@@ -42,13 +42,13 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 4. `pack.html`, `preview.html`의 그림 주소를 고칩니다.
 5. `tool/site.json`의 `apps`에 폴더 이름을 넣고 `python3 tool/build.py`를 돌립니다.
 
-앱이 셋을 넘으면 진열대는 아래 줄로 내려갑니다. 팻말의 개수와 앱 페이지의 「다른 앱」도 함께 바뀝니다.
+앱이 셋을 넘으면 진열대는 아래 줄로 내려갑니다. 앱 페이지의 「다른 앱」도 함께 바뀝니다.
 
 앱에 딸린 문서는 그 앱의 경로 아래에 둡니다(예: `pocketpet/privacy.html` 파일 → `https://zoo3323.github.io/pocketpet/privacy`).
 
 ## 그 밖에 고칠 때
 
-- **개발자 이름**: `tool/site.json`의 `developer`를 고치고 다시 만듭니다. 링크 미리보기 그림 `assets/img/og.png`는 첫 화면을 1200×630으로 다시 찍어 바꿉니다.
+- **개발자 이름, 소개 한 줄**: `tool/site.json`의 `developer`, `tagline`을 고치고 다시 만듭니다. 링크 미리보기 그림 `assets/img/og.png`는 첫 화면을 1200×630으로 다시 찍어 바꿉니다.
 - **버전, 새로운 기능**: 그 앱의 `app.json`에서 `version`, `news`를 고칩니다.
 - **이름 글씨를 따로 쓰는 앱**: 이름 글자만 담은 글꼴 조각을 `tool/wordmarks.py`로 만들고 `assets/site.css` 맨 위에 `@font-face`를 한 줄 더한 뒤 `app.json`의 `mark.font`에 그 이름을 적습니다.
 - **포켓펫 동물 추가**: `assets/img/pocketpet/`의 `thumb/`, `atlas/`(스프라이트 위 다섯 줄, 1536×1040), 보송 그림체면 `stage/`에 그림을 넣고 `tool/apps/pocketpet/demo.html`의 선반에 버튼 한 줄을 더합니다.

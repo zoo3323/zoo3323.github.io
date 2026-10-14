@@ -149,12 +149,14 @@ a {
   padding-top: var(--p);
 }
 
+/* 첫 줄에 이름과 버튼, 둘째 줄에 소개 한 줄. 높이는 구멍 세 칸으로 고정이다. */
 .sign {
   height: calc(var(--p) * 3);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--p);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: start;
+  align-items: start;
+  column-gap: var(--p);
 }
 
 .sign__name {
@@ -167,6 +169,7 @@ a {
   text-decoration: none;
 }
 .sign__line {
+  grid-column: 1 / -1;
   margin: calc(var(--p) * 0.28) 0 0;
   width: fit-content;
   font-size: max(0.9375rem, calc(var(--p) * 0.53));
