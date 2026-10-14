@@ -1,0 +1,37 @@
+{
+  "name": "앱 이름",
+  "line": "한 줄 소개",
+  "lead": "이 앱이 무엇을 하는지 한 문장으로 적습니다.",
+  "tone": "#74ccff",
+  "ink": "#0b2a3d",
+  "accent": "#0b5c8a",
+  "pack": "bag",
+  "bag": "#ffffff",
+  "label": "printed",
+  "mark": {},
+  "rest": 0.6,
+  "status": "출시 준비 중",
+  "version": "0.1.0",
+  "package": "com.example.app",
+  "platforms": [
+    {
+      "name": "Android",
+      "requires": "8.0 이상"
+    }
+  ],
+  "language": {
+    "code": "KO",
+    "name": "한국어"
+  },
+  "highlights": [],
+  "about": [
+    "앱 설명을 한두 문단으로 적습니다."
+  ],
+  "features": [
+    "기능 하나",
+    "기능 둘"
+  ],
+  "news": "이번 버전에서 바뀐 것을 적습니다.",
+  "info": [],
+  "scripts": []
+}

@@ -1,0 +1,58 @@
+{
+  "name": "모아캠",
+  "nameLines": [
+    "모아캠"
+  ],
+  "dot": true,
+  "line": "안 쓰는 폰과 PC 웹캠으로 만드는 홈캠",
+  "lead": "안 쓰는 폰이나 PC 웹캠을 카메라로 두고, 밖에서 실시간으로 봅니다.",
+  "tone": "#ffd60a",
+  "ink": "#141414",
+  "accent": "#c80d25",
+  "pack": "bag",
+  "bag": "#ffffff",
+  "label": "printed",
+  "mark": {
+    "font": "Mark Moacam",
+    "weight": 400,
+    "size": 2.5,
+    "tracking": "0"
+  },
+  "rest": -0.5,
+  "status": "출시 준비 중",
+  "version": "0.2.0",
+  "package": "dev.njkim.moacam",
+  "platforms": [
+    {
+      "name": "Android"
+    },
+    {
+      "name": "PC 웹 브라우저",
+      "short": "웹"
+    }
+  ],
+  "labelLine": "0.2.0 · 견본 화면",
+  "language": {
+    "code": "KO",
+    "name": "한국어"
+  },
+  "highlights": [],
+  "about": [
+    "공기계에 앱을 깔거나 집 PC에서 연결 링크를 열면 그 기기가 카메라가 됩니다. 로그인한 내 폰에서 영상과 소리를 실시간으로 보고, 가족을 초대해 카메라마다 볼 수 있는 범위를 정합니다."
+  ],
+  "features": [
+    "안드로이드 공기계와 PC·노트북 웹캠을 카메라로",
+    "앱과 웹에서 실시간 보기",
+    "가족 초대, 카메라별 영상·소리·촬영 중지 권한",
+    "누가 언제 봤는지 남는 접속 기록",
+    "실시간 보기만 있고 녹화는 없습니다"
+  ],
+  "news": "버그를 고치고 화면을 방송 플랫폼처럼 다시 짰습니다.",
+  "info": [
+    [
+      "만든 도구",
+      "Flutter, React, Node.js, WebRTC"
+    ]
+  ],
+  "scripts": []
+}

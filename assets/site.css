@@ -1,5 +1,6 @@
 /* 앱 진열대: 흰 타공판에 고리로 건 봉지들.
-   길이의 단위는 타공판 구멍 간격(--p)이고, 고리는 실제 구멍 자리에 꽂힌다. */
+   벽에서 길이의 단위는 타공판 구멍 간격(--p)이고, 고리는 실제 구멍 자리에 꽂힌다.
+   봉지의 뒷면(앱 페이지)은 앱 장터의 앱 화면처럼 짠다. 그 안의 길이는 rem 이다. */
 
 @font-face {
   font-family: "Do Hyeon";
@@ -37,6 +38,7 @@
   --ink: #17171a;
   --sub: #55554f;
   --rule: #d9d8d0;
+  --mute: #efeee8;
 
   --pink: #ff6196;
   --pink-light: #ff86ae;
@@ -45,9 +47,7 @@
   --lilac-light: #f1eeff;
   --navy: #1f1b4d;
   --lemon: #ffe55c;
-  --yellow: #ffd60a;
   --red: #e8112d;
-  --black: #141414;
 
   --shop: "Do Hyeon", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR",
@@ -202,12 +202,14 @@ a {
   transform: translateY(1px);
 }
 
-/* ── 고리에 건 봉지 ────────────────────────── */
+/* ── 고리에 건 봉지 ──────────────────────────
+   한 줄에 셋. 앱이 늘면 아래 줄로 내려가고, 줄 사이도 구멍 간격에 맞는다(봉지 17.5칸 + 2.5칸). */
 
 .rail {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, calc(var(--p) * 10));
   justify-content: space-between;
-  align-items: flex-start;
+  row-gap: calc(var(--p) * 2.5);
   margin: calc(var(--p) * 1.4375) 0 0;
   padding: 0;
   list-style: none;
@@ -216,7 +218,6 @@ a {
 .peg {
   position: relative;
   width: calc(var(--p) * 10);
-  flex: none;
 }
 
 .hook {
@@ -242,15 +243,16 @@ a {
   pointer-events: none;
 }
 
+/* 봉지의 색과 이름 글씨는 앱마다 --tone, --tone-ink, --mark 로 넘겨받는다. */
 .pack {
   position: relative;
   display: block;
   transform-origin: 50% calc(var(--p) * 0.5625);
   transform: rotate(calc(var(--rest, 0deg) + var(--sway, 0deg)));
 }
-/* 벽에 지는 그림자. 봉지 뒤에 한 장 깔아 둔다. */
+/* 벽에 지는 그림자. 걸린 것 뒤에 한 장 깔아 둔다. */
 .pack::before,
-.back__card::before {
+.listing::before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -281,6 +283,8 @@ a {
   display: block;
   height: calc(var(--p) * 7);
   padding: calc(var(--p) * 1.5) calc(var(--p) * 0.75) 0;
+  color: var(--tone-ink, var(--ink));
+  background: var(--tone, var(--paper));
   border-radius: calc(var(--p) * 0.44) calc(var(--p) * 0.44) 0 0;
   -webkit-mask:
     var(--slot) 50% calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
@@ -293,15 +297,26 @@ a {
 }
 .card__name {
   margin: 0;
-  font-size: calc(var(--p) * 2.8);
+  font-family: var(--mark, "Do Hyeon"), var(--body);
+  font-weight: var(--mark-weight, 400);
+  font-size: calc(var(--p) * var(--mark-size, 2.4));
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--mark-tracking, -0.02em);
 }
 .card__line {
   margin: calc(var(--p) * 0.3) 0 0;
   font-size: max(0.8125rem, calc(var(--p) * 0.5));
   font-weight: 600;
   line-height: 1.4;
+}
+.dot {
+  display: inline-block;
+  width: 0.2em;
+  height: 0.2em;
+  margin: 0.12em 0 0 0.06em;
+  vertical-align: top;
+  border-radius: 50%;
+  background: var(--red);
 }
 
 .bag {
@@ -311,6 +326,27 @@ a {
   border-radius: 0 0 calc(var(--p) * 0.44) calc(var(--p) * 0.44);
   overflow: hidden;
 }
+/* 한 장짜리 색 판(pack--card)과, 헤더 카드를 철심으로 박은 봉지(pack--bag) */
+.pack--card .bag {
+  color: var(--tone-ink);
+  background: var(--tone);
+}
+.pack--bag .bag {
+  background: var(--bag, var(--paper));
+  box-shadow: inset 0 0 0 2px rgb(20 20 30 / 0.13);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--tone-ink) 14%, transparent);
+}
+.pack--bag .card::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--p) * 1.1);
+  bottom: calc(var(--p) * 0.3);
+  width: calc(var(--p) * 0.7);
+  height: calc(var(--p) * 0.13);
+  border-radius: calc(var(--p) * 0.07);
+  background: var(--wire-deep);
+  box-shadow: calc(var(--p) * 7.1) 0 0 var(--wire-deep);
+}
 
 .tag {
   position: absolute;
@@ -319,6 +355,7 @@ a {
   top: calc(var(--p) * -0.75);
   width: calc(var(--p) * 2.6);
   height: calc(var(--p) * 2.6);
+  margin: 0;
   display: grid;
   place-items: center;
   text-align: center;
@@ -336,6 +373,10 @@ a {
   right: calc(var(--p) * 0.5);
   bottom: calc(var(--p) * 0.5);
   padding: calc(var(--p) * 0.3) calc(var(--p) * 0.4) calc(var(--p) * 0.25);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: calc(var(--p) * 0.3);
+  align-items: end;
   color: var(--ink);
   background: var(--paper);
   border-radius: calc(var(--p) * 0.19);
@@ -344,11 +385,14 @@ a {
   line-height: 1.4;
   font-variant-numeric: tabular-nums;
 }
-.label {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: calc(var(--p) * 0.3);
-  align-items: end;
+.pack--bag .label--sticker {
+  box-shadow: 0 0 0 2px rgb(20 20 30 / 0.13);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--tone-ink) 14%, transparent);
+}
+/* 흰 봉지에는 흰 딱지를 한 겹 더 두지 않고 바로 찍는다. */
+.label--printed {
+  background: none;
+  padding-inline: calc(var(--p) * 0.25);
 }
 .label > svg {
   grid-column: 1 / -1;
@@ -363,60 +407,44 @@ a {
   color: var(--sub);
 }
 /* 봉지가 눌린다는 단서. 딱지에 찍힌 한마디다. */
-.label__go,
-.card__go {
+.label__go {
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
   font: 400 max(0.8125rem, calc(var(--p) * 0.5)) / 1.2 var(--shop);
-  color: inherit;
   text-decoration: underline transparent;
   text-underline-offset: 0.22em;
   transition: text-decoration-color 0.18s var(--out);
 }
-.label__go svg,
-.card__go svg {
+.label__go svg {
   width: 0.7em;
   height: 0.7em;
   flex: none;
 }
 .pack:hover .label__go,
-.pack:hover .card__go,
-.pack:has(.pack__link:focus-visible) .label__go,
-.pack:has(.pack__link:focus-visible) .card__go {
+.pack:has(.pack__link:focus-visible) .label__go {
   text-decoration-color: currentColor;
 }
-.card__go {
-  position: absolute;
-  right: calc(var(--p) * 0.6);
-  bottom: calc(var(--p) * 0.5);
-}
 
-/* 헤더 카드를 봉지에 박은 철심 두 개 */
-.pack--mylittlecloset:not(.pack--mini) .card::after,
-.pack--moacam:not(.pack--mini) .card::after {
-  content: "";
+/* 봉지 속 물건 ─ 앱마다 다르다 */
+
+/* 따로 꾸미지 않은 앱: 화면 한 장을 창에 넣는다 */
+.window {
   position: absolute;
-  left: calc(var(--p) * 1.1);
-  bottom: calc(var(--p) * 0.3);
-  width: calc(var(--p) * 0.7);
-  height: calc(var(--p) * 0.13);
-  border-radius: calc(var(--p) * 0.07);
-  background: var(--wire-deep);
-  box-shadow: calc(var(--p) * 7.1) 0 0 var(--wire-deep);
+  left: calc(var(--p) * 1.25);
+  right: calc(var(--p) * 1.25);
+  top: calc(var(--p) * 0.5);
+  height: calc(var(--p) * 6.6);
+  overflow: hidden;
+  border-radius: calc(var(--p) * 0.4);
+  box-shadow: 0 0 0 1px var(--rule);
+}
+.window img {
+  width: 100%;
+  height: auto;
 }
 
 /* 포켓펫: 분홍 판에 투명 덮개 */
-.pack--pocketpet .card,
-.pack--pocketpet .bag {
-  background: var(--pink);
-  color: var(--pink-ink);
-}
-.pack--pocketpet .card__name,
-.back--pocketpet .back__name {
-  font-family: "Mark PocketPet", var(--body);
-  font-weight: 700;
-}
 .bubble {
   position: absolute;
   left: calc(var(--p) * 1);
@@ -451,25 +479,6 @@ a {
 }
 
 /* 마이리틀클로젯: 투명 봉지에 든 스티커 시트 */
-.pack--mylittlecloset .card {
-  background: var(--lilac);
-  color: var(--navy);
-}
-.pack--mylittlecloset .card__name,
-.back--mylittlecloset .back__name {
-  font-family: "Mark Closet", var(--body);
-  font-weight: 800;
-}
-.pack--mylittlecloset .card__name {
-  font-size: calc(var(--p) * 1.9);
-}
-.pack--mylittlecloset .bag {
-  background: var(--lilac-light);
-  box-shadow: inset 0 0 0 2px rgb(31 27 77 / 0.14);
-}
-.pack--mylittlecloset .label {
-  box-shadow: 0 0 0 2px rgb(31 27 77 / 0.14);
-}
 .stickers {
   position: absolute;
   left: calc(var(--p) * 0.5);
@@ -492,36 +501,6 @@ a {
 }
 
 /* 모아캠: 흰 봉지에 든 라이브 판 두 장 */
-.pack--moacam .card {
-  background: var(--yellow);
-  color: var(--black);
-}
-.pack--moacam .card__name,
-.back--moacam .back__name {
-  font-family: "Mark Moacam", var(--body);
-  font-weight: 400;
-  letter-spacing: 0;
-}
-.pack--moacam .card__name {
-  font-size: calc(var(--p) * 2.5);
-}
-.dot {
-  display: inline-block;
-  width: 0.2em;
-  height: 0.2em;
-  margin: 0.12em 0 0 0.06em;
-  vertical-align: top;
-  border-radius: 50%;
-  background: var(--red);
-}
-.pack--moacam .bag {
-  background: var(--paper);
-  box-shadow: inset 0 0 0 2px rgb(20 20 20 / 0.12);
-}
-.pack--moacam .label {
-  background: none;
-  padding-inline: calc(var(--p) * 0.25);
-}
 .plates {
   position: absolute;
   left: calc(var(--p) * 1.25);
@@ -550,7 +529,6 @@ a {
 }
 .foot p {
   margin: 0;
-  width: fit-content;
 }
 .foot a {
   display: inline-flex;
@@ -558,218 +536,280 @@ a {
   min-height: 44px;
 }
 
-/* ── 앱 페이지: 고리에서 뗀 봉지의 뒷면 ───────── */
+/* ── 앱 페이지: 고리에서 뗀 봉지의 뒷면 ─────────
+   흰 판 한 장이 고리 둘에 걸려 있고, 그 위는 앱 장터의 앱 화면처럼 짠다. */
 
 .back {
   position: relative;
-  margin-top: calc(var(--p) * 1.4375);
+  width: calc(var(--p) * 30);
+  max-width: 100%;
+  margin: calc(var(--p) * 1.4375) auto 0;
 }
-.back .hook {
-  left: calc(50% + var(--hx, 0) * var(--p));
-}
+.back .hook,
 .back .hook-tip {
   left: calc(50% + var(--hx, 0) * var(--p));
 }
-.back__card {
+.listing {
   position: relative;
-  border-radius: calc(var(--p) * 0.44);
-  padding: calc(var(--p) * 1.75) calc(var(--p) * 1.5) calc(var(--p) * 1.5);
   isolation: isolate;
+  border-radius: calc(var(--p) * 0.44);
 }
-.back__mask {
+.listing__paper {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: var(--tone);
+  background: var(--paper);
   -webkit-mask:
-    var(--slot) calc(50% - var(--p) * 9) calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
-    var(--slot) calc(50% + var(--p) * 9) calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
+    var(--slot) calc(50% - var(--p) * 7) calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
+    var(--slot) calc(50% + var(--p) * 7) calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask:
-    var(--slot) calc(50% - var(--p) * 9) calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
-    var(--slot) calc(50% + var(--p) * 9) calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
+    var(--slot) calc(50% - var(--p) * 7) calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
+    var(--slot) calc(50% + var(--p) * 7) calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
 }
-.back__inner {
+.listing__in {
   position: relative;
+  padding: calc(var(--p) * 1.4 + 1.25rem) 2.5rem 2rem;
+  font-size: 1rem;
+  line-height: 1.7;
 }
-.back--pocketpet {
-  --tone: var(--pink);
-  --tone-ink: var(--pink-ink);
+
+/* 머리: 아이콘, 이름, 받기 */
+.app-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: center;
 }
-.back--mylittlecloset {
-  --tone: var(--lilac);
-  --tone-ink: var(--navy);
+.app-icon {
+  width: 8.5rem;
+  height: 8.5rem;
+  border-radius: 22.5%;
+  box-shadow: 0 0 0 1px var(--rule);
 }
-.back--moacam {
-  --tone: var(--yellow);
-  --tone-ink: var(--black);
-}
-.back__head {
-  color: var(--tone-ink);
-  padding-right: calc(var(--p) * 2);
-}
-.back__name {
+.app-name {
   margin: 0;
-  font-size: calc(var(--p) * 3);
-  line-height: 1.02;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
-.back--mylittlecloset .back__name {
-  font-size: calc(var(--p) * 2.6);
+.app-sub {
+  margin: 0.15rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+  color: var(--sub);
 }
-.back__line {
-  margin: calc(var(--p) * 0.35) 0 0;
-  max-width: 30em;
-  font-size: max(1.0625rem, calc(var(--p) * 0.62));
+.app-dev {
+  margin: 0.2rem 0 0;
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1.45;
 }
-.back .tag {
-  right: calc(var(--p) * -0.9);
-  top: calc(var(--p) * -0.9);
-  width: calc(var(--p) * 3);
-  height: calc(var(--p) * 3);
-  font-size: max(0.875rem, calc(var(--p) * 0.56));
+.app-dev a {
+  display: inline-block;
+  padding-block: 0.2rem;
+  color: var(--accent, var(--ink));
+  text-decoration: none;
 }
-.back__body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) calc(var(--p) * 12.5);
-  gap: calc(var(--p) * 1.5);
-  align-items: start;
-  margin-top: calc(var(--p) * 1.5);
+.app-dev a:hover {
+  text-decoration: underline;
 }
-
-/* 뒷면 표시: 흰 딱지에 적은 설명과 표 */
-.spec {
-  padding: calc(var(--p) * 0.9) calc(var(--p) * 0.9) calc(var(--p) * 0.8);
-  background: var(--paper);
-  border-radius: calc(var(--p) * 0.25);
+.app-get {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.7rem 0 0;
+}
+.get {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--tone-ink, var(--ink));
+  text-decoration: none;
+  background: var(--tone, var(--mute));
+  border-radius: 999px;
+  transition: filter 0.18s var(--out);
+}
+a.get:hover {
+  filter: brightness(0.95);
+}
+.get--wait {
+  color: var(--sub);
+  background: var(--mute);
+}
+.get--small {
+  min-height: 2rem;
+  padding: 0 1.1rem;
+  font-size: 0.875rem;
   color: var(--ink);
-}
-.spec h2 {
-  margin: calc(var(--p) * 0.9) 0 calc(var(--p) * 0.3);
-  font: 400 1.25rem/1.2 var(--shop);
-}
-.spec h2:first-child {
-  margin-top: 0;
-}
-.spec p {
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.7;
-  max-width: 34em;
-}
-.spec ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 1rem;
-  line-height: 1.55;
-}
-.spec li {
-  padding: 0.5em 0;
-  border-top: 1px solid var(--rule);
-}
-.spec li:first-child {
-  border-top: 0;
-  padding-top: 0.1em;
-}
-.spec dl {
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  border: 1.5px solid var(--ink);
-}
-.spec dl div {
-  display: grid;
-  grid-template-columns: 5.6em minmax(0, 1fr);
-  border-top: 1px solid var(--ink);
-}
-.spec dl div:first-child {
-  border-top: 0;
-}
-.spec dt {
-  padding: 0.4em 0.6em;
-  font-family: var(--shop);
-  font-size: 1rem;
-  border-right: 1px solid var(--ink);
-}
-.spec dd {
-  margin: 0;
-  padding: 0.4em 0.6em;
-  font-variant-numeric: tabular-nums;
-}
-.spec .spec__code {
-  margin-top: calc(var(--p) * 0.8);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.spec__code svg {
-  width: 100%;
-  height: calc(var(--p) * 1.2);
-  margin-bottom: 0.3em;
+  background: var(--mute);
 }
 
-/* 봉지에서 꺼낸 물건 */
-.goods {
-  min-width: 0;
-  color: var(--tone-ink);
-}
-.goods__note {
-  margin: calc(var(--p) * 0.6) 0 0;
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-/* 앱 화면 그림 */
-.screens {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  gap: calc(var(--p) * 0.75);
-  margin: 0;
-  padding: 0;
+/* 한눈에 보기 띠 */
+.app-facts {
+  display: flex;
+  margin: 1.75rem 0 0;
+  padding: 0.9rem 0;
   list-style: none;
+  border-block: 1px solid var(--rule);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-.screens figure {
-  margin: 0;
+.app-facts::-webkit-scrollbar {
+  display: none;
 }
-.screens img {
-  width: 100%;
-  height: auto;
-  border-radius: calc(var(--p) * 0.5);
-  box-shadow: 0 calc(var(--p) * 0.4) calc(var(--p) * 0.8) calc(var(--p) * -0.3) rgb(52 48 70 / 0.35);
+.app-facts li {
+  flex: 1 0 auto;
+  min-width: 6.25rem;
+  padding: 0 1.1rem;
+  text-align: center;
+  border-left: 1px solid var(--rule);
 }
-.screens figcaption {
-  margin-top: 0.7em;
-  font-size: 0.9375rem;
+.app-facts li:first-child {
+  border-left: 0;
+}
+.fact__label,
+.fact__value,
+.fact__note {
+  display: block;
+}
+.fact__label {
+  font-size: 0.75rem;
   font-weight: 600;
   line-height: 1.4;
+  color: var(--sub);
+}
+.fact__value {
+  margin: 0.2rem 0 0.05rem;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  color: var(--sub);
+}
+.fact__note {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--sub);
+}
+
+/* 구역 */
+.sec {
+  margin-top: 2rem;
+}
+.sec + .sec {
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--rule);
+}
+.sec h2 {
+  margin: 0 0 0.9rem;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.sec p {
+  margin: 0;
+  max-width: 40rem;
+}
+.sec p + p {
+  margin-top: 0.6rem;
+}
+.sec .sec__note {
+  margin-top: 0.8rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--sub);
+}
+.desc__lead {
+  font-weight: 700;
+}
+.desc ul {
+  margin: 0.9rem 0 0;
+  padding: 0;
+  max-width: 40rem;
+  list-style: none;
+}
+.desc li {
+  position: relative;
+  padding: 0.15rem 0 0.15rem 1.1rem;
+}
+.desc li::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 0.95em;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--tone-ink, var(--ink));
+}
+.news__ver {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--sub);
+}
+
+/* 미리보기: 앱 화면을 옆으로 넘겨 본다 */
+.shots {
+  display: flex;
+  gap: 0.875rem;
+  margin: 0 -2.5rem;
+  padding: 0.25rem 2.5rem 0.75rem;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 2.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+.shots li {
+  flex: 0 0 auto;
+  width: 13.75rem;
+  scroll-snap-align: start;
+}
+.shots img {
+  width: 100%;
+  height: auto;
+  border-radius: 1.1rem;
+  box-shadow: 0 0 0 1px var(--rule);
 }
 
 /* 포켓펫: 꺼내 보기 */
+.demo--pet {
+  padding: 1.5rem;
+  color: var(--pink-ink);
+  background: var(--pink);
+  border-radius: 1.25rem;
+}
 .petbox {
   display: grid;
-  grid-template-columns: calc(var(--p) * 9) minmax(0, 1fr);
-  gap: calc(var(--p) * 1.25);
+  grid-template-columns: 13rem minmax(0, 1fr);
+  gap: 1.75rem;
   align-items: center;
 }
 .petbox__stage {
   position: relative;
-  height: calc(var(--p) * 10.5);
-  border-radius: calc(var(--p) * 4.5) calc(var(--p) * 4.5) calc(var(--p) * 0.8) calc(var(--p) * 0.8);
-  background: var(--pink-light);
-  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.7);
+  height: 15rem;
   display: grid;
   place-items: end center;
-  padding-bottom: calc(var(--p) * 0.5);
+  padding-bottom: 0.75rem;
   overflow: hidden;
+  border-radius: 6.5rem 6.5rem 1.25rem 1.25rem;
+  background: var(--pink-light);
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.7);
 }
 .petbox__stage img {
-  max-height: calc(var(--p) * 8.6);
+  max-height: 12.5rem;
   width: auto;
 }
 .petbox__stage img[data-style="pixel"] {
@@ -777,42 +817,46 @@ a {
   height: 208px;
   max-height: none;
   image-rendering: pixelated;
-  margin-bottom: calc(var(--p) * 0.6);
 }
-.petbox__name {
-  margin: 0 0 calc(var(--p) * 0.15);
+.demo--pet .petbox__name {
+  margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
-.petbox__kind {
-  margin: 0;
+.demo--pet .petbox__kind {
+  margin: 0.1rem 0 0;
   font-size: 0.9375rem;
   font-weight: 600;
 }
 .petbox__go {
-  margin-top: calc(var(--p) * 0.6);
+  margin-top: 0.9rem;
 }
-.petbox__hint {
-  margin: calc(var(--p) * 0.45) 0 0;
+.demo--pet .petbox__hint {
+  margin: 0.7rem 0 0;
   font-size: 0.9375rem;
   font-weight: 600;
   line-height: 1.5;
 }
 .roster {
-  margin: calc(var(--p) * 1.1) 0 0;
+  margin: 1.5rem 0 0;
   padding: 0;
   border: 0;
   min-width: 0;
 }
 .roster legend {
   padding: 0;
-  margin-bottom: 0.5em;
-  font: 400 1.25rem/1.2 var(--shop);
+  font-size: 1.0625rem;
+  font-weight: 700;
 }
 .roster__group {
-  margin-top: 0.6em;
+  margin-top: 0.6rem;
+}
+.demo--pet .roster__kind {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 .roster__row {
   display: flex;
@@ -840,31 +884,6 @@ a {
   background: var(--paper);
   border-color: var(--pink-ink);
 }
-/* 뜯는 선 아래: 앱 화면 */
-.back__more {
-  display: grid;
-  grid-template-columns: calc(var(--p) * 9) minmax(0, 1fr);
-  gap: calc(var(--p) * 1.25);
-  align-items: start;
-  margin-top: calc(var(--p) * 1.5);
-  padding-top: calc(var(--p) * 1.5);
-  border-top: 2px dashed color-mix(in srgb, var(--tone-ink) 38%, transparent);
-  color: var(--tone-ink);
-}
-.back__more h2 {
-  margin: 0 0 0.4em;
-  font: 400 1.5rem/1.2 var(--shop);
-}
-.back__more p {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.65;
-}
-.back__more .screens {
-  grid-template-columns: repeat(3, minmax(0, calc(var(--p) * 7)));
-}
-
 .roamer {
   position: fixed;
   z-index: 60;
@@ -886,16 +905,16 @@ a {
 
 /* 마이리틀클로젯: 스티커 시트 */
 .sheet {
-  padding: calc(var(--p) * 0.9);
+  padding: 1.5rem;
+  color: var(--navy);
   background: var(--lilac);
-  border-radius: calc(var(--p) * 0.25);
-  box-shadow: inset 0 0 0 2px var(--navy);
+  border-radius: 1.25rem;
 }
 .sheet__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: calc(var(--p) * 0.3);
-  padding-bottom: calc(var(--p) * 0.7);
+  gap: 0.5rem;
+  padding-bottom: 1.1rem;
   border-bottom: 2px dashed rgb(31 27 77 / 0.4);
 }
 .chip {
@@ -904,12 +923,12 @@ a {
   font-family: var(--body);
   font-size: 1.0625rem;
   font-weight: 700;
-  transition: background-color 0.18s var(--out);
   color: var(--navy);
   background: var(--paper);
   border: 2px solid var(--navy);
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.18s var(--out);
 }
 .chip:hover {
   background: var(--lilac-light);
@@ -917,16 +936,16 @@ a {
 .chip[aria-pressed="true"] {
   background: var(--lemon);
 }
-.sheet__count {
-  margin: calc(var(--p) * 0.6) 0 0;
+.sheet .sheet__count {
+  margin: 1rem 0 0;
   font-size: 0.9375rem;
   font-weight: 700;
 }
 .sheet__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: calc(var(--p) * 0.6) calc(var(--p) * 0.4);
-  margin: calc(var(--p) * 0.5) 0 0;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem 0.75rem;
+  margin: 0.75rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -936,7 +955,7 @@ a {
   align-content: end;
   gap: 0.35em;
   text-align: center;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   line-height: 1.3;
 }
@@ -944,53 +963,101 @@ a {
   display: none;
 }
 .sheet__grid img {
-  max-height: calc(var(--p) * 5.2);
+  max-height: 8.5rem;
   width: auto;
 }
 .sheet__grid small {
   display: block;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
 }
 
-/* 모아캠: 왼쪽에 화면 한 장을 크게, 오른쪽에 화면 일부 두 장을 쌓는다 */
-.screens--moa {
-  grid-template-columns: 9.63fr 8.62fr;
-  align-items: start;
+/* 정보 */
+.info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 2.5rem;
+  margin: 0;
 }
-.screens--moa li:first-child {
-  grid-row: 1 / span 2;
+.info div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rule);
 }
-.screens--moa li:last-child {
-  align-self: end;
+.info dt {
+  flex: none;
+  color: var(--sub);
+}
+.info dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-/* 다른 봉지 */
+/* 같은 사람이 만든 다른 앱 */
 .others {
-  margin-top: calc(var(--p) * 3.5625);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+  gap: 0 2.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.others__title {
-  margin: 0 0 calc(var(--p) * 2.25);
-  width: fit-content;
-  font: 400 1.375rem/1.2 var(--shop);
+.others a {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.65rem 0;
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
 }
-.others .rail {
-  justify-content: flex-start;
-  gap: calc(var(--p) * 3);
-  margin-top: 0;
+.others img {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 22.5%;
+  box-shadow: 0 0 0 1px var(--rule);
 }
-.pack--mini .card {
-  height: calc(var(--p) * 5);
-  border-radius: calc(var(--p) * 0.44);
+.others b {
+  display: block;
+  font-size: 1.0625rem;
+  line-height: 1.35;
 }
-.pack--mini .card__name {
-  font-size: calc(var(--p) * 1.7);
+.others b + span {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--sub);
 }
-.pack--mini.pack--mylittlecloset .card__name {
-  font-size: calc(var(--p) * 1.25);
+.others a:hover .get--small {
+  background: var(--lemon);
 }
 
-/* 빈 고리: 고리에 꼬리표 한 장만 걸려 있다 */
+/* 뒷면 맨 아래에 찍힌 바코드 */
+.imprint {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--sub);
+}
+.imprint svg {
+  width: min(100%, 17rem);
+  height: 2.25rem;
+  color: var(--ink);
+}
+
+/* ── 빈 고리: 고리에 꼬리표 한 장만 걸려 있다 ───── */
+
 .empty {
   margin-top: calc(var(--p) * 1.4375);
   display: grid;
@@ -1000,7 +1067,6 @@ a {
   height: auto;
   padding: calc(var(--p) * 1.6) calc(var(--p) * 0.75) calc(var(--p) * 1);
   text-align: center;
-  background: var(--paper);
   border: 2px solid var(--ink);
   border-radius: calc(var(--p) * 0.44);
 }
@@ -1014,49 +1080,27 @@ a {
   line-height: 1.6;
 }
 
-/* ── 좁은 화면: 고리가 한 줄로 내려간다 ─────── */
+/* ── 좁은 화면 ─────────────────────────────── */
 
+/* 고리 둘: 가운데에서 6칸씩 떨어져야 구멍 자리에 맞는다 */
 @media (max-width: 935px) {
   .rail {
-    flex-direction: column;
-    align-items: center;
-    gap: calc(var(--p) * 2.5);
-  }
-  .others .rail {
-    flex-direction: row;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(2, calc(var(--p) * 10));
     justify-content: center;
-    gap: calc(var(--p) * 2.5) calc(var(--p) * 0.75);
+    column-gap: calc(var(--p) * 2);
   }
-  .others .peg {
-    width: calc(var(--p) * 5);
+}
+
+/* 고리 하나 */
+@media (max-width: 735px) {
+  .rail {
+    grid-template-columns: calc(var(--p) * 10);
   }
-  .others__title {
-    margin-inline: auto;
-  }
-  .pack--mini .card {
-    height: calc(var(--p) * 5);
-    padding: calc(var(--p) * 1.3) calc(var(--p) * 0.4) 0;
-    text-align: center;
-  }
-  .pack--mini .card__name {
-    font-size: calc(var(--p) * 1.1);
-  }
-  .pack--mini.pack--mylittlecloset .card__name {
-    font-size: calc(var(--p) * 1);
-  }
-  .back__card {
-    padding: calc(var(--p) * 1.6) calc(var(--p) * 0.7) calc(var(--p) * 0.8);
-  }
-  .back__mask {
-    -webkit-mask:
-      var(--slot) 50% calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask:
-      var(--slot) 50% calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
-      linear-gradient(#000 0 0);
-    mask-composite: exclude;
+}
+
+@media (max-width: 935px) {
+  .back {
+    width: auto;
   }
   .back .hook,
   .back .hook-tip {
@@ -1066,79 +1110,91 @@ a {
   .back .hook + .hook-tip + .hook + .hook-tip {
     display: none;
   }
-  .back__head {
-    padding-right: calc(var(--p) * 1.9);
+  .listing__paper {
+    -webkit-mask:
+      var(--slot) 50% calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      var(--slot) 50% calc(var(--p) * 0.28) / calc(var(--p) * 1.75) calc(var(--p) * 0.5625) no-repeat,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
   }
-  .back__name {
-    font-size: calc(var(--p) * 2.3);
+}
+
+@media (max-width: 640px) {
+  .listing__in {
+    padding: calc(var(--p) * 1.4 + 0.75rem) 1.25rem 1.5rem;
   }
-  .back--mylittlecloset .back__name {
-    font-size: calc(var(--p) * 1.75);
+  .app-head {
+    gap: 1rem;
+    align-items: start;
   }
-  .back .tag {
-    right: calc(var(--p) * -0.3);
-    top: calc(var(--p) * -0.9);
-    width: calc(var(--p) * 2.6);
-    height: calc(var(--p) * 2.6);
-    font-size: max(0.75rem, calc(var(--p) * 0.5));
+  .app-icon {
+    width: 6.25rem;
+    height: 6.25rem;
   }
-  .back__body {
-    grid-template-columns: minmax(0, 1fr);
-    gap: calc(var(--p) * 1);
-    margin-top: calc(var(--p) * 1);
+  .app-name {
+    font-size: 1.5rem;
+  }
+  .app-sub {
+    font-size: 0.9375rem;
+  }
+  .app-get {
+    margin-top: 0.5rem;
+  }
+  .get {
+    min-height: 2.75rem;
+    padding: 0 1.25rem;
+    font-size: 0.9375rem;
+  }
+  .get--small {
+    min-height: 2rem;
+    padding: 0 1rem;
+  }
+  .app-facts {
+    margin-inline: -1.25rem;
+    padding-inline: 0.25rem;
+  }
+  .app-facts li {
+    min-width: 5.5rem;
+    padding: 0 0.9rem;
+  }
+  .shots {
+    margin-inline: -1.25rem;
+    padding-inline: 1.25rem;
+    scroll-padding-inline: 1.25rem;
+  }
+  .shots li {
+    width: 58%;
+  }
+  .demo--pet,
+  .sheet {
+    padding: 1.1rem;
   }
   .petbox {
     grid-template-columns: minmax(0, 1fr);
-    gap: calc(var(--p) * 0.6);
-  }
-  .back__more {
-    grid-template-columns: minmax(0, 1fr);
-    gap: calc(var(--p) * 0.8);
-    margin-top: calc(var(--p) * 1);
-    padding-top: calc(var(--p) * 1);
-  }
-  /* 화면 그림은 봉지 가장자리까지 이어지는 띠로 두고 옆으로 넘겨 본다 */
-  .screens,
-  .back__more .screens {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: calc(var(--p) * 0.5);
-    margin-inline: calc(var(--p) * -0.7);
-    padding: 0 calc(var(--p) * 0.7) calc(var(--p) * 0.4);
-    scroll-padding-inline: calc(var(--p) * 0.7);
-    scrollbar-width: thin;
-    scrollbar-color: var(--tone-ink) transparent;
-  }
-  .screens li {
-    flex: 0 0 62%;
-    scroll-snap-align: start;
+    gap: 0.9rem;
   }
   .petbox > div:last-child {
     text-align: center;
   }
-  .card__go {
-    position: static;
-    display: flex;
-    justify-content: center;
-    margin-top: calc(var(--p) * 0.35);
-  }
   .petbox__stage {
-    height: calc(var(--p) * 8.5);
-    width: calc(var(--p) * 8);
+    width: 12rem;
+    height: 13.5rem;
     margin-inline: auto;
   }
   .petbox__stage img {
-    max-height: calc(var(--p) * 7);
+    max-height: 11rem;
   }
-  .sheet {
-    padding: calc(var(--p) * 0.6);
+  .sheet__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .sheet__grid img {
-    max-height: calc(var(--p) * 3);
+    max-height: 6rem;
   }
-  .spec {
-    padding: calc(var(--p) * 0.7);
+  .info {
+    grid-template-columns: minmax(0, 1fr);
   }
   .foot {
     margin-top: calc(var(--p) * 2.5);
@@ -1156,15 +1212,6 @@ a {
     animation-timing-function: var(--out);
   }
 }
-.vt-pocketpet {
-  view-transition-name: pack-pocketpet;
-}
-.vt-mylittlecloset {
-  view-transition-name: pack-mylittlecloset;
-}
-.vt-moacam {
-  view-transition-name: pack-moacam;
-}
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -1173,16 +1220,4 @@ a {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
-}
-
-.roster__kind {
-  margin: 0;
-  font-size: 0.9375rem;
-  font-weight: 700;
-}
-
-.back__more .back__aside {
-  margin-top: 0.9em;
-  font-size: 0.9375rem;
-  font-weight: 400;
 }
