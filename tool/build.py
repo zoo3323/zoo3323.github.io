@@ -232,7 +232,7 @@ def write(path, text):
 names = ", ".join(app["name"] for app in APPS[:6]) + (" 등" if len(APPS) > 6 else "")
 write(
     "index.html",
-    head(f"{DEV} · {SITE['tagline']}", f"{SITE['tagline']} {DEV}의 포트폴리오. {names}.", "/", ["wall.js"])
+    head(f"{DEV} · {SITE['tagline']}", f"{DEV} · {SITE['tagline']}. {names}.", "/", ["wall.js"])
     + f"""<body>
 <a class="skip" href="#apps">앱 목록으로 건너뛰기</a>
 <div class="wall">
