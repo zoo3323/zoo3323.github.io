@@ -268,11 +268,12 @@ a {
   text-decoration: none;
   outline: none;
 }
-.pack__link::after {
-  content: "";
+/* 봉지 어디를 눌러도 앱 페이지로 간다. 이름의 링크와 같은 곳을 가리키는 덮개다. */
+.pack__cover {
   position: absolute;
   inset: 0;
   z-index: 5;
+  border-radius: calc(var(--p) * 0.44);
 }
 
 .card {
