@@ -1,0 +1,104 @@
+{
+  "role": "비전 AI 연구개발 · 앱 개발",
+  "packLine": "이 진열대를 만든 사람",
+  "lead": "비전 AI를 연구하고, 앱을 만듭니다.",
+  "about": [
+    "회사에서는 주차장 CCTV를 읽는 비전 AI를 연구·개발하고, 경북대학교 인공지능학과에서 석사과정을 밟고 있습니다. 혼자 앱과 웹 서비스도 기획하고 만듭니다."
+  ],
+  "facts": [
+    {
+      "label": "회사",
+      "value": "신라이앤씨",
+      "note": "개발팀"
+    },
+    {
+      "label": "대학원",
+      "value": "경북대",
+      "note": "인공지능학과 석사과정"
+    },
+    {
+      "label": "분야",
+      "value": "비전 AI",
+      "note": "앱·웹 개발"
+    }
+  ],
+  "career": [
+    {
+      "org": "신라이앤씨",
+      "unit": "개발팀",
+      "period": "2026. 6. – 현재",
+      "notes": "주차장 CCTV 영상에서 차량을 검출해 주차면이 찼는지 판단하는 AI 모델을 연구·개발합니다. 학습 데이터 준비와 모델 학습부터 현장 장비 배포까지 맡고 있습니다."
+    },
+    {
+      "org": "경북대학교",
+      "unit": "인공지능학과 석사과정",
+      "period": "재학 중",
+      "notes": ""
+    }
+  ],
+  "skills": [
+    {
+      "group": "비전 AI",
+      "items": [
+        "Python",
+        "객체 검출(YOLO 등)",
+        "GPU 서버 학습",
+        "Jetson·라즈베리파이 배포"
+      ]
+    },
+    {
+      "group": "앱",
+      "items": [
+        "Kotlin · Android",
+        "Swift · SwiftUI",
+        "Flutter · Dart"
+      ]
+    },
+    {
+      "group": "웹·서버",
+      "items": [
+        "React",
+        "Next.js",
+        "Node.js",
+        "Supabase",
+        "Cloudflare Workers",
+        "WebRTC",
+        "OpenAI API"
+      ]
+    },
+    {
+      "group": "도구",
+      "items": [
+        "Bash",
+        "C# · Windows",
+        "Claude Code 플러그인"
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "name": "paper-summary",
+      "repo": "https://github.com/zoo3323/paper-summary",
+      "kind": "Claude Code 플러그인",
+      "line": "영어 논문 PDF를 한국어 번역본·요약본·용어사전 HTML로 만듭니다. 그림·표·수식을 원문 그대로 옮깁니다."
+    },
+    {
+      "name": "ezet",
+      "repo": "https://github.com/zoo3323/ezet",
+      "kind": "Bash · Homebrew",
+      "line": "SSH와 Eternal Terminal 너머의 tmux 세션을 골라 접속하고 관리하는 대화형 CLI입니다."
+    },
+    {
+      "name": "audioswitch",
+      "repo": "https://github.com/zoo3323/audioswitch",
+      "kind": "C# · Windows",
+      "line": "단축키 하나로 Windows 기본 오디오 출력과 입력을 함께 바꾸는 트레이 앱입니다. 59KB, 설치 없이 씁니다."
+    },
+    {
+      "name": "usage-statusline",
+      "repo": "https://github.com/zoo3323/usage-statusline",
+      "kind": "Claude Code 플러그인",
+      "line": "Claude Code 상태줄에 Claude·Codex 사용량과 컨텍스트 게이지를 보여 줍니다."
+    }
+  ]
+}

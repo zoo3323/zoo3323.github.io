@@ -8,9 +8,10 @@
   tool/apps/<앱>/pack.html  진열대의 봉지 속에 넣을 물건
   tool/apps/<앱>/preview.html  앱 페이지의 「미리보기」에 넣을 내용
   tool/apps/<앱>/demo.html  (있으면) 미리보기 아래에 따로 두는 구역. 제목은 app.json 의 demoTitle
+  tool/about.json           (있으면) 진열대 맨 앞의 명함과 소개 페이지(/about/)
 
 쓰는 것
-  index.html, <앱>/index.html, 404.html
+  index.html, <앱>/index.html, about/index.html, 404.html
 
 앱을 더할 때는 tool/apps/_template 을 복사해 고치고, site.json 의 apps 에 폴더 이름을 넣은 뒤
 이 파일을 다시 돌린다. 만들어진 HTML 은 직접 고치지 않는다.
@@ -97,6 +98,10 @@ def load(app_id):
 
 
 APPS = [load(app_id) for app_id in SITE["apps"]]
+ABOUT = json.loads((TOOL / "about.json").read_text()) if (TOOL / "about.json").exists() else None
+GITHUB_HOST = SITE["github"].split("://", 1)[-1].rstrip("/")
+ABOUT_STYLE_WALL = "--rest:-0.8deg;--tone:#ffffff;--tone-ink:#17171a;--accent:#17171a;--bag:#f5f4ef;--mark-size:2.8"
+ABOUT_STYLE_PAGE = "--tone:#ffe55c;--tone-ink:#17171a;--accent:#17171a"
 
 
 def code(app):
@@ -227,6 +232,89 @@ def pack(app):
 </li>"""
 
 
+def date_ko(text):
+    year, month, day = text.split("-")
+    return f"{int(year)}. {int(month)}. {int(day)}."
+
+
+def news_entry(app):
+    """「새로운 기능」에 올릴 기록. 지금 버전의 기록이 있으면 그것, 없으면 가장 위의 기록."""
+    history = app.get("history") or []
+    for entry in history:
+        if entry.get("version") == app["version"]:
+            return entry
+    return history[0] if history else None
+
+
+def news(app):
+    entry = news_entry(app)
+    if not entry:
+        return ""
+    head = " · ".join(filter(None, [f'버전 {entry["version"]}' if entry.get("version") else "", date_ko(entry["date"])]))
+    rest = [e for e in app.get("history", []) if e is not entry]
+    older = ""
+    if rest:
+        label = "버전 기록" if any(e.get("version") for e in app["history"]) else "업데이트 기록"
+        rows = "\n          ".join(
+            f'<li><div class="history__head"><b>{esc(e.get("version") or "")}</b>'
+            f'<time datetime="{e["date"]}">{date_ko(e["date"])}</time></div><p>{esc(e["notes"])}</p></li>'
+            for e in rest
+        )
+        older = f"""
+      <details class="history">
+        <summary>{label} <span>{len(rest)}개 더</span></summary>
+        <ol class="history__list">
+          {rows}
+        </ol>
+      </details>"""
+    return f"""<section class="sec" aria-labelledby="h-news">
+      <h2 id="h-news">새로운 기능</h2>
+      <p class="news__ver">{head}</p>
+      <p>{esc(entry["notes"])}</p>{older}
+    </section>"""
+
+
+def about_pack():
+    a = ABOUT
+    orgs = "<br>".join(esc(f'{x["org"]} {x["unit"]}') for x in a["career"])
+    return f"""<li class="peg">
+  {HOOK.format(style="")}
+  <article class="pack pack--bag pack--about" data-sway style="{ABOUT_STYLE_WALL};view-transition-name:pack-about">
+    <div class="card">
+      <h2 class="card__name"><a class="pack__link" href="/about/">소개</a></h2>
+      <p class="card__line">{esc(a["packLine"])}</p>
+    </div>
+    <div class="bag">
+      <div class="namecards">
+        <div class="namecard namecard--under" aria-hidden="true"></div>
+        <div class="namecard">
+          <p class="namecard__name">{esc(DEV)}</p>
+          <p class="namecard__role">{esc(a["role"])}</p>
+          <p class="namecard__org">{orgs}</p>
+        </div>
+      </div>
+      <div class="label label--sticker">{barcode(GITHUB_HOST)}<span class="label__id">{esc(GITHUB_HOST)}</span><span class="label__go" aria-hidden="true">뒷면 보기 {ICON_GO}</span></div>
+    </div>
+    <span class="pack__holo" aria-hidden="true"></span>
+    <span class="pack__glare" aria-hidden="true"></span>
+    <a class="pack__cover" href="/about/" tabindex="-1" aria-hidden="true"></a>
+  </article>
+  {TIP.format(style="")}
+</li>"""
+
+
+ABOUT_ICON = (
+    '<svg class="app-icon" viewBox="0 0 120 120" aria-hidden="true" focusable="false">'
+    '<rect width="120" height="120" rx="27" fill="#ffe55c"/>'
+    '<path d="M48 22v7a6 6 0 0 0 6 6h12a6 6 0 0 0 6-6v-7M60 35v14" fill="none" stroke="#6a6962" stroke-width="5" stroke-linecap="round"/>'
+    '<g transform="rotate(-4 60 74)"><rect x="24" y="48" width="72" height="46" rx="5" fill="#fff" stroke="#17171a" stroke-width="3.5"/>'
+    '<circle cx="60" cy="55" r="3.2" fill="#6a6962"/>'
+    '<rect x="34" y="64" width="34" height="7" rx="3.5" fill="#17171a"/>'
+    '<rect x="34" y="77" width="48" height="4" rx="2" fill="#a3a199"/>'
+    '<rect x="34" y="85" width="40" height="4" rx="2" fill="#a3a199"/></g></svg>'
+)
+
+
 def write(path, text):
     target = ROOT / path
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -240,13 +328,13 @@ names = ", ".join(app["name"] for app in APPS[:6]) + (" 등" if len(APPS) > 6 el
 write(
     "index.html",
     head(f"{DEV} · {SITE['tagline']}", f"{DEV} · {SITE['tagline']}. {names}.", "/", ["wall.js", "light.js"])
-    + f"""<body>
+    + f"""<body class="home">
 <a class="skip" href="#apps">목록으로 건너뛰기</a>
 <div class="wall">
 {sign(True)}
 <main id="apps">
 <ul class="rail">
-{chr(10).join(pack(app) for app in APPS)}
+{about_pack() + chr(10) if ABOUT else ""}{chr(10).join(pack(app) for app in APPS)}
 </ul>
 </main>
 {FOOT}
@@ -259,13 +347,29 @@ write(
 # ── 앱 페이지: 봉지의 뒷면. 앱 장터의 앱 화면처럼 짠다 ──
 
 
+PLAY_BADGE = '<img class="badge-play" src="/assets/img/google-play-badge.png" width="646" height="192" alt="{alt}">'
+PLAY_LEGAL = "Google Play 및 Google Play 로고는 Google LLC의 상표입니다."
+
+
+def has_play(app):
+    return any(p["name"] == "Android" for p in app["platforms"])
+
+
 def get_buttons(app):
-    links = [
-        f'<a class="get" href="{esc(p["store"])}">{esc(p.get("storeLabel") or STORE.get(p["name"], p["name"]))}</a>'
-        for p in app["platforms"]
-        if p.get("store")
-    ]
-    return "".join(links) or f'<span class="get get--wait">{esc(app["status"])}</span>'
+    """받기 단추. 안드로이드 앱은 Google Play 배지를 늘 보이고, 스토어 주소(store)가 생기면 그 주소로 잇는다."""
+    parts = []
+    for p in app["platforms"]:
+        if p["name"] == "Android":
+            if p.get("store"):
+                parts.append(f'<a class="store-badge" href="{esc(p["store"])}">{PLAY_BADGE.format(alt="Google Play에서 다운로드")}</a>')
+            else:
+                parts.append(
+                    f'<span class="store-badge store-badge--wait">{PLAY_BADGE.format(alt="Google Play에서 다운로드")}'
+                    f'<span class="store-badge__note">{esc(app["status"])}</span></span>'
+                )
+        elif p.get("store"):
+            parts.append(f'<a class="get" href="{esc(p["store"])}">{esc(p.get("storeLabel") or STORE.get(p["name"], p["name"]))}</a>')
+    return "".join(parts) or f'<span class="get get--wait">{esc(app["status"])}</span>'
 
 
 def fact(label, value, note=""):
@@ -328,7 +432,7 @@ for app in APPS:
     features = "\n        ".join(f"<li>{esc(text)}</li>" for text in app["features"])
     write(
         f"{app_id}/index.html",
-        head(f'{app["name"]} · {app["line"]} | {DEV}', app["lead"], f"/{app_id}/", [*app.get("scripts", []), "light.js"])
+        head(f'{app["name"]} · {app["line"]} | {DEV}', app["lead"], f"/{app_id}/", [*app.get("scripts", []), "shots.js", "light.js"])
         + f"""<body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
 <div class="wall">
@@ -347,7 +451,7 @@ for app in APPS:
       <div>
         <h1 class="app-name">{esc(app["name"])}</h1>
         <p class="app-sub">{esc(app["line"])}</p>
-        <p class="app-dev"><a href="/">{esc(DEV)}</a></p>
+        <p class="app-dev"><a href="{"/about/" if ABOUT else "/"}">{esc(DEV)}</a></p>
         <p class="app-get">{get_buttons(app)}</p>
       </div>
     </header>
@@ -366,11 +470,7 @@ for app in APPS:
         {features}
       </ul>
     </section>
-    <section class="sec" aria-labelledby="h-news">
-      <h2 id="h-news">새로운 기능</h2>
-      <p class="news__ver">버전 {esc(app["version"])}</p>
-      <p>{esc(app["news"])}</p>
-    </section>
+    {news(app)}
     <section class="sec" aria-labelledby="h-info">
       <h2 id="h-info">정보</h2>
       <dl class="info">
@@ -378,7 +478,102 @@ for app in APPS:
       </dl>
     </section>
     {others(app)}
-    <footer class="imprint">{barcode(code(app))}<span>{esc(code(app))}</span></footer>
+    <footer class="imprint">{barcode(code(app))}<span>{esc(code(app))}</span>{f'<small class="imprint__legal">{PLAY_LEGAL}</small>' if has_play(app) else ""}</footer>
+  </div>
+  </div>
+</article>
+</main>
+{FOOT}
+</div>
+</body>
+</html>
+""",
+    )
+
+# ── 소개: 명함의 뒷면. 장터의 개발자 페이지처럼 짠다 ──
+
+if ABOUT:
+    a = ABOUT
+    about_facts = "\n      ".join(fact(f["label"], f["value"], f.get("note", "")) for f in a["facts"])
+    about_text = "\n      ".join(f"<p>{esc(t)}</p>" for t in a["about"])
+    cv = "\n        ".join(
+        f'<li><div class="cv__head"><b>{esc(x["org"])}</b><span>{esc(x["unit"])}</span><time>{esc(x["period"])}</time></div>'
+        + (f'<p>{esc(x["notes"])}</p>' if x.get("notes") else "") + "</li>"
+        for x in a["career"] + a.get("education", [])
+    )
+    skills = "\n        ".join(
+        f'<div><dt>{esc(g["group"])}</dt><dd><ul class="chips">{"".join(f"<li>{esc(i)}</li>" for i in g["items"])}</ul></dd></div>'
+        for g in a["skills"]
+    )
+    works = "\n      ".join(
+        f'<li><a href="/{w["id"]}/"><img src="/assets/img/{w["id"]}/icon.webp" width="256" height="256" alt="" loading="lazy">'
+        f'<span><b>{esc(w["name"])}</b><span>{esc(w["line"])}</span></span><span class="get get--small">보기</span></a></li>'
+        for w in APPS
+    )
+    tools = "\n      ".join(
+        f'<li><a href="{esc(t["repo"])}"><span class="tool"><span class="tool__head"><b>{esc(t["name"])}</b>'
+        f'<span class="tool__kind">{esc(t["kind"])}</span></span><span class="tool__line">{esc(t["line"])}</span></span>'
+        f'<span class="get get--small">GitHub</span></a></li>'
+        for t in a.get("tools", [])
+    )
+    tools_sec = f"""<section class="sec" aria-labelledby="h-tools">
+      <h2 id="h-tools">공개한 도구</h2>
+      <ul class="others tools">
+      {tools}
+      </ul>
+    </section>""" if a.get("tools") else ""
+    write(
+        "about/index.html",
+        head(f"소개 | {DEV}", f'{DEV} · {a["role"]}. ' + " · ".join(f'{x["org"]} {x["unit"]}' for x in a["career"] + a.get("education", [])) + ".", "/about/", ["light.js"])
+        + f"""<body>
+<a class="skip" href="#app">본문으로 건너뛰기</a>
+<div class="wall">
+{sign(False)}
+<main id="app">
+<article class="back back--about" style="{ABOUT_STYLE_PAGE}">
+  {HOOK.format(style=' style="--hx:-7"')}
+  {TIP.format(style=' style="--hx:-7"')}
+  {HOOK.format(style=' style="--hx:7"')}
+  {TIP.format(style=' style="--hx:7"')}
+  <div class="listing" style="view-transition-name:pack-about">
+  <div class="listing__paper"></div>
+  <div class="listing__in">
+    <header class="app-head">
+      {ABOUT_ICON}
+      <div>
+        <h1 class="app-name">{esc(DEV)}</h1>
+        <p class="app-sub">{esc(a["role"])}</p>
+        <p class="app-dev app-dev--plain">{esc(SITE["tagline"])}</p>
+        <p class="app-get"><a class="get" href="{SITE["github"]}" rel="me">GitHub</a></p>
+      </div>
+    </header>
+    <ul class="app-facts" aria-label="한눈에 보기">
+      {about_facts}
+    </ul>
+    <section class="sec desc" aria-label="소개">
+      <p class="desc__lead">{esc(a["lead"])}</p>
+      {about_text}
+    </section>
+    <section class="sec" aria-labelledby="h-cv">
+      <h2 id="h-cv">경력과 학력</h2>
+      <ol class="cv">
+        {cv}
+      </ol>
+    </section>
+    <section class="sec" aria-labelledby="h-skills">
+      <h2 id="h-skills">다루는 기술</h2>
+      <dl class="skills">
+        {skills}
+      </dl>
+    </section>
+    <section class="sec" aria-labelledby="h-works">
+      <h2 id="h-works">만든 것</h2>
+      <ul class="others">
+      {works}
+      </ul>
+    </section>
+    {tools_sec}
+    <footer class="imprint">{barcode(GITHUB_HOST)}<span>{esc(GITHUB_HOST)}</span></footer>
   </div>
   </div>
 </article>

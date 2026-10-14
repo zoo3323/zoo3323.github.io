@@ -88,8 +88,11 @@ html {
   scrollbar-color: var(--wire) var(--board);
 }
 
+/* body 도 가로로 잘라 낸다. html 의 값은 화면(뷰포트)으로 넘어가 '숨김'으로 바뀌므로,
+   흔들리는 봉지가 잠깐 화면 밖으로 나가는 순간 옆으로 밀리는 것까지 막으려면 body 에서 한 번 더 자른다. */
 body {
   position: relative;
+  overflow-x: clip;
   margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
@@ -506,6 +509,7 @@ body::after {
 }
 /* 봉지가 눌린다는 단서. 딱지에 찍힌 한마디다. */
 .label__go {
+  grid-column: 2;
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
@@ -555,6 +559,63 @@ body::after {
   width: calc(var(--p) * 5.4);
   height: auto;
   margin-inline: auto;
+}
+
+/* 소개: 흰 헤더 카드에 먹 테두리, 비닐 봉지에 든 명함. 아래 한 장이 더 비친다. */
+.pack--about .card {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+.pack--about .bag {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+.namecards {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--p) * 0.85);
+  height: calc(var(--p) * 6);
+}
+.namecard {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: calc(var(--p) * 8.4);
+  height: calc(var(--p) * 4.9);
+  margin-left: calc(var(--p) * -4.2);
+  padding: calc(var(--p) * 0.55) calc(var(--p) * 0.6);
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: calc(var(--p) * 0.12);
+  box-shadow: 0 0 0 1px var(--rule), 0 calc(var(--p) * 0.12) calc(var(--p) * 0.3) rgb(52 48 70 / 0.12);
+  transform: rotate(-2deg);
+}
+.namecard--under {
+  top: calc(var(--p) * 0.9);
+  background: var(--lemon);
+  box-shadow: 0 0 0 1px rgb(23 23 26 / 0.08);
+  transform: rotate(3.5deg);
+}
+.namecard p {
+  margin: 0;
+}
+.namecard__name {
+  font: 400 calc(var(--p) * 0.95) / 1 var(--shop);
+  letter-spacing: -0.01em;
+}
+.namecard .namecard__role {
+  margin-top: calc(var(--p) * 0.2);
+  font-size: calc(var(--p) * 0.36);
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--sub);
+}
+.namecard .namecard__org {
+  margin-top: calc(var(--p) * 0.45);
+  padding-top: calc(var(--p) * 0.32);
+  border-top: 1px solid var(--rule);
+  font-size: calc(var(--p) * 0.36);
+  font-weight: 600;
+  line-height: 1.45;
 }
 
 /* 포켓펫: 분홍 판에 투명 덮개 */
@@ -761,6 +822,27 @@ a.get:hover {
   color: var(--sub);
   background: var(--mute);
 }
+
+/* Google Play 배지. 구글이 주는 그림을 그대로 쓰고, 주소가 없으면 옆에 상태만 적는다. */
+.store-badge {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.8rem;
+  border-radius: 0.55rem;
+}
+.badge-play {
+  height: 3rem;
+  width: auto;
+}
+.store-badge--wait {
+  cursor: default;
+}
+.store-badge__note {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sub);
+}
 .get--small {
   min-height: 2rem;
   padding: 0 1.1rem;
@@ -871,10 +953,179 @@ a.get:hover {
 .news__ver {
   font-size: 0.9375rem;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
   color: var(--sub);
 }
 
-/* 미리보기: 앱 화면을 옆으로 넘겨 본다 */
+/* 버전 기록: 접어 두었다가 펼쳐 본다 */
+.history {
+  margin-top: 0.9rem;
+}
+.history summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--accent, var(--ink));
+  cursor: pointer;
+  list-style: none;
+}
+.history summary::-webkit-details-marker {
+  display: none;
+}
+.history summary span {
+  font-weight: 600;
+  color: var(--sub);
+}
+.history summary::after {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  margin: -0.2rem 0 0 0.1rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s var(--out);
+}
+.history[open] summary::after {
+  margin-top: 0.25rem;
+  transform: rotate(-135deg);
+}
+.history__list {
+  max-width: 40rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.history__list li {
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--rule);
+}
+.history__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+.history__head time {
+  flex: none;
+  font-size: 0.875rem;
+  color: var(--sub);
+  font-variant-numeric: tabular-nums;
+}
+.sec .history__list p {
+  margin-top: 0.2rem;
+}
+
+/* 미리보기: 앱 화면을 옆으로 넘겨 보고, 누르면 크게 본다 */
+.shots__open {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 1.1rem;
+  background: none;
+  cursor: zoom-in;
+}
+.shots--wide .shots__open {
+  border-radius: 0.7rem;
+}
+.shots__open:hover img {
+  box-shadow: 0 0 0 1px var(--rule), 0 0.6rem 1.4rem -0.6rem rgb(52 48 70 / 0.35);
+}
+
+/* 크게 보기 */
+.zoom {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+}
+.zoom::backdrop {
+  background: var(--board);
+}
+.zoom__stage {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 4.75rem 5.5rem 4.25rem;
+  touch-action: pan-y;
+}
+/* 그림은 위 막대와 아래 설명을 뺀 자리 안에 들어온다 */
+.zoom__img {
+  max-width: calc(100vw - 11rem);
+  max-height: calc(100vh - 9rem);
+  max-height: calc(100dvh - 9rem);
+  width: auto;
+  height: auto;
+  border-radius: 1rem;
+  box-shadow: 0 0 0 1px var(--rule), 0 1.5rem 3rem -1.2rem rgb(52 48 70 / 0.4);
+}
+.zoom__bar {
+  position: fixed;
+  top: 1rem;
+  left: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+}
+.zoom__count {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--sub);
+}
+.zoom__caption {
+  position: fixed;
+  left: 1.25rem;
+  right: 1.25rem;
+  bottom: 1rem;
+  margin: 0 auto;
+  max-width: 40rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--sub);
+}
+.zoom__prev,
+.zoom__next {
+  position: fixed;
+  top: 50%;
+  z-index: 1;
+  width: 44px;
+  justify-content: center;
+  padding: 0;
+  transform: translateY(-50%);
+}
+.zoom__prev {
+  left: 1.25rem;
+}
+.zoom__next {
+  right: 1.25rem;
+}
+.zoom__prev:active,
+.zoom__next:active {
+  transform: translateY(calc(-50% + 1px));
+}
+.zoom__prev[hidden],
+.zoom__next[hidden] {
+  display: none;
+}
 .shots {
   display: flex;
   gap: 0.875rem;
@@ -1094,6 +1345,88 @@ a.get:hover {
   font-weight: 600;
 }
 
+/* 소개 페이지 */
+svg.app-icon {
+  box-shadow: none;
+}
+.app-dev--plain {
+  color: var(--sub);
+}
+.cv {
+  max-width: 40rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cv li {
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--rule);
+}
+.cv li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.cv__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+}
+.cv__head b {
+  font-size: 1.125rem;
+}
+.cv__head span {
+  font-weight: 600;
+}
+.cv__head time {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--sub);
+  font-variant-numeric: tabular-nums;
+}
+.sec .cv p {
+  margin-top: 0.35rem;
+  color: #33333a;
+}
+.skills {
+  margin: 0;
+}
+.skills div {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--rule);
+}
+.skills div:first-child {
+  border-top: 0;
+  padding-top: 0.1rem;
+}
+.skills dt {
+  padding-top: 0.3rem;
+  font-weight: 700;
+}
+.skills dd {
+  margin: 0;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.chips li {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  background: var(--mute);
+  border-radius: 999px;
+}
+
 /* 정보 */
 .info {
   display: grid;
@@ -1158,6 +1491,38 @@ a.get:hover {
   background: var(--lemon);
 }
 
+/* 공개한 도구: 아이콘 없이 이름, 종류, 한 줄 */
+.others.tools a {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  padding-block: 0.85rem;
+}
+.tool__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 0.55rem;
+}
+.others .tool__head b {
+  display: inline;
+}
+.others .tool__head .tool__kind {
+  display: inline;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--sub);
+}
+.others .tool__line {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--sub);
+}
+.others.tools .get--small {
+  margin-top: 0.1rem;
+}
+
 /* 뒷면 맨 아래에 찍힌 바코드 */
 .imprint {
   display: grid;
@@ -1176,6 +1541,12 @@ a.get:hover {
   width: min(100%, 17rem);
   height: 2.25rem;
   color: var(--ink);
+}
+.imprint__legal {
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 400;
 }
 
 /* ── 빈 고리: 고리에 꼬리표 한 장만 걸려 있다 ───── */
@@ -1203,6 +1574,37 @@ a.get:hover {
 }
 
 /* ── 좁은 화면 ─────────────────────────────── */
+
+/* 폰의 첫 화면: 봉지를 반만 한 크기로 두 줄씩 건다. 구멍 간격째 줄이므로 고리는 그대로 구멍에 꽂힌다.
+   작은 봉지에는 이름, 물건, 바코드와 「뒷면 보기」만 남긴다. */
+@media (min-width: 360px) and (max-width: 735px) {
+  .home {
+    --p: min(32px, calc((100vw - 32px) / 22));
+  }
+  .home .rail {
+    grid-template-columns: repeat(2, calc(var(--p) * 10));
+    justify-content: center;
+    column-gap: calc(var(--p) * 2);
+  }
+  .home .sign {
+    height: calc(var(--p) * 6);
+  }
+  .home .sign__name {
+    font-size: calc(var(--p) * 2.75);
+  }
+  .home .sign__line {
+    margin-top: calc(var(--p) * 0.5);
+  }
+  .home .card__line,
+  .home .label__id,
+  .home .label__ver {
+    display: none;
+  }
+  .home .label {
+    grid-template-columns: 1fr;
+    justify-items: end;
+  }
+}
 
 /* 고리 둘: 가운데에서 6칸씩 떨어져야 구멍 자리에 맞는다 */
 @media (max-width: 935px) {
@@ -1245,6 +1647,29 @@ a.get:hover {
 }
 
 @media (max-width: 640px) {
+  .zoom__stage {
+    padding: 4.25rem 0.75rem 4.75rem;
+  }
+  .zoom__img {
+    max-width: calc(100vw - 1.5rem);
+    max-height: calc(100vh - 9rem);
+    max-height: calc(100dvh - 9rem);
+  }
+  .zoom__prev,
+  .zoom__next {
+    top: auto;
+    bottom: 0.75rem;
+    transform: none;
+  }
+  .zoom__prev:active,
+  .zoom__next:active {
+    transform: translateY(1px);
+  }
+  .zoom__caption {
+    left: 4.25rem;
+    right: 4.25rem;
+    bottom: 1rem;
+  }
   .listing__in {
     padding: calc(var(--p) * 1.4 + 0.75rem) 1.25rem 1.5rem;
   }
@@ -1273,6 +1698,9 @@ a.get:hover {
   .get--small {
     min-height: 2rem;
     padding: 0 1rem;
+  }
+  .badge-play {
+    height: 2.75rem;
   }
   .app-facts {
     margin-inline: -1.25rem;
@@ -1320,6 +1748,13 @@ a.get:hover {
   }
   .info {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .skills div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+  }
+  .skills dt {
+    padding-top: 0;
   }
   .foot {
     margin-top: calc(var(--p) * 2.5);

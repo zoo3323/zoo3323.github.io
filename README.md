@@ -12,10 +12,13 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `tool/apps/<앱>/app.json` | 앱 한 개의 정보(이름, 색, 버전, 플랫폼, 설명) |
 | `tool/apps/<앱>/pack.html` | 진열대의 봉지 속에 넣을 물건 |
 | `tool/apps/<앱>/preview.html` | 앱 페이지의 「미리보기」 |
+| `tool/apps/<앱>/demo.html` | (있으면) 미리보기 아래의 따로 해 보는 구역 |
+| `tool/about.json` | 진열대 맨 앞의 명함(소개)과 소개 페이지 `/about/`의 내용 |
 | `tool/build.py` | 위 파일들로 HTML을 만든다 |
-| `index.html`, `<앱>/index.html`, `404.html` | 만들어진 결과. 직접 고치지 않는다 |
+| `index.html`, `<앱>/index.html`, `about/index.html`, `404.html` | 만들어진 결과. 직접 고치지 않는다 |
 | `assets/site.css` | 화면 전체의 모양 |
 | `assets/wall.js`, `light.js` | 봉지의 흔들림, 마우스를 따르는 빛(벽의 등빛, 봉지의 반사·무지개 결) |
+| `assets/shots.js` | 미리보기 화면을 눌러 크게 보기 |
 | `assets/pet.js`, `closet.js` | 포켓펫 꺼내 보기, 옷 분류 딱지 |
 | `assets/img/`, `assets/fonts/` | 그림과 글꼴 |
 
@@ -36,7 +39,7 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 2. `app.json`을 채웁니다.
    - `tone`, `ink`: 봉지의 색과 그 위에 올리는 글자색. `accent`: 흰 바탕에서 쓰는 강조색.
    - `pack`: `card`(한 장짜리 색 판) 또는 `bag`(헤더 카드를 박은 봉지, 봉지 색은 `bag`).
-   - `platforms`: `[{"name": "Android", "requires": "8.0 이상"}, {"name": "iOS", "requires": "17 이상"}]`처럼 적습니다. `store`에 스토어 주소를 넣으면 앱 페이지의 버튼이 그 주소로 가는 버튼으로 바뀝니다.
+   - `platforms`: `[{"name": "Android", "requires": "8.0 이상"}, {"name": "iOS", "requires": "17 이상"}]`처럼 적습니다. 안드로이드 앱의 페이지에는 Google Play 배지가 늘 나오고, 주소가 없으면 배지 옆에 `status`가 적힙니다. `store`에 스토어 주소를 넣으면 배지가 그 주소로 이어집니다(배지 그림은 구글이 배포하는 공식 그림 `assets/img/google-play-badge.png`, 페이지 맨 아래에 구글이 요청하는 상표 문구가 함께 나옵니다).
    - `status`: 봉지의 둥근 딱지와 스토어 주소가 없을 때의 버튼에 적히는 말.
    - `mark`: 이름 글씨. 비워 두면 팻말 글씨로 적고 크기는 카드 폭에 맞춥니다.
 3. 그림을 `assets/img/<앱>/`에 넣습니다. `icon.webp`(256px 정사각형)는 꼭 있어야 합니다.
@@ -51,7 +54,8 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 ## 그 밖에 고칠 때
 
 - **개발자 이름, 소개 한 줄**: `tool/site.json`의 `developer`, `tagline`을 고치고 다시 만듭니다. 링크 미리보기 그림 `assets/img/og.png`는 첫 화면을 1200×630으로 다시 찍어 바꿉니다.
-- **버전, 새로운 기능**: 그 앱의 `app.json`에서 `version`, `news`를 고칩니다.
+- **버전 기록**: 그 앱의 `app.json`에서 `version`을 올리고 `history` 맨 위에 `{"version", "date", "notes"}`를 하나 더합니다. 앱 페이지의 「새로운 기능」에는 지금 버전의 기록이, 그 아래 접힌 「버전 기록」에는 나머지가 나옵니다. 버전이 없는 웹 서비스는 `version`을 `null`로 두면 「업데이트 기록」이 됩니다.
+- **소개**: `tool/about.json`의 경력·학력·기술·공개한 도구를 고칩니다. 앱 페이지의 개발자 이름은 소개 페이지로 이어집니다.
 - **이름 글씨를 따로 쓰는 앱**: 이름 글자만 담은 글꼴 조각을 `tool/wordmarks.py`로 만들고 `assets/site.css` 맨 위에 `@font-face`를 한 줄 더한 뒤 `app.json`의 `mark.font`에 그 이름을 적습니다.
 - **포켓펫 동물 추가**: `assets/img/pocketpet/`의 `thumb/`, `atlas/`(스프라이트 위 다섯 줄, 1536×1040), 보송 그림체면 `stage/`에 그림을 넣고 `tool/apps/pocketpet/demo.html`의 선반에 버튼 한 줄을 더합니다.
 

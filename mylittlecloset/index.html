@@ -21,6 +21,7 @@
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
 <script src="/assets/closet.js" defer></script>
+<script src="/assets/shots.js" defer></script>
 <script src="/assets/light.js" defer></script>
 </head>
 <body>
@@ -45,12 +46,12 @@
       <div>
         <h1 class="app-name">마이리틀클로젯</h1>
         <p class="app-sub">내 옷장 속 옷을 기록하고 찾아보기</p>
-        <p class="app-dev"><a href="/">NamJuKim</a></p>
-        <p class="app-get"><span class="get get--wait">출시 준비 중</span></p>
+        <p class="app-dev"><a href="/about/">NamJuKim</a></p>
+        <p class="app-get"><span class="store-badge store-badge--wait"><img class="badge-play" src="/assets/img/google-play-badge.png" width="646" height="192" alt="Google Play에서 다운로드"><span class="store-badge__note">출시 준비 중</span></span></p>
       </div>
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
-      <li><span class="fact__label">버전</span><span class="fact__value">1.3.2</span></li>
+      <li><span class="fact__label">버전</span><span class="fact__value">1.5.0</span></li>
       <li><span class="fact__label">호환성</span><span class="fact__value">Android</span><span class="fact__note">8.0 이상</span></li>
       <li><span class="fact__label">언어</span><span class="fact__value">KO</span><span class="fact__note">한국어</span></li>
       <li><span class="fact__label">개발</span><span class="fact__value">1인</span><span class="fact__note">NamJuKim</span></li>
@@ -89,8 +90,20 @@
     </section>
     <section class="sec" aria-labelledby="h-news">
       <h2 id="h-news">새로운 기능</h2>
-      <p class="news__ver">버전 1.3.2</p>
-      <p>긴 글이 어절 단위로 줄바꿈됩니다. 안드로이드 자동 백업에 옷 기록이 들어갑니다.</p>
+      <p class="news__ver">버전 1.5.0 · 2026. 10. 14.</p>
+      <p>아이폰용 빌드를 만들었습니다. 아이폰에서는 Vision으로 옷 사진의 배경을 지웁니다.</p>
+      <details class="history">
+        <summary>버전 기록 <span>7개 더</span></summary>
+        <ol class="history__list">
+          <li><div class="history__head"><b>1.4.0</b><time datetime="2026-10-14">2026. 10. 14.</time></div><p>쇼핑몰 주문 내역에서 산 옷을 찾아 종류·색·사이즈를 미리 채워 확인 대기함에 넣습니다. 로그인은 앱 안 브라우저에서 직접 하고 비밀번호는 저장하지 않습니다.</p></li>
+          <li><div class="history__head"><b>1.3.2</b><time datetime="2026-10-14">2026. 10. 14.</time></div><p>긴 글이 어절 단위로 줄바꿈됩니다. 안드로이드 자동 백업에 옷 기록이 들어갑니다.</p></li>
+          <li><div class="history__head"><b>1.3.1</b><time datetime="2026-10-14">2026. 10. 14.</time></div><p>길어서 넘치던 항목 제목을 고치고, 오픈소스 라이선스 화면을 넣었습니다.</p></li>
+          <li><div class="history__head"><b>1.3.0</b><time datetime="2026-10-13">2026. 10. 13.</time></div><p>코디마다 그 옷을 입은 사진 한 장을 올릴 수 있습니다.</p></li>
+          <li><div class="history__head"><b>1.2.0</b><time datetime="2026-10-13">2026. 10. 13.</time></div><p>코디를 옷 스티커를 붙여 만드는 판으로 바꿨습니다.</p></li>
+          <li><div class="history__head"><b>1.1.0</b><time datetime="2026-10-13">2026. 10. 13.</time></div><p>라일락 색지와 옷 스티커로 화면과 아이콘을 새로 짰습니다. 버리기와 ‘예전 옷’이 생겼습니다.</p></li>
+          <li><div class="history__head"><b>1.0.0</b><time datetime="2026-10-12">2026. 10. 12.</time></div><p>첫 버전. 옷 등록, 옷장 찾기, 정리, 백업.</p></li>
+        </ol>
+      </details>
     </section>
     <section class="sec" aria-labelledby="h-info">
       <h2 id="h-info">정보</h2>
@@ -98,7 +111,7 @@
       <div><dt>제공자</dt><dd>NamJuKim</dd></div>
       <div><dt>호환성</dt><dd>Android 8.0 이상</dd></div>
       <div><dt>언어</dt><dd>한국어</dd></div>
-      <div><dt>버전</dt><dd>1.3.2</dd></div>
+      <div><dt>버전</dt><dd>1.5.0</dd></div>
       <div><dt>만든 도구</dt><dd>Flutter, SQLite, ML Kit</dd></div>
       <div><dt>패키지 이름</dt><dd>com.njkim.mylittlecloset</dd></div>
       <div><dt>저작권</dt><dd>© 2026 NamJuKim</dd></div>
@@ -112,7 +125,7 @@
       <li><a href="/scorelab/"><img src="/assets/img/scorelab/icon.webp" width="256" height="256" alt="" loading="lazy"><span><b>Scorelab</b><span>시험지 한 장이 리포트가 되는 학원</span></span><span class="get get--small">보기</span></a></li>
       </ul>
     </section>
-    <footer class="imprint"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 299 10" preserveAspectRatio="none" fill="currentColor" aria-hidden="true" focusable="false"><rect x="0" y="0" width="2" height="10"/><rect x="3" y="0" width="1" height="10"/><rect x="6" y="0" width="1" height="10"/><rect x="11" y="0" width="1" height="10"/><rect x="16" y="0" width="1" height="10"/><rect x="18" y="0" width="2" height="10"/><rect x="22" y="0" width="1" height="10"/><rect x="26" y="0" width="4" height="10"/><rect x="31" y="0" width="1" height="10"/><rect x="33" y="0" width="4" height="10"/><rect x="38" y="0" width="3" height="10"/><rect x="42" y="0" width="1" height="10"/><rect x="44" y="0" width="1" height="10"/><rect x="47" y="0" width="2" height="10"/><rect x="51" y="0" width="3" height="10"/><rect x="55" y="0" width="2" height="10"/><rect x="61" y="0" width="1" height="10"/><rect x="63" y="0" width="1" height="10"/><rect x="66" y="0" width="1" height="10"/><rect x="71" y="0" width="2" height="10"/><rect x="75" y="0" width="1" height="10"/><rect x="77" y="0" width="2" height="10"/><rect x="83" y="0" width="1" height="10"/><rect x="86" y="0" width="1" height="10"/><rect x="88" y="0" width="1" height="10"/><rect x="93" y="0" width="2" height="10"/><rect x="96" y="0" width="1" height="10"/><rect x="99" y="0" width="4" height="10"/><rect x="104" y="0" width="3" height="10"/><rect x="108" y="0" width="1" height="10"/><rect x="110" y="0" width="1" height="10"/><rect x="113" y="0" width="2" height="10"/><rect x="117" y="0" width="3" height="10"/><rect x="121" y="0" width="4" height="10"/><rect x="126" y="0" width="3" height="10"/><rect x="130" y="0" width="1" height="10"/><rect x="132" y="0" width="2" height="10"/><rect x="135" y="0" width="2" height="10"/><rect x="138" y="0" width="4" height="10"/><rect x="143" y="0" width="2" height="10"/><rect x="147" y="0" width="1" height="10"/><rect x="149" y="0" width="1" height="10"/><rect x="154" y="0" width="1" height="10"/><rect x="159" y="0" width="2" height="10"/><rect x="162" y="0" width="1" height="10"/><rect x="165" y="0" width="1" height="10"/><rect x="168" y="0" width="4" height="10"/><rect x="173" y="0" width="1" height="10"/><rect x="176" y="0" width="1" height="10"/><rect x="179" y="0" width="4" height="10"/><rect x="184" y="0" width="1" height="10"/><rect x="187" y="0" width="2" height="10"/><rect x="191" y="0" width="1" height="10"/><rect x="193" y="0" width="1" height="10"/><rect x="198" y="0" width="1" height="10"/><rect x="200" y="0" width="2" height="10"/><rect x="204" y="0" width="1" height="10"/><rect x="209" y="0" width="1" height="10"/><rect x="214" y="0" width="1" height="10"/><rect x="216" y="0" width="2" height="10"/><rect x="220" y="0" width="2" height="10"/><rect x="224" y="0" width="1" height="10"/><rect x="226" y="0" width="1" height="10"/><rect x="231" y="0" width="1" height="10"/><rect x="235" y="0" width="4" height="10"/><rect x="240" y="0" width="1" height="10"/><rect x="242" y="0" width="1" height="10"/><rect x="244" y="0" width="4" height="10"/><rect x="250" y="0" width="1" height="10"/><rect x="253" y="0" width="1" height="10"/><rect x="255" y="0" width="2" height="10"/><rect x="259" y="0" width="1" height="10"/><rect x="264" y="0" width="1" height="10"/><rect x="267" y="0" width="4" height="10"/><rect x="272" y="0" width="1" height="10"/><rect x="275" y="0" width="4" height="10"/><rect x="281" y="0" width="1" height="10"/><rect x="284" y="0" width="1" height="10"/><rect x="286" y="0" width="2" height="10"/><rect x="291" y="0" width="3" height="10"/><rect x="295" y="0" width="1" height="10"/><rect x="297" y="0" width="2" height="10"/></svg><span>com.njkim.mylittlecloset</span></footer>
+    <footer class="imprint"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 299 10" preserveAspectRatio="none" fill="currentColor" aria-hidden="true" focusable="false"><rect x="0" y="0" width="2" height="10"/><rect x="3" y="0" width="1" height="10"/><rect x="6" y="0" width="1" height="10"/><rect x="11" y="0" width="1" height="10"/><rect x="16" y="0" width="1" height="10"/><rect x="18" y="0" width="2" height="10"/><rect x="22" y="0" width="1" height="10"/><rect x="26" y="0" width="4" height="10"/><rect x="31" y="0" width="1" height="10"/><rect x="33" y="0" width="4" height="10"/><rect x="38" y="0" width="3" height="10"/><rect x="42" y="0" width="1" height="10"/><rect x="44" y="0" width="1" height="10"/><rect x="47" y="0" width="2" height="10"/><rect x="51" y="0" width="3" height="10"/><rect x="55" y="0" width="2" height="10"/><rect x="61" y="0" width="1" height="10"/><rect x="63" y="0" width="1" height="10"/><rect x="66" y="0" width="1" height="10"/><rect x="71" y="0" width="2" height="10"/><rect x="75" y="0" width="1" height="10"/><rect x="77" y="0" width="2" height="10"/><rect x="83" y="0" width="1" height="10"/><rect x="86" y="0" width="1" height="10"/><rect x="88" y="0" width="1" height="10"/><rect x="93" y="0" width="2" height="10"/><rect x="96" y="0" width="1" height="10"/><rect x="99" y="0" width="4" height="10"/><rect x="104" y="0" width="3" height="10"/><rect x="108" y="0" width="1" height="10"/><rect x="110" y="0" width="1" height="10"/><rect x="113" y="0" width="2" height="10"/><rect x="117" y="0" width="3" height="10"/><rect x="121" y="0" width="4" height="10"/><rect x="126" y="0" width="3" height="10"/><rect x="130" y="0" width="1" height="10"/><rect x="132" y="0" width="2" height="10"/><rect x="135" y="0" width="2" height="10"/><rect x="138" y="0" width="4" height="10"/><rect x="143" y="0" width="2" height="10"/><rect x="147" y="0" width="1" height="10"/><rect x="149" y="0" width="1" height="10"/><rect x="154" y="0" width="1" height="10"/><rect x="159" y="0" width="2" height="10"/><rect x="162" y="0" width="1" height="10"/><rect x="165" y="0" width="1" height="10"/><rect x="168" y="0" width="4" height="10"/><rect x="173" y="0" width="1" height="10"/><rect x="176" y="0" width="1" height="10"/><rect x="179" y="0" width="4" height="10"/><rect x="184" y="0" width="1" height="10"/><rect x="187" y="0" width="2" height="10"/><rect x="191" y="0" width="1" height="10"/><rect x="193" y="0" width="1" height="10"/><rect x="198" y="0" width="1" height="10"/><rect x="200" y="0" width="2" height="10"/><rect x="204" y="0" width="1" height="10"/><rect x="209" y="0" width="1" height="10"/><rect x="214" y="0" width="1" height="10"/><rect x="216" y="0" width="2" height="10"/><rect x="220" y="0" width="2" height="10"/><rect x="224" y="0" width="1" height="10"/><rect x="226" y="0" width="1" height="10"/><rect x="231" y="0" width="1" height="10"/><rect x="235" y="0" width="4" height="10"/><rect x="240" y="0" width="1" height="10"/><rect x="242" y="0" width="1" height="10"/><rect x="244" y="0" width="4" height="10"/><rect x="250" y="0" width="1" height="10"/><rect x="253" y="0" width="1" height="10"/><rect x="255" y="0" width="2" height="10"/><rect x="259" y="0" width="1" height="10"/><rect x="264" y="0" width="1" height="10"/><rect x="267" y="0" width="4" height="10"/><rect x="272" y="0" width="1" height="10"/><rect x="275" y="0" width="4" height="10"/><rect x="281" y="0" width="1" height="10"/><rect x="284" y="0" width="1" height="10"/><rect x="286" y="0" width="2" height="10"/><rect x="291" y="0" width="3" height="10"/><rect x="295" y="0" width="1" height="10"/><rect x="297" y="0" width="2" height="10"/></svg><span>com.njkim.mylittlecloset</span><small class="imprint__legal">Google Play 및 Google Play 로고는 Google LLC의 상표입니다.</small></footer>
   </div>
   </div>
 </article>
