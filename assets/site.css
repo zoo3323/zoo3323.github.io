@@ -31,17 +31,8 @@
   font-display: swap;
 }
 
-/* 벽에 번지는 빛의 색. 봉지에 손을 대면 그 봉지의 색으로 천천히 바뀐다. */
-@property --glow {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #fff1c9;
-}
-
 :root {
   color-scheme: light;
-  --glow: #fff1c9;
-  transition: --glow 0.45s var(--out);
 
   --p: clamp(24px, min(calc((100vw - 48px) / 37), calc((100vh - 16px) / 24)), 40px);
 
@@ -54,8 +45,8 @@
   --sub: #55554f;
   --rule: #d9d8d0;
   --mute: #efeee8;
-  --hole-deep: #b9b5a7;
-  --lamp: 280px;
+  --hole-deep: #ccc9be;
+  --lamp: 260px;
 
   --pink: #ff6196;
   --pink-light: #ff86ae;
@@ -174,8 +165,8 @@ body::before {
   background:
     radial-gradient(
         circle at center,
-        var(--hole-deep) 0 calc(var(--p) * 0.17),
-        transparent calc(var(--p) * 0.17 + 0.75px)
+        var(--hole-deep) 0 calc(var(--p) * 0.14),
+        transparent calc(var(--p) * 0.14 + 0.75px)
       )
       calc(50% + var(--p) / 2) 0 / var(--p) var(--p);
   -webkit-mask: radial-gradient(circle var(--lamp) at var(--mx, -999px) var(--my, -999px), #000 0, rgb(0 0 0 / 0.7) 35%, transparent 100%);
@@ -183,10 +174,10 @@ body::before {
 }
 body::after {
   background: radial-gradient(
-    circle calc(var(--lamp) * 1.5) at var(--mx, -999px) var(--my, -999px),
-    color-mix(in srgb, var(--glow) 55%, transparent),
-    color-mix(in srgb, var(--glow) 18%, transparent) 45%,
-    transparent 72%
+    circle calc(var(--lamp) * 1.4) at var(--mx, -999px) var(--my, -999px),
+    rgb(255 246 220 / 0.38),
+    rgb(255 246 220 / 0.12) 45%,
+    rgb(255 246 220 / 0) 72%
   );
 }
 
@@ -304,13 +295,13 @@ body::after {
   display: block;
   transform-origin: 50% calc(var(--p) * 0.5625);
   transform: perspective(1400px) rotate(calc(var(--rest, 0deg) + var(--sway, 0deg)))
-    rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(calc(var(--lift, 0) * 26px));
+    rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(calc(var(--lift, 0) * 14px));
 }
 .pack::before {
   box-shadow:
-    var(--shx, 0px) calc(var(--p) * 0.8 + var(--shy, 0px) + var(--lift, 0) * 10px)
-    calc(var(--p) * 1.3 + var(--lift, 0) * 14px) calc(var(--p) * -0.25)
-    rgb(52 48 70 / calc(0.34 - var(--lift, 0) * 0.08));
+    var(--shx, 0px) calc(var(--p) * 0.8 + var(--shy, 0px) + var(--lift, 0) * 6px)
+    calc(var(--p) * 1.3 + var(--lift, 0) * 8px) calc(var(--p) * -0.25)
+    rgb(52 48 70 / calc(0.34 - var(--lift, 0) * 0.06));
 }
 /* 벽에 지는 그림자. 걸린 것 뒤에 한 장 깔아 둔다. */
 .pack::before,
@@ -332,8 +323,8 @@ body::after {
   text-decoration: none;
   outline: none;
 }
-/* 빛. 손이 닿은 자리에 하얀 반사(비닐 전체)가 서고, 헤더 카드의 포일 인쇄에는 무지개 결이 흐른다.
-   무지개 결은 헤더 카드에만 둔다. 봉지 속 사진(옷, 앱 화면)의 색을 바꾸지 않기 위해서다. */
+/* 빛. 손이 닿은 자리에 부드러운 반사가 서고, 봉지 전체에 옅은 무지개 결이 흐른다.
+   눈이 아프지 않게 줄무늬 없이 넓은 띠만 쓰고, soft-light 로 얹어 사진의 색을 크게 바꾸지 않는다. */
 .pack__holo,
 .pack__glare {
   position: absolute;
@@ -351,43 +342,30 @@ body::after {
   mask-composite: exclude;
 }
 .pack__holo {
-  bottom: auto;
-  height: calc(var(--p) * 7);
-  border-radius: calc(var(--p) * 0.44) calc(var(--p) * 0.44) 0 0;
-  background-image:
-    repeating-linear-gradient(
-      118deg,
-      #ff7eb0 0%,
-      #ffd76e 6%,
-      #a6ff8f 12%,
-      #6fdcff 18%,
-      #b896ff 24%,
-      #ff7eb0 30%
-    ),
-    repeating-linear-gradient(62deg, rgb(255 255 255 / 0.45) 0 0.5%, rgb(255 255 255 / 0) 0.5% 2.2%);
-  background-size: 320% 320%, 180% 180%;
-  background-position:
-    calc(var(--hx, 50) * 1%) calc(var(--hy, 50) * 1%),
-    calc(100% - var(--hx, 50) * 1%) calc(var(--hy, 50) * 1%);
-  background-blend-mode: overlay;
-  mix-blend-mode: color-dodge;
-  filter: brightness(0.72) contrast(1.25) saturate(1.15);
+  background-image: linear-gradient(
+    118deg,
+    #ff8fb8 0%,
+    #ffe08a 16%,
+    #b4f5a0 32%,
+    #8fdfff 48%,
+    #c3a8ff 64%,
+    #ff8fb8 80%,
+    #ffe08a 100%
+  );
+  background-size: 260% 260%;
+  background-position: calc(var(--hx, 50) * 1%) calc(var(--hy, 50) * 1%);
+  mix-blend-mode: soft-light;
   opacity: calc(var(--lift, 0) * 0.55);
-}
-.pack--note .pack__holo {
-  height: auto;
-  bottom: 0;
-  border-radius: calc(var(--p) * 0.44);
 }
 .pack__glare {
   background: radial-gradient(
     farthest-corner circle at var(--gx, 50%) var(--gy, 50%),
-    rgb(255 255 255 / 0.85) 0%,
-    rgb(255 255 255 / 0.35) 22%,
-    rgb(0 0 0 / 0.14) 85%
+    rgb(255 255 255 / 0.5) 0%,
+    rgb(255 255 255 / 0.16) 26%,
+    rgb(255 255 255 / 0) 60%
   );
-  mix-blend-mode: overlay;
-  opacity: calc(var(--lift, 0) * 0.85);
+  mix-blend-mode: soft-light;
+  opacity: calc(var(--lift, 0) * 0.8);
 }
 
 /* 봉지 어디를 눌러도 앱 페이지로 간다. 이름의 링크와 같은 곳을 가리키는 덮개다. */

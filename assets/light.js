@@ -1,6 +1,7 @@
 // 빛. 마우스는 벽 앞에 든 작은 등이다.
 // 등 가까이의 구멍은 깊어 보이고, 걸린 봉지의 그림자는 등 반대쪽으로 진다.
-// 봉지에 손을 대면 고리를 축으로 살짝 돌며 앞으로 나오고, 비닐 위로 빛과 무지개 결이 번진다.
+// 봉지에 손을 대면 고리를 축으로 살짝 돌며 앞으로 나오고, 비닐 위로 빛과 옅은 무지개 결이 번진다.
+// 봉지에 손이 가 있는 동안 벽의 등빛은 거의 꺼진다(봉지 하나에만 눈이 가게).
 (() => {
   const fine = matchMedia("(hover: hover) and (pointer: fine)");
   const still = matchMedia("(prefers-reduced-motion: reduce)");
@@ -8,6 +9,8 @@
 
   const root = document.documentElement;
   const lamp = { x: 0, y: 0, tx: 0, ty: 0, lit: 0, tlit: 0, placed: false };
+  let touching = 0; // 손이 올라가 있는 봉지 수
+  const LIT_ON_CARD = 0.08;
   const cards = [...document.querySelectorAll(".pack")].map((el) => ({
     el,
     rx: 0, ry: 0, trx: 0, try_: 0,
@@ -82,7 +85,7 @@
         lamp.y = lamp.ty;
         lamp.placed = true;
       }
-      lamp.tlit = 1;
+      lamp.tlit = touching ? LIT_ON_CARD : 1;
       wake();
     },
     { passive: true },
@@ -113,24 +116,27 @@
     el.addEventListener("pointerenter", (event) => {
       if (event.pointerType !== "mouse") return;
       card.box = el.getBoundingClientRect();
-      const tone = el.style.getPropertyValue("--tone").trim();
-      if (tone) root.style.setProperty("--glow", tone);
+      touching += 1;
+      lamp.tlit = LIT_ON_CARD;
+      wake();
     });
     el.addEventListener("pointermove", (event) => {
       if (event.pointerType !== "mouse") return;
       const box = card.box || el.getBoundingClientRect();
       const px = Math.max(0, Math.min(1, (event.clientX - box.left) / box.width));
       const py = Math.max(0, Math.min(1, (event.clientY - box.top) / box.height));
-      card.try_ = (px - 0.5) * 18;
-      card.trx = (0.5 - py) * 14;
+      card.try_ = (px - 0.5) * 10;
+      card.trx = (0.5 - py) * 8;
       card.tgx = px * 100;
       card.tgy = py * 100;
       card.tlift = 1;
       wake();
     });
-    el.addEventListener("pointerleave", () => {
+    el.addEventListener("pointerleave", (event) => {
+      if (event.pointerType !== "mouse") return;
       card.box = null;
-      root.style.removeProperty("--glow");
+      touching = Math.max(0, touching - 1);
+      if (!touching) lamp.tlit = 1;
       card.trx = card.try_ = 0;
       card.tgx = card.tgy = 50;
       card.tlift = 0;
