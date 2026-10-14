@@ -99,6 +99,11 @@ def load(app_id):
 APPS = [load(app_id) for app_id in SITE["apps"]]
 
 
+def code(app):
+    """바코드와 그 아래에 적는 글. 앱은 패키지 이름, 웹 서비스처럼 패키지가 없으면 app.json 의 code."""
+    return app.get("package") or app["code"]
+
+
 def name_lines(app):
     """헤더 카드에 적을 이름의 줄. nameLines 가 없으면 긴 이름을 가운데 가까운 띄어쓰기에서 둘로 나눈다."""
     if app.get("nameLines"):
@@ -212,7 +217,7 @@ def pack(app):
     <p class="tag">{tag(app)}</p>
     <div class="bag">
       {app["pack_html"]}
-      <div class="label label--{app.get("label", "sticker")}">{barcode(app["package"])}<span class="label__id">{esc(app["package"])}</span><span class="label__ver">{esc(line)}</span><span class="label__go" aria-hidden="true">뒷면 보기 {ICON_GO}</span></div>
+      <div class="label label--{app.get("label", "sticker")}">{barcode(code(app))}<span class="label__id">{esc(code(app))}</span><span class="label__ver">{esc(line)}</span><span class="label__go" aria-hidden="true">뒷면 보기 {ICON_GO}</span></div>
     </div>
     <a class="pack__cover" href="/{app_id}/" tabindex="-1" aria-hidden="true"></a>
   </article>
@@ -234,7 +239,7 @@ write(
     "index.html",
     head(f"{DEV} · {SITE['tagline']}", f"{DEV} · {SITE['tagline']}. {names}.", "/", ["wall.js"])
     + f"""<body>
-<a class="skip" href="#apps">앱 목록으로 건너뛰기</a>
+<a class="skip" href="#apps">목록으로 건너뛰기</a>
 <div class="wall">
 {sign(True)}
 <main id="apps">
@@ -281,7 +286,9 @@ def facts(app):
 def info(app):
     rows = [("제공자", DEV), ("호환성", compat(app)), ("언어", app["language"]["name"]), ("버전", app["version"])]
     rows += [tuple(row) for row in app.get("info", [])]
-    rows += [("패키지 이름", app["package"]), ("저작권", f'© {SITE["year"]} {DEV}')]
+    if app.get("package"):
+        rows.append(("패키지 이름", app["package"]))
+    rows.append(("저작권", f'© {SITE["year"]} {DEV}'))
     return "\n      ".join(f"<div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in rows)
 
 
@@ -306,7 +313,7 @@ def others(app):
     if not rows:
         return ""
     return f"""<section class="sec" aria-labelledby="h-others">
-      <h2 id="h-others">{esc(DEV)}의 다른 앱</h2>
+      <h2 id="h-others">{esc(DEV)}의 다른 작업</h2>
       <ul class="others">
       {chr(10).join("      " + row for row in rows).strip()}
       </ul>
@@ -369,7 +376,7 @@ for app in APPS:
       </dl>
     </section>
     {others(app)}
-    <footer class="imprint">{barcode(app["package"])}<span>{esc(app["package"])}</span></footer>
+    <footer class="imprint">{barcode(code(app))}<span>{esc(code(app))}</span></footer>
   </div>
   </div>
 </article>

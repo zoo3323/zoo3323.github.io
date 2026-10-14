@@ -1,0 +1,57 @@
+{
+  "name": "Scorelab",
+  "nameLines": [
+    "Scorelab"
+  ],
+  "line": "시험지 한 장이 리포트가 되는 학원",
+  "lead": "학원이 시험지 PDF를 올리면 답안 수집, 자동채점, 유형 분석, 학부모 리포트까지 한곳에서 이어집니다.",
+  "tone": "#a3e635",
+  "ink": "#1a2e05",
+  "accent": "#3f6212",
+  "pack": "bag",
+  "bag": "#ffffff",
+  "label": "printed",
+  "mark": {
+    "font": "Mark Scorelab",
+    "weight": 700,
+    "size": 1.85,
+    "tracking": "-0.01em"
+  },
+  "rest": 0.9,
+  "status": "출시 준비 중",
+  "version": "0.1.0",
+  "code": "scorelab",
+  "platforms": [
+    {
+      "name": "웹"
+    }
+  ],
+  "labelLine": "0.1.0 · 견본 화면",
+  "language": {
+    "code": "KO",
+    "name": "한국어"
+  },
+  "highlights": [],
+  "about": [
+    "선생님이 시험지와 정답지를 올리면 AI가 문항과 유형을 읽고, 선생님이 확인합니다. 학생은 QR로 들어와 휴대폰에서 답을 내고, 채점과 유형별 집계는 바로 끝납니다. 선생님이 승인한 리포트만 학부모에게 링크로 갑니다."
+  ],
+  "features": [
+    "시험지·정답지 PDF 업로드와 문항 유형 자동 분석",
+    "QR로 받는 학생 답안과 실시간 제출 현황",
+    "자동채점, 학생별·유형별 결과",
+    "선생님이 승인한 뒤 링크로 보내는 학부모 리포트",
+    "점수와 판정은 코드가 계산하고, AI는 그 결과를 문장으로 옮기기만 합니다"
+  ],
+  "news": "홈을 한 판으로 정리하고 시험 목록을 두 줄로 바꿨습니다. 「무료로 시작하기」가 새로고침 없이 넘어갑니다.",
+  "info": [
+    [
+      "쓰는 곳",
+      "선생님 화면은 PC, 학생 답안과 학부모 리포트는 휴대폰"
+    ],
+    [
+      "만든 도구",
+      "Next.js, Supabase, Cloudflare Workers, OpenAI API"
+    ]
+  ],
+  "scripts": []
+}

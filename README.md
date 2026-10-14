@@ -39,7 +39,8 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
    - `status`: 봉지의 둥근 딱지와 스토어 주소가 없을 때의 버튼에 적히는 말.
    - `mark`: 이름 글씨. 비워 두면 팻말 글씨로 적고 크기는 카드 폭에 맞춥니다.
 3. 그림을 `assets/img/<앱>/`에 넣습니다. `icon.webp`(256px 정사각형)는 꼭 있어야 합니다.
-4. `pack.html`, `preview.html`의 그림 주소를 고칩니다.
+4. `pack.html`, `preview.html`의 그림 주소를 고칩니다. 봉지 속에는 `window`(화면 한 장의 윗부분)나 `showcase`(세로로 긴 그림 하나)를, 미리보기의 PC 화면에는 `shots shots--wide`를 씁니다.
+   - 웹 서비스처럼 패키지 이름이 없으면 `package` 대신 `code`에 바코드로 찍을 짧은 이름을 적습니다.
 5. `tool/site.json`의 `apps`에 폴더 이름을 넣고 `python3 tool/build.py`를 돌립니다.
 
 앱이 셋을 넘으면 진열대는 아래 줄로 내려갑니다. 앱 페이지의 「다른 앱」도 함께 바뀝니다.
@@ -55,5 +56,5 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 
 ## 그림과 글꼴
 
-- 포켓펫 동물 그림, 옷 스티커, 앱 화면은 각 앱에서 가져온 것입니다. 옷 스티커와 모아캠 화면은 견본 데이터로 만든 것입니다.
-- 글꼴은 SIL Open Font License로 배포된 Do Hyeon, Black Han Sans, Pretendard(이름 글자만 추린 조각)입니다. 라이선스 전문은 `assets/fonts/`에 있습니다.
+- 포켓펫 동물 그림, 옷 스티커, 앱 화면은 각 앱에서 가져온 것입니다. 옷 스티커와 모아캠·Scorelab 화면은 견본 데이터로 만든 것입니다.
+- 글꼴은 SIL Open Font License로 배포된 Do Hyeon, Black Han Sans, Pretendard, Nunito(이름 글자만 추린 조각)입니다. 라이선스 전문은 `assets/fonts/`에 있습니다.

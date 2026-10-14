@@ -20,6 +20,12 @@
   font-display: swap;
 }
 @font-face {
+  font-family: "Mark Scorelab";
+  src: url("fonts/mark-scorelab.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
   font-family: "Mark Moacam";
   src: url("fonts/mark-moacam.woff2") format("woff2");
   font-display: swap;
@@ -447,6 +453,21 @@ a {
   height: auto;
 }
 
+/* 세로로 긴 물건 하나(휴대폰 화면 등)를 봉지에 꽂아 둔다. 아래쪽은 딱지 뒤로 들어간다. */
+.showcase {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--p) * 0.5);
+  height: calc(var(--p) * 6.7);
+  overflow: hidden;
+}
+.showcase img {
+  width: calc(var(--p) * 5.4);
+  height: auto;
+  margin-inline: auto;
+}
+
 /* 포켓펫: 분홍 판에 투명 덮개 */
 .bubble {
   position: absolute;
@@ -787,6 +808,13 @@ a.get:hover {
   height: auto;
   border-radius: 1.1rem;
   box-shadow: 0 0 0 1px var(--rule);
+}
+/* PC 화면처럼 가로로 긴 그림 */
+.shots--wide li {
+  width: 27rem;
+}
+.shots--wide img {
+  border-radius: 0.7rem;
 }
 
 /* 포켓펫: 꺼내 보기 */
@@ -1172,6 +1200,9 @@ a.get:hover {
   }
   .shots li {
     width: 58%;
+  }
+  .shots--wide li {
+    width: 88%;
   }
   .demo--pet,
   .sheet {

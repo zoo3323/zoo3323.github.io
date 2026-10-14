@@ -4,7 +4,7 @@
 
   uv run --with fonttools --with brotli python tool/wordmarks.py \
       --bold <Pretendard 계열 Bold.otf> --extrabold <Pretendard 계열 ExtraBold.otf> \
-      --blackhan <BlackHanSans-Regular.ttf>
+      --blackhan <BlackHanSans-Regular.ttf> --nunito <Nunito 700 으로 굳힌 .ttf>
 """
 import argparse
 from pathlib import Path
@@ -17,12 +17,13 @@ MARKS = {
     "mark-pocketpet.woff2": ("bold", "포켓펫"),
     "mark-mylittlecloset.woff2": ("extrabold", "마이리틀클로젯"),
     "mark-moacam.woff2": ("blackhan", "모아캠"),
+    "mark-scorelab.woff2": ("nunito", "Scorelab"),
 }
 
 
 def main():
     parser = argparse.ArgumentParser()
-    for key in ("bold", "extrabold", "blackhan"):
+    for key in ("bold", "extrabold", "blackhan", "nunito"):
         parser.add_argument(f"--{key}", required=True)
     args = parser.parse_args()
     for name, (key, text) in MARKS.items():
