@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>포켓펫 · 화면 위를 걷는 작은 동물 | NamJuKim</title>
+<meta name="description" content="고른 동물 한 마리가 홈 화면과 다른 앱 위에서 걷고, 쉬고, 잠듭니다.">
+<link rel="canonical" href="https://zoo3323.github.io/pocketpet/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NamJuKim">
+<meta property="og:title" content="포켓펫 · 화면 위를 걷는 작은 동물 | NamJuKim">
+<meta property="og:description" content="고른 동물 한 마리가 홈 화면과 다른 앱 위에서 걷고, 쉬고, 잠듭니다.">
+<meta property="og:url" content="https://zoo3323.github.io/pocketpet/">
+<meta property="og:image" content="https://zoo3323.github.io/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script src="/assets/wall.js" defer></script>
+<script src="/assets/pet.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#app">본문으로 건너뛰기</a>
+<div class="wall">
+<header class="sign">
+  <div>
+    <p class="sign__name"><a href="/">NamJuKim</a></p>
+    <p class="sign__line">혼자 만드는 안드로이드 앱 세 개</p>
+  </div>
+  <a class="btn" href="/"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 7H2.5M6.5 3 2.5 7l4 4"/></svg> 진열대</a>
+</header>
+<main id="app">
+<article class="back back--pocketpet">
+  <svg class="hook" style="--hx:-9" viewBox="0 0 64 80" fill="none" stroke="#8b8a82" stroke-width="5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M16 16v10a8 8 0 0 0 8 8h16a8 8 0 0 0 8-8V16"/><path d="M32 34v30"/><circle cx="16" cy="16" r="3.5" fill="#6a6962" stroke="none"/><circle cx="48" cy="16" r="3.5" fill="#6a6962" stroke="none"/></svg>
+  <span class="hook-tip" style="--hx:-9" aria-hidden="true"></span>
+  <svg class="hook" style="--hx:9" viewBox="0 0 64 80" fill="none" stroke="#8b8a82" stroke-width="5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M16 16v10a8 8 0 0 0 8 8h16a8 8 0 0 0 8-8V16"/><path d="M32 34v30"/><circle cx="16" cy="16" r="3.5" fill="#6a6962" stroke="none"/><circle cx="48" cy="16" r="3.5" fill="#6a6962" stroke="none"/></svg>
+  <span class="hook-tip" style="--hx:9" aria-hidden="true"></span>
+  <div class="back__card vt-pocketpet">
+  <div class="back__mask"></div>
+  <div class="back__inner">
+  <header class="back__head">
+    <h1 class="back__name">포켓펫</h1>
+    <p class="back__line">고른 동물 한 마리가 홈 화면과 다른 앱 위에서 걷고, 쉬고, 잠듭니다.</p>
+  </header>
+  <p class="tag">출시<br>준비 중</p>
+  <div class="back__body">
+  <section class="goods" aria-label="동물 꺼내 보기" data-pet-demo="/assets/img/pocketpet/">
+    <div class="petbox">
+      <div class="petbox__stage"><img data-pet-stage data-style="soft" src="/assets/img/pocketpet/stage/nyangi.webp" width="576" height="624" alt="터키시 앙고라 그림"></div>
+      <div>
+        <p class="petbox__name" data-pet-name aria-live="polite">터키시 앙고라</p>
+        <p class="petbox__kind" data-pet-kind>고양이 · 보송</p>
+        <button type="button" class="btn petbox__go" data-pet-toggle aria-pressed="false"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 2.5v9l7.5-4.5z"/></svg> <span data-label>꺼내 보기</span></button>
+        <p class="petbox__hint">이 화면 위로 나와 걸어 다닙니다. 끌어서 옮기고, 던지고, 눌러서 인사를 받아 보세요.</p>
+      </div>
+    </div>
+    <fieldset class="roster">
+      <legend>동물 26마리</legend>
+      <div class="roster__group">
+      <p class="roster__kind" id="kind-cat">고양이 11</p>
+      <div class="roster__row" role="group" aria-labelledby="kind-cat">
+        <button type="button" class="pick" data-pet="nyangi" data-breed="터키시 앙고라" data-kind="고양이 · 보송" data-style="soft" data-stage="true" aria-pressed="true" aria-label="터키시 앙고라, 보송"><img src="/assets/img/pocketpet/thumb/nyangi.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="russian-blue" data-breed="러시안블루" data-kind="고양이 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="러시안블루, 보송"><img src="/assets/img/pocketpet/thumb/russian-blue.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="persian" data-breed="페르시안" data-kind="고양이 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="페르시안, 보송"><img src="/assets/img/pocketpet/thumb/persian.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="maine-coon-soft" data-breed="메인쿤" data-kind="고양이 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="메인쿤, 보송"><img src="/assets/img/pocketpet/thumb/maine-coon-soft.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="ragdoll-soft" data-breed="랙돌" data-kind="고양이 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="랙돌, 보송"><img src="/assets/img/pocketpet/thumb/ragdoll-soft.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="british-shorthair-soft" data-breed="브리티시 쇼트헤어" data-kind="고양이 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="브리티시 쇼트헤어, 보송"><img src="/assets/img/pocketpet/thumb/british-shorthair-soft.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="cheese-tabby" data-breed="코리안숏헤어" data-kind="고양이 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="코리안숏헤어, 도트"><img src="/assets/img/pocketpet/thumb/cheese-tabby.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="siamese" data-breed="샴" data-kind="고양이 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="샴, 도트"><img src="/assets/img/pocketpet/thumb/siamese.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="bengal-pixel" data-breed="벵갈" data-kind="고양이 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="벵갈, 도트"><img src="/assets/img/pocketpet/thumb/bengal-pixel.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="scottish-fold-pixel" data-breed="스코티시 폴드" data-kind="고양이 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="스코티시 폴드, 도트"><img src="/assets/img/pocketpet/thumb/scottish-fold-pixel.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="sphynx-pixel" data-breed="스핑크스" data-kind="고양이 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="스핑크스, 도트"><img src="/assets/img/pocketpet/thumb/sphynx-pixel.webp" width="192" height="208" alt="" loading="lazy"></button>
+      </div>
+      </div>
+      <div class="roster__group">
+      <p class="roster__kind" id="kind-dog">강아지 11</p>
+      <div class="roster__row" role="group" aria-labelledby="kind-dog">
+        <button type="button" class="pick" data-pet="jjong" data-breed="시바 이누" data-kind="강아지 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="시바 이누, 보송"><img src="/assets/img/pocketpet/thumb/jjong.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="maltese" data-breed="몰티즈" data-kind="강아지 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="몰티즈, 보송"><img src="/assets/img/pocketpet/thumb/maltese.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="poodle" data-breed="푸들" data-kind="강아지 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="푸들, 보송"><img src="/assets/img/pocketpet/thumb/poodle.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="bichon-frise-soft" data-breed="비숑 프리제" data-kind="강아지 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="비숑 프리제, 보송"><img src="/assets/img/pocketpet/thumb/bichon-frise-soft.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="golden-retriever-soft" data-breed="골든 리트리버" data-kind="강아지 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="골든 리트리버, 보송"><img src="/assets/img/pocketpet/thumb/golden-retriever-soft.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="dachshund-soft" data-breed="닥스훈트" data-kind="강아지 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="닥스훈트, 보송"><img src="/assets/img/pocketpet/thumb/dachshund-soft.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="pomeranian" data-breed="포메라니안" data-kind="강아지 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="포메라니안, 도트"><img src="/assets/img/pocketpet/thumb/pomeranian.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="chihuahua" data-breed="치와와" data-kind="강아지 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="치와와, 도트"><img src="/assets/img/pocketpet/thumb/chihuahua.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="welsh-corgi-pixel" data-breed="웰시코기" data-kind="강아지 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="웰시코기, 도트"><img src="/assets/img/pocketpet/thumb/welsh-corgi-pixel.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="beagle-pixel" data-breed="비글" data-kind="강아지 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="비글, 도트"><img src="/assets/img/pocketpet/thumb/beagle-pixel.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="siberian-husky-pixel" data-breed="시베리안 허스키" data-kind="강아지 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="시베리안 허스키, 도트"><img src="/assets/img/pocketpet/thumb/siberian-husky-pixel.webp" width="192" height="208" alt="" loading="lazy"></button>
+      </div>
+      </div>
+      <div class="roster__group">
+      <p class="roster__kind" id="kind-hamster">햄스터 4</p>
+      <div class="roster__row" role="group" aria-labelledby="kind-hamster">
+        <button type="button" class="pick" data-pet="golden-syrian-soft" data-breed="골든 시리안" data-kind="햄스터 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="골든 시리안, 보송"><img src="/assets/img/pocketpet/thumb/golden-syrian-soft.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="winter-dwarf-soft" data-breed="윈터 화이트 드워프" data-kind="햄스터 · 보송" data-style="soft" data-stage="true" aria-pressed="false" aria-label="윈터 화이트 드워프, 보송"><img src="/assets/img/pocketpet/thumb/winter-dwarf-soft.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="cream-syrian-pixel" data-breed="크림 시리안" data-kind="햄스터 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="크림 시리안, 도트"><img src="/assets/img/pocketpet/thumb/cream-syrian-pixel.webp" width="192" height="208" alt="" loading="lazy"></button>
+        <button type="button" class="pick" data-pet="roborovski-pixel" data-breed="로보로브스키" data-kind="햄스터 · 도트" data-style="pixel" data-stage="false" aria-pressed="false" aria-label="로보로브스키, 도트"><img src="/assets/img/pocketpet/thumb/roborovski-pixel.webp" width="192" height="208" alt="" loading="lazy"></button>
+      </div>
+      </div>
+    </fieldset>
+  </section>
+  <section class="spec" aria-label="앱 설명">
+    <h2>이런 앱</h2>
+    <p>앱을 열어 동물을 고르고 시작을 누르면, 그 동물이 홈 화면과 다른 앱 위에 떠서 혼자 돌아다닙니다. 끌어서 옮기거나 던질 수 있고, 화면 가장자리에 붙여 둘 수도 있습니다.</p>
+    <h2>들어 있는 것</h2>
+    <ul>
+      <li>고양이·강아지·햄스터 26마리, 보송과 도트 두 그림체</li>
+      <li>쓰다듬기, 두 번 눌러 장난치기, 잠든 펫 깨우기</li>
+      <li>크기와 빠르기 조절, 이름 붙이기</li>
+      <li>직접 켠 동안에만 떠 있고 화면이 꺼지면 숨습니다</li>
+    </ul>
+    <h2>표시 사항</h2>
+    <dl>
+      <div><dt>버전</dt><dd>1.6.2</dd></div>
+      <div><dt>사용 환경</dt><dd>Android 8.0 이상</dd></div>
+      <div><dt>권한</dt><dd>다른 앱 위에 표시, 알림(선택), 진동</dd></div>
+      <div><dt>인터넷</dt><dd>사용하지 않음</dd></div>
+      <div><dt>만든 사람</dt><dd>NamJuKim</dd></div>
+    </dl>
+    <p class="spec__code"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 233 10" preserveAspectRatio="none" fill="currentColor" aria-hidden="true" focusable="false"><rect x="0" y="0" width="2" height="10"/><rect x="3" y="0" width="1" height="10"/><rect x="6" y="0" width="1" height="10"/><rect x="11" y="0" width="1" height="10"/><rect x="16" y="0" width="1" height="10"/><rect x="19" y="0" width="2" height="10"/><rect x="22" y="0" width="1" height="10"/><rect x="24" y="0" width="2" height="10"/><rect x="28" y="0" width="1" height="10"/><rect x="33" y="0" width="4" height="10"/><rect x="38" y="0" width="1" height="10"/><rect x="41" y="0" width="1" height="10"/><rect x="44" y="0" width="1" height="10"/><rect x="47" y="0" width="2" height="10"/><rect x="51" y="0" width="3" height="10"/><rect x="55" y="0" width="2" height="10"/><rect x="61" y="0" width="1" height="10"/><rect x="63" y="0" width="1" height="10"/><rect x="66" y="0" width="2" height="10"/><rect x="69" y="0" width="2" height="10"/><rect x="72" y="0" width="4" height="10"/><rect x="77" y="0" width="1" height="10"/><rect x="80" y="0" width="1" height="10"/><rect x="82" y="0" width="2" height="10"/><rect x="88" y="0" width="2" height="10"/><rect x="94" y="0" width="1" height="10"/><rect x="96" y="0" width="1" height="10"/><rect x="99" y="0" width="1" height="10"/><rect x="102" y="0" width="2" height="10"/><rect x="105" y="0" width="1" height="10"/><rect x="110" y="0" width="1" height="10"/><rect x="115" y="0" width="2" height="10"/><rect x="118" y="0" width="1" height="10"/><rect x="121" y="0" width="1" height="10"/><rect x="124" y="0" width="2" height="10"/><rect x="128" y="0" width="3" height="10"/><rect x="132" y="0" width="1" height="10"/><rect x="136" y="0" width="4" height="10"/><rect x="141" y="0" width="1" height="10"/><rect x="143" y="0" width="4" height="10"/><rect x="148" y="0" width="1" height="10"/><rect x="151" y="0" width="1" height="10"/><rect x="154" y="0" width="1" height="10"/><rect x="156" y="0" width="2" height="10"/><rect x="160" y="0" width="1" height="10"/><rect x="165" y="0" width="1" height="10"/><rect x="168" y="0" width="1" height="10"/><rect x="171" y="0" width="4" height="10"/><rect x="176" y="0" width="2" height="10"/><rect x="180" y="0" width="1" height="10"/><rect x="182" y="0" width="1" height="10"/><rect x="187" y="0" width="1" height="10"/><rect x="190" y="0" width="1" height="10"/><rect x="192" y="0" width="2" height="10"/><rect x="198" y="0" width="2" height="10"/><rect x="201" y="0" width="2" height="10"/><rect x="204" y="0" width="4" height="10"/><rect x="209" y="0" width="2" height="10"/><rect x="215" y="0" width="1" height="10"/><rect x="217" y="0" width="1" height="10"/><rect x="220" y="0" width="2" height="10"/><rect x="225" y="0" width="3" height="10"/><rect x="229" y="0" width="1" height="10"/><rect x="231" y="0" width="2" height="10"/></svg>dev.nyangi.overlay</p>
+  </section>
+  </div>
+  <section class="back__more" aria-labelledby="shots-title">
+    <div>
+      <h2 id="shots-title">앱 화면</h2>
+      <p>앱 화면은 동물을 고르고 켜고 끌 때 잠깐 여는 곳입니다. 크기와 빠르기는 펫이 떠 있는 동안에도 바로 바뀝니다.</p>
+      <p class="back__aside">1.4.0 때 그린 화면입니다. 지금 버전에는 설정에 충돌 진동이 더 있습니다.</p>
+    </div>
+    <ul class="screens">
+      <li><figure><img src="/assets/img/pocketpet/screen-1.webp" width="720" height="1600" alt="포켓펫 앱 화면. 보송 그림체의 브리티시 쇼트헤어가 크게 보이고 아래에 시작 버튼과 동물 목록, 크기와 속도 조절이 있다." loading="lazy"><figcaption>고양이 · 보송</figcaption></figure></li>
+      <li><figure><img src="/assets/img/pocketpet/screen-2.webp" width="720" height="1600" alt="포켓펫 앱 화면. 강아지 탭에서 도트 그림체의 시베리안 허스키를 고른 모습." loading="lazy"><figcaption>강아지 · 도트</figcaption></figure></li>
+      <li><figure><img src="/assets/img/pocketpet/screen-3.webp" width="720" height="1600" alt="포켓펫 앱 화면. 강아지 탭에서 보송 그림체의 골든 리트리버를 고른 모습." loading="lazy"><figcaption>강아지 · 보송</figcaption></figure></li>
+    </ul>
+  </section>
+  </div>
+  </div>
+</article>
+</main>
+<nav class="others" aria-labelledby="others-title">
+  <h2 class="others__title" id="others-title">함께 걸린 앱</h2>
+  <ul class="rail">
+<li class="peg">
+  <svg class="hook" viewBox="0 0 64 80" fill="none" stroke="#8b8a82" stroke-width="5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M16 16v10a8 8 0 0 0 8 8h16a8 8 0 0 0 8-8V16"/><path d="M32 34v30"/><circle cx="16" cy="16" r="3.5" fill="#6a6962" stroke="none"/><circle cx="48" cy="16" r="3.5" fill="#6a6962" stroke="none"/></svg>
+  <article class="pack pack--mylittlecloset vt-mylittlecloset pack--mini" data-sway style="--rest:0.7deg">
+    <div class="card">
+      <h3 class="card__name"><a class="pack__link" href="/mylittlecloset/">마이리틀<br>클로젯</a></h3>
+      <span class="card__go" aria-hidden="true">뒷면 보기 <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M2 7h9.5M7.5 3l4 4-4 4"/></svg></span>
+    </div>
+  </article>
+  <span class="hook-tip" aria-hidden="true"></span>
+</li>
+<li class="peg">
+  <svg class="hook" viewBox="0 0 64 80" fill="none" stroke="#8b8a82" stroke-width="5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M16 16v10a8 8 0 0 0 8 8h16a8 8 0 0 0 8-8V16"/><path d="M32 34v30"/><circle cx="16" cy="16" r="3.5" fill="#6a6962" stroke="none"/><circle cx="48" cy="16" r="3.5" fill="#6a6962" stroke="none"/></svg>
+  <article class="pack pack--moacam vt-moacam pack--mini" data-sway style="--rest:-0.5deg">
+    <div class="card">
+      <h3 class="card__name"><a class="pack__link" href="/moacam/">모아캠<span class="dot" aria-hidden="true"></span></a></h3>
+      <span class="card__go" aria-hidden="true">뒷면 보기 <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M2 7h9.5M7.5 3l4 4-4 4"/></svg></span>
+    </div>
+  </article>
+  <span class="hook-tip" aria-hidden="true"></span>
+</li>
+  </ul>
+</nav>
+<footer class="foot">
+  <p class="onboard">© 2026 NamJuKim</p>
+  <a href="https://github.com/zoo3323" rel="me">GitHub</a>
+</footer>
+</div>
+</body>
+</html>
