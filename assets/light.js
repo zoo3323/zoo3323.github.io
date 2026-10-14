@@ -11,7 +11,6 @@
   const still = matchMedia("(prefers-reduced-motion: reduce)");
   if (still.matches) return;
 
-  const root = document.documentElement;
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
   const settled = (a, b) => Math.abs(a - b) < 0.01;
 
@@ -98,6 +97,20 @@
   }
 
   // ── 마우스 ──
+  // 등은 등 크기의 층 하나다. 따라갈 때는 다시 그리지 않고 자리(transform)와 밝기(opacity)만 바꾼다.
+  // 예전처럼 페이지 전체 크기의 층을 마우스가 움직일 때마다 다시 그리면, 펫을 끌어 던질 때 프레임이 반으로 줄었다.
+  const shade = document.createElement("div");
+  shade.className = "lamp";
+  shade.setAttribute("aria-hidden", "true");
+  shade.innerHTML = '<div class="lamp__light"><div class="lamp__pit"><div class="lamp__holes"></div></div><div class="lamp__glow"></div></div>';
+  document.body.append(shade);
+  const light = shade.firstElementChild;
+  const pit = light.firstElementChild;
+  const holes = pit.firstElementChild;
+  // 벽의 구멍 자리: 가로는 body 가운데에서, 세로는 body 위에서 p 간격(--p)으로 놓인다
+  const grid = { left: 0, top: 0, mid: 0, r: 0, p: 1 };
+  const mod = (a, n) => ((a % n) + n) % n;
+
   const lamp = { x: 0, y: 0, tx: 0, ty: 0, lit: 0, tlit: 0, placed: false };
   let touching = 0; // 손이 올라가 있는 봉지 수
   const LIT_ON_CARD = 0.08;
@@ -107,9 +120,21 @@
     gx: 50, gy: 50, tgx: 50, tgy: 50,
     lift: 0, tlift: 0,
     cx: 0, cy: 0, box: null,
+    css: {}, // 마지막으로 쓴 값. 같으면 다시 쓰지 않는다
   }));
+  const put = (card, name, value) => {
+    if (card.css[name] === value) return;
+    card.css[name] = value;
+    card.el.style.setProperty(name, value);
+  };
 
   const measure = () => {
+    const body = document.body.getBoundingClientRect();
+    grid.left = body.left + scrollX;
+    grid.top = body.top + scrollY;
+    grid.mid = body.width / 2;
+    grid.r = pit.getBoundingClientRect().width / 2;
+    grid.p = holes.getBoundingClientRect().width - grid.r * 2 || 1;
     for (const card of cards) {
       const r = card.el.getBoundingClientRect();
       card.cx = r.left + r.width / 2 + scrollX;
@@ -131,9 +156,11 @@
     lamp.y += (lamp.ty - lamp.y) * k;
     lamp.lit += (lamp.tlit - lamp.lit) * k;
     if (!near(lamp.x, lamp.tx) || !near(lamp.y, lamp.ty) || !near(lamp.lit, lamp.tlit)) moving = true;
-    root.style.setProperty("--mx", `${lamp.x.toFixed(1)}px`);
-    root.style.setProperty("--my", `${lamp.y.toFixed(1)}px`);
-    root.style.setProperty("--lit", lamp.lit.toFixed(3));
+    const x = Math.round((lamp.x - grid.left) * 10) / 10;
+    const y = Math.round((lamp.y - grid.top) * 10) / 10;
+    light.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    light.style.opacity = lamp.lit.toFixed(3);
+    holes.style.transform = `translate3d(${(-mod(x - grid.r - grid.mid, grid.p)).toFixed(2)}px, ${(-mod(y - grid.r, grid.p)).toFixed(2)}px, 0)`;
 
     for (const card of cards) {
       card.rx += (card.trx - card.rx) * k;
@@ -144,16 +171,15 @@
       if (!near(card.rx, card.trx) || !near(card.ry, card.try_) || !near(card.lift, card.tlift)) moving = true;
       const shx = Math.max(-16, Math.min(16, (card.cx - lamp.x) * 0.03)) * lamp.lit;
       const shy = Math.max(-8, Math.min(14, (card.cy - lamp.y) * 0.022)) * lamp.lit;
-      const s = card.el.style;
-      s.setProperty("--rx", `${card.rx.toFixed(2)}deg`);
-      s.setProperty("--ry", `${card.ry.toFixed(2)}deg`);
-      s.setProperty("--lift", card.lift.toFixed(3));
-      s.setProperty("--gx", `${card.gx.toFixed(1)}%`);
-      s.setProperty("--gy", `${card.gy.toFixed(1)}%`);
-      s.setProperty("--hx", card.gx.toFixed(1));
-      s.setProperty("--hy", card.gy.toFixed(1));
-      s.setProperty("--shx", `${shx.toFixed(1)}px`);
-      s.setProperty("--shy", `${shy.toFixed(1)}px`);
+      put(card, "--rx", `${card.rx.toFixed(2)}deg`);
+      put(card, "--ry", `${card.ry.toFixed(2)}deg`);
+      put(card, "--lift", card.lift.toFixed(3));
+      put(card, "--gx", `${card.gx.toFixed(1)}%`);
+      put(card, "--gy", `${card.gy.toFixed(1)}%`);
+      put(card, "--hx", card.gx.toFixed(1));
+      put(card, "--hy", card.gy.toFixed(1));
+      put(card, "--shx", `${shx.toFixed(1)}px`);
+      put(card, "--shy", `${shy.toFixed(1)}px`);
     }
     frame = moving ? requestAnimationFrame(step) : 0;
   };
