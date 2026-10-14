@@ -1,7 +1,17 @@
 // 미리보기의 앱 화면을 누르면 크게 본다. 옆으로 넘기거나 화살표·←→ 키로 다음 화면, Esc 나 바깥을 누르면 닫힌다.
 (() => {
   const lists = [...document.querySelectorAll(".shots")];
-  if (!lists.length || typeof HTMLDialogElement !== "function") return;
+  if (!lists.length) return;
+
+  // 움직임 줄이기를 켠 기기에서는 영상을 멈춰 두고, 누르면 재생한다
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    for (const video of document.querySelectorAll(".shots video")) {
+      video.removeAttribute("autoplay");
+      video.pause();
+      video.controls = true;
+    }
+  }
+  if (typeof HTMLDialogElement !== "function") return;
 
   const arrow = (d) =>
     `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;

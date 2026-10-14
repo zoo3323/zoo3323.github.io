@@ -51,13 +51,21 @@
       </div>
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
-      <li><span class="fact__label">버전</span><span class="fact__value">1.5.0</span></li>
+      <li><span class="fact__label">버전</span><span class="fact__value">1.4.0</span></li>
       <li><span class="fact__label">호환성</span><span class="fact__value">Android</span><span class="fact__note">8.0 이상</span></li>
-      <li><span class="fact__label">언어</span><span class="fact__value">KO</span><span class="fact__note">한국어</span></li>
-      <li><span class="fact__label">개발</span><span class="fact__value">1인</span><span class="fact__note">NamJuKim</span></li>
     </ul>
     <section class="sec" aria-labelledby="h-preview">
       <h2 id="h-preview">미리보기</h2>
+      <ul class="shots">
+  <li><img src="/assets/img/mylittlecloset/real-1.webp" width="720" height="1560" alt="내 옷장 첫 화면. 검색창과 분류 탭 아래로 옷 스티커가 세 줄로 놓이고, 옷마다 이름·브랜드·가격이 적혀 있다."></li>
+  <li><img src="/assets/img/mylittlecloset/real-2.webp" width="720" height="1560" alt="옷 상세 화면. 빨간 카디건 스티커 아래에 구매처·구매일·사이즈·대표 색이 있고, 수정하기와 버리기 단추가 있다." loading="lazy"></li>
+  <li><img src="/assets/img/mylittlecloset/real-3.webp" width="720" height="1560" alt="필터 시트. 예전 옷과 정보가 비어 있는 옷 보기, 색상·무늬·계절을 고른다." loading="lazy"></li>
+  <li><img src="/assets/img/mylittlecloset/real-4.webp" width="720" height="1560" alt="버리기 시트. 버림·판매·기부·선물·기타 중 고르고 정리한 날을 적어 예전 옷으로 옮긴다." loading="lazy"></li>
+</ul>
+<p class="sec__note">1.1.0 때 갤럭시 S24+에서 찍은 실제 화면입니다.</p>
+    </section>
+    <section class="sec" aria-labelledby="h-demo">
+      <h2 id="h-demo">스티커 시트로 골라 보기</h2>
       <div class="sheet" data-sheet>
   <div class="sheet__chips" role="group" aria-label="분류">
     <button type="button" class="chip" data-filter="all" aria-pressed="true">전체</button>
@@ -76,7 +84,6 @@
 </div>
 <p class="sec__note">견본 옷으로 꾸민 시트입니다. 앱에서는 내 옷 사진의 배경을 지워 이렇게 스티커로 붙여 둡니다.</p>
     </section>
-    
     <section class="sec desc" aria-label="설명">
       <p class="desc__lead">내 옷장 속 옷을 사진과 구매 기록으로 남기고 빠르게 찾아봅니다.</p>
       <p>옷을 찍어 넣으면 배경을 지워 스티커처럼 정리합니다. 브랜드, 구매처, 가격, 구매일, 사이즈, 실측까지 적어 두고, 옷을 살 때나 입을 옷을 고를 때 찾아봅니다.</p>
@@ -90,12 +97,11 @@
     </section>
     <section class="sec" aria-labelledby="h-news">
       <h2 id="h-news">새로운 기능</h2>
-      <p class="news__ver">버전 1.5.0 · 2026. 10. 14.</p>
-      <p>아이폰용 빌드를 만들었습니다. 아이폰에서는 Vision으로 옷 사진의 배경을 지웁니다.</p>
+      <p class="news__ver">버전 1.4.0 · 2026. 10. 14.</p>
+      <p>쇼핑몰 주문 내역에서 산 옷을 찾아 종류·색·사이즈를 미리 채워 확인 대기함에 넣습니다. 로그인은 앱 안 브라우저에서 직접 하고 비밀번호는 저장하지 않습니다.</p>
       <details class="history">
-        <summary>버전 기록 <span>7개 더</span></summary>
+        <summary>버전 기록 <span>6개 더</span></summary>
         <ol class="history__list">
-          <li><div class="history__head"><b>1.4.0</b><time datetime="2026-10-14">2026. 10. 14.</time></div><p>쇼핑몰 주문 내역에서 산 옷을 찾아 종류·색·사이즈를 미리 채워 확인 대기함에 넣습니다. 로그인은 앱 안 브라우저에서 직접 하고 비밀번호는 저장하지 않습니다.</p></li>
           <li><div class="history__head"><b>1.3.2</b><time datetime="2026-10-14">2026. 10. 14.</time></div><p>긴 글이 어절 단위로 줄바꿈됩니다. 안드로이드 자동 백업에 옷 기록이 들어갑니다.</p></li>
           <li><div class="history__head"><b>1.3.1</b><time datetime="2026-10-14">2026. 10. 14.</time></div><p>길어서 넘치던 항목 제목을 고치고, 오픈소스 라이선스 화면을 넣었습니다.</p></li>
           <li><div class="history__head"><b>1.3.0</b><time datetime="2026-10-13">2026. 10. 13.</time></div><p>코디마다 그 옷을 입은 사진 한 장을 올릴 수 있습니다.</p></li>
@@ -110,8 +116,7 @@
       <dl class="info">
       <div><dt>제공자</dt><dd>NamJuKim</dd></div>
       <div><dt>호환성</dt><dd>Android 8.0 이상</dd></div>
-      <div><dt>언어</dt><dd>한국어</dd></div>
-      <div><dt>버전</dt><dd>1.5.0</dd></div>
+      <div><dt>버전</dt><dd>1.4.0</dd></div>
       <div><dt>만든 도구</dt><dd>Flutter, SQLite, ML Kit</dd></div>
       <div><dt>패키지 이름</dt><dd>com.njkim.mylittlecloset</dd></div>
       <div><dt>저작권</dt><dd>© 2026 NamJuKim</dd></div>

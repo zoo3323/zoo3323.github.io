@@ -1,13 +1,103 @@
-// 빛. 마우스는 벽 앞에 든 작은 등이다.
-// 등 가까이의 구멍은 깊어 보이고, 걸린 봉지의 그림자는 등 반대쪽으로 진다.
-// 봉지에 손을 대면 고리를 축으로 살짝 돌며 앞으로 나오고, 비닐 위로 빛과 옅은 무지개 결이 번진다.
-// 봉지에 손이 가 있는 동안 벽의 등빛은 거의 꺼진다(봉지 하나에만 눈이 가게).
+// 빛. 마우스가 있으면 마우스가, 폰에서는 폰의 기울기가 빛을 움직인다.
+//
+// 마우스: 마우스는 벽 앞에 든 작은 등이다. 등 가까이의 구멍은 깊어 보이고, 걸린 봉지의 그림자는 등 반대쪽으로 진다.
+//   봉지에 손을 대면 고리를 축으로 살짝 돌며 앞으로 나오고, 비닐 위로 빛과 옅은 무지개 결이 번진다.
+//   봉지에 손이 가 있는 동안 벽의 등빛은 거의 꺼진다(봉지 하나에만 눈이 가게).
+// 기울기(안드로이드 폰): 폰을 기울이면 걸린 봉지들이 그만큼 살짝 돌고, 반사와 무지개 결이 기운 쪽으로 흐른다.
+//   들고 있는 자세가 곧 가운데라서, 가만히 들고 있으면 빛은 천천히 사라진다. 벽의 등빛은 쓰지 않는다.
+//   허락 창은 띄우지 않는다. 허락이 있어야 기울기를 주는 아이폰에서는 그래서 이 효과가 없다.
 (() => {
   const fine = matchMedia("(hover: hover) and (pointer: fine)");
   const still = matchMedia("(prefers-reduced-motion: reduce)");
-  if (!fine.matches || still.matches) return;
+  if (still.matches) return;
 
   const root = document.documentElement;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const settled = (a, b) => Math.abs(a - b) < 0.01;
+
+  // ── 폰의 기울기 ──
+  const tilt = () => {
+    const packs = [...document.querySelectorAll(".pack")];
+    if (!packs.length || !("DeviceOrientationEvent" in window)) return;
+    // 허락을 묻지 않는다. 허락이 있어야 신호가 오는 폰(아이폰)에서는 신호가 오지 않으니 아무 일도 없다.
+
+    const RANGE = 18; // 이만큼(도) 기울이면 끝까지 돈다
+    const SETTLE = 1.4; // 들고 있는 자세를 새 가운데로 받아들이는 시간(초)
+    let base = null;
+    let lastT = 0;
+    let tx = 0;
+    let ty = 0;
+    let x = 0;
+    let y = 0;
+    let frame = 0;
+    let last = 0;
+
+    const step = (now) => {
+      const dt = Math.min(0.05, (now - last) / 1000 || 0.016);
+      last = now;
+      const k = 1 - Math.exp(-dt * 9);
+      x += (tx - x) * k;
+      y += (ty - y) * k;
+      const lift = Math.min(1, Math.hypot(x, y)) * 0.85;
+      for (const el of packs) {
+        const s = el.style;
+        s.setProperty("--rx", `${(-y * 6).toFixed(2)}deg`);
+        s.setProperty("--ry", `${(x * 8).toFixed(2)}deg`);
+        s.setProperty("--lift", lift.toFixed(3));
+        s.setProperty("--gx", `${(50 + x * 45).toFixed(1)}%`);
+        s.setProperty("--gy", `${(50 + y * 45).toFixed(1)}%`);
+        s.setProperty("--hx", (50 + x * 45).toFixed(1));
+        s.setProperty("--hy", (50 + y * 45).toFixed(1));
+        s.setProperty("--shx", `${(x * 7).toFixed(1)}px`);
+      }
+      frame = settled(x, tx) && settled(y, ty) ? 0 : requestAnimationFrame(step);
+    };
+    const wake = () => {
+      if (frame) return;
+      last = performance.now();
+      frame = requestAnimationFrame(step);
+    };
+
+    addEventListener("deviceorientation", (event) => {
+      if (event.beta == null || event.gamma == null) return;
+      let b = event.beta;
+      let g = event.gamma;
+      // 가로로 돌려 쥐면 축이 바뀐다
+      const angle = (screen.orientation && screen.orientation.angle) || 0;
+      if (angle === 90) [b, g] = [-g, b];
+      else if (angle === 270) [b, g] = [g, -b];
+      else if (angle === 180) [b, g] = [-b, -g];
+
+      const t = event.timeStamp / 1000;
+      if (!base) {
+        base = { b, g };
+        lastT = t;
+        return;
+      }
+      const a = 1 - Math.exp(-clamp(t - lastT, 0, 0.2) / SETTLE);
+      lastT = t;
+      base.b += (b - base.b) * a;
+      base.g += (g - base.g) * a;
+      const nx = clamp((g - base.g) / RANGE, -1, 1);
+      const ny = clamp((b - base.b) / RANGE, -1, 1);
+      // 손떨림만큼의 작은 흔들림으로는 다시 그리지 않는다
+      if (Math.abs(nx - tx) < 0.01 && Math.abs(ny - ty) < 0.01) return;
+      tx = nx;
+      ty = ny;
+      wake();
+    });
+    // 다른 앱에 갔다 오면 그때 쥔 자세를 새 가운데로 삼는다
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) base = null;
+    });
+  };
+
+  if (!fine.matches) {
+    tilt();
+    return;
+  }
+
+  // ── 마우스 ──
   const lamp = { x: 0, y: 0, tx: 0, ty: 0, lit: 0, tlit: 0, placed: false };
   let touching = 0; // 손이 올라가 있는 봉지 수
   const LIT_ON_CARD = 0.08;

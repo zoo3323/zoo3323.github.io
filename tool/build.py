@@ -276,7 +276,7 @@ def news(app):
 
 def about_pack():
     a = ABOUT
-    orgs = "<br>".join(esc(f'{x["org"]} {x["unit"]}') for x in a["career"])
+    orgs = "<br>".join(esc(line) for line in a["card"])
     return f"""<li class="peg">
   {HOOK.format(style="")}
   <article class="pack pack--bag pack--about" data-sway style="{ABOUT_STYLE_WALL};view-transition-name:pack-about">
@@ -383,14 +383,11 @@ def facts(app):
         cells = [fact("버전", app["version"]), fact("호환성", first["name"], first.get("requires", ""))]
     else:
         cells = [fact("버전", app["version"]), fact("호환성", " · ".join(p.get("short", p["name"]) for p in app["platforms"]))]
-    cells.append(fact("언어", app["language"]["code"], app["language"]["name"]))
-    cells += [fact(h["label"], h["value"], h.get("note", "")) for h in app.get("highlights", [])]
-    cells.append(fact("개발", "1인", DEV))
     return "\n      ".join(cells)
 
 
 def info(app):
-    rows = [("제공자", DEV), ("호환성", compat(app)), ("언어", app["language"]["name"]), ("버전", app["version"])]
+    rows = [("제공자", DEV), ("호환성", compat(app)), ("버전", app["version"])]
     rows += [tuple(row) for row in app.get("info", [])]
     if app.get("package"):
         rows.append(("패키지 이름", app["package"]))
@@ -524,7 +521,7 @@ if ABOUT:
     </section>""" if a.get("tools") else ""
     write(
         "about/index.html",
-        head(f"소개 | {DEV}", f'{DEV} · {a["role"]}. ' + " · ".join(f'{x["org"]} {x["unit"]}' for x in a["career"] + a.get("education", [])) + ".", "/about/", ["light.js"])
+        head(f"소개 | {DEV}", f'{DEV} · ' + " · ".join(f'{x["org"]} {x["unit"]}' for x in a["career"] + a.get("education", [])) + ".", "/about/", ["light.js"])
         + f"""<body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
 <div class="wall">
@@ -542,7 +539,7 @@ if ABOUT:
       {ABOUT_ICON}
       <div>
         <h1 class="app-name">{esc(DEV)}</h1>
-        <p class="app-sub">{esc(a["role"])}</p>
+        <p class="app-sub">{esc(a["headline"])}</p>
         <p class="app-dev app-dev--plain">{esc(SITE["tagline"])}</p>
         <p class="app-get"><a class="get" href="{SITE["github"]}" rel="me">GitHub</a></p>
       </div>

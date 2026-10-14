@@ -1149,6 +1149,19 @@ a.get:hover {
   border-radius: 1.1rem;
   box-shadow: 0 0 0 1px var(--rule);
 }
+/* 실제 폰에서 녹화한 영상. 옆의 화면 그림과 높이를 맞춘다(그림 720×1600, 영상 540×976). */
+.shots li.shots__video {
+  width: calc(13.75rem * 1600 / 720 * 540 / 976);
+}
+.shots video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1.1rem;
+  background: #111;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
 /* PC 화면처럼 가로로 긴 그림 */
 .shots--wide li {
   width: 27rem;
@@ -1720,6 +1733,9 @@ svg.app-icon {
   }
   .shots--wide li {
     width: 88%;
+  }
+  .shots li.shots__video {
+    width: calc(58% * 1600 / 720 * 540 / 976);
   }
   .demo--pet,
   .sheet {

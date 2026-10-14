@@ -19,7 +19,7 @@
   },
   "rest": 0.7,
   "status": "출시 준비 중",
-  "version": "1.5.0",
+  "version": "1.4.0",
   "package": "com.njkim.mylittlecloset",
   "platforms": [
     {
@@ -52,11 +52,6 @@
     "closet.js"
   ],
   "history": [
-    {
-      "version": "1.5.0",
-      "date": "2026-10-14",
-      "notes": "아이폰용 빌드를 만들었습니다. 아이폰에서는 Vision으로 옷 사진의 배경을 지웁니다."
-    },
     {
       "version": "1.4.0",
       "date": "2026-10-14",
@@ -92,5 +87,6 @@
       "date": "2026-10-12",
       "notes": "첫 버전. 옷 등록, 옷장 찾기, 정리, 백업."
     }
-  ]
+  ],
+  "demoTitle": "스티커 시트로 골라 보기"
 }
