@@ -316,19 +316,92 @@ def about_pack(place=""):
 # ── 작은 봉지: 스펙·도구·회사 프로젝트처럼 따로 뒷면이 없는 물건. 누르면 소개나 GitHub 로 간다 ──
 
 ART = {
-    # 주차장을 위에서 본 그림: 주차면 선, 서 있는 차, 차를 찾은 상자
+    # 주차장을 위에서 본 그림: 주차면 선, 서 있는 차와 차를 찾은 빨간 상자, 빈자리 점
     "parking": (
-        '<svg class="mini__art" viewBox="0 0 120 54" aria-hidden="true" focusable="false">'
-        '<path d="M4 4h112M4 50h112M24 4v18M44 4v18M64 4v18M84 4v18M104 4v18M24 50V32M44 50V32M64 50V32M84 50V32M104 50V32" '
-        'fill="none" stroke="currentColor" stroke-width="1.6" opacity=".55"/>'
-        '<g fill="currentColor"><rect x="7" y="7" width="13" height="12" rx="3"/><rect x="47" y="7" width="13" height="12" rx="3"/>'
-        '<rect x="67" y="7" width="13" height="12" rx="3"/><rect x="27" y="35" width="13" height="12" rx="3"/>'
-        '<rect x="87" y="35" width="13" height="12" rx="3"/></g>'
-        '<g fill="none" stroke="#e8112d" stroke-width="1.6"><rect x="5" y="5" width="17" height="16" rx="2"/>'
-        '<rect x="45" y="5" width="17" height="16" rx="2"/><rect x="65" y="5" width="17" height="16" rx="2"/>'
-        '<rect x="25" y="33" width="17" height="16" rx="2"/><rect x="85" y="33" width="17" height="16" rx="2"/></g></svg>'
+        '<path d="M6 8h108M6 56h108M26 8v18M46 8v18M66 8v18M86 8v18M26 56V38M46 56V38M66 56V38M86 56V38" '
+        'fill="none" stroke="currentColor" stroke-width="1.4" stroke-opacity=".45"/>'
+        '<g fill="currentColor"><rect x="10" y="11" width="12" height="13" rx="2.5"/><rect x="50" y="11" width="12" height="13" rx="2.5"/>'
+        '<rect x="70" y="11" width="12" height="13" rx="2.5"/><rect x="30" y="40" width="12" height="13" rx="2.5"/>'
+        '<rect x="95" y="40" width="12" height="13" rx="2.5"/></g>'
+        '<g fill="none" stroke="#e8112d" stroke-width="1.5"><rect x="8" y="9" width="16" height="17" rx="1.5"/>'
+        '<rect x="48" y="9" width="16" height="17" rx="1.5"/><rect x="68" y="9" width="16" height="17" rx="1.5"/>'
+        '<rect x="28" y="38" width="16" height="17" rx="1.5"/><rect x="93" y="38" width="16" height="17" rx="1.5"/></g>'
+        '<g fill="currentColor" fill-opacity=".35"><circle cx="36" cy="17" r="2"/><circle cx="100" cy="17" r="2"/>'
+        '<circle cx="16" cy="47" r="2"/><circle cx="56" cy="47" r="2"/><circle cx="76" cy="47" r="2"/></g>'
+    ),
+    # 라벨링 도구: 한 장면에 다 단 상자와 그리는 중인 점선 상자, 커서, 아래 프레임 줄
+    "labeling": (
+        '<rect x="4" y="4" width="112" height="44" rx="3" fill="currentColor" fill-opacity=".07" stroke="currentColor" stroke-opacity=".35" stroke-width="1.2"/>'
+        '<path d="M4 40 116 26" stroke="currentColor" stroke-opacity=".16" stroke-width="10" fill="none"/>'
+        '<rect x="20" y="25" width="20" height="11" rx="3" fill="currentColor"/>'
+        '<rect x="70" y="18" width="20" height="11" rx="3" fill="currentColor" fill-opacity=".85"/>'
+        '<rect x="17" y="22" width="26" height="17" rx="1.5" fill="none" stroke="#e8112d" stroke-width="1.5"/>'
+        '<rect x="17" y="16.5" width="13" height="5.5" rx="1" fill="#e8112d"/>'
+        '<rect x="67" y="15" width="26" height="17" rx="1.5" fill="none" stroke="#e8112d" stroke-width="1.3" stroke-dasharray="3 2"/>'
+        '<g fill="#fff" stroke="#e8112d" stroke-width="1"><rect x="65.5" y="13.5" width="3" height="3"/><rect x="91.5" y="13.5" width="3" height="3"/>'
+        '<rect x="65.5" y="30.5" width="3" height="3"/><rect x="91.5" y="30.5" width="3" height="3"/></g>'
+        '<path d="M94 32v9.5l2.7-2.5 2 4.2 1.7-.8-2-4.1 3.6-.2z" fill="currentColor" stroke="#fff" stroke-width=".8"/>'
+        '<rect x="4" y="53" width="112" height="7" rx="2" fill="currentColor" fill-opacity=".12"/>'
+        '<path d="M14 54.5v4M24 54.5v4M34 54.5v4M44 54.5v4M54 54.5v4M64 54.5v4M74 54.5v4M84 54.5v4M94 54.5v4M104 54.5v4" stroke="currentColor" stroke-opacity=".45"/>'
+        '<rect x="58" y="51" width="2.6" height="11" rx="1.2" fill="#e8112d"/>'
+    ),
+    # 안전 영상 분석: 카메라 두 대에 걸쳐 같은 사람을 따라가고, 안전모 미착용(!)과 화재 자리를 빨갛게
+    "safety": (
+        '<g fill="currentColor" fill-opacity=".07" stroke="currentColor" stroke-opacity=".35" stroke-width="1.2">'
+        '<rect x="4" y="5" width="52" height="40" rx="3"/><rect x="64" y="5" width="52" height="40" rx="3"/></g>'
+        '<circle cx="10" cy="11" r="2" fill="#e8112d"/><circle cx="70" cy="11" r="2" fill="#e8112d"/>'
+        '<rect x="24" y="16" width="12" height="25" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+        '<rect x="24" y="11" width="9" height="5" rx="1" fill="currentColor"/>'
+        '<rect x="88" y="18" width="11" height="23" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+        '<rect x="88" y="13" width="9" height="5" rx="1" fill="currentColor"/>'
+        '<rect x="26" y="17.5" width="8" height="7" rx="1" fill="none" stroke="#e8112d" stroke-width="1.4"/>'
+        '<circle cx="40.5" cy="18.5" r="3.3" fill="#e8112d"/><path d="M40.5 16.6v2.3M40.5 20.2v.2" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>'
+        '<rect x="102" y="29" width="10" height="12" rx="1.5" fill="#e8112d" fill-opacity=".2" stroke="#e8112d" stroke-width="1.4"/>'
+        '<path d="M36 52c16 8 34 8 54-3" fill="none" stroke="currentColor" stroke-width="1.3" stroke-dasharray="3 2.5"/>'
+        '<path d="m91 48.5-4.8.4 2.6 3.6z" fill="currentColor"/>'
+    ),
+    # 위험성평가 AI: 평가표의 한 줄을 짚고, 옆 말풍선이 법령(§)을 근거로 답한다
+    "risk": (
+        '<rect x="4" y="4" width="70" height="56" rx="3" fill="#fff" fill-opacity=".7" stroke="currentColor" stroke-opacity=".35" stroke-width="1.2"/>'
+        '<path d="M7 4h64a3 3 0 0 1 3 3v6H4V7a3 3 0 0 1 3-3z" fill="currentColor" fill-opacity=".85"/>'
+        '<path d="M4 23h70M4 33h70M4 43h70M28 13v47" stroke="currentColor" stroke-opacity=".28"/>'
+        '<rect x="4.6" y="33.5" width="68.8" height="9" fill="#e8112d" fill-opacity=".14"/><rect x="4" y="33.5" width="2.6" height="9" fill="#e8112d"/>'
+        '<g fill="currentColor" fill-opacity=".45"><rect x="9" y="17" width="14" height="2.4" rx="1.2"/><rect x="33" y="17" width="34" height="2.4" rx="1.2"/>'
+        '<rect x="9" y="27" width="12" height="2.4" rx="1.2"/><rect x="33" y="27" width="28" height="2.4" rx="1.2"/>'
+        '<rect x="9" y="37" width="15" height="2.4" rx="1.2"/><rect x="33" y="37" width="31" height="2.4" rx="1.2"/>'
+        '<rect x="9" y="49" width="11" height="2.4" rx="1.2"/><rect x="33" y="49" width="25" height="2.4" rx="1.2"/></g>'
+        '<rect x="81" y="22" width="35" height="30" rx="3" fill="currentColor"/><path d="m81 34-6.5 4 6.5 4z" fill="currentColor"/>'
+        '<path d="M87.6 27.6c-1.4-.9-3.6-.6-3.6 1 0 2.4 4.6 1.6 4.6 4.2 0 1.6-2.3 2-3.8 1M84.4 33.4c1.4.9 3.6.6 3.6-1 0-2.4-4.6-1.6-4.6-4.2" '
+        'fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/>'
+        '<g fill="#fff" fill-opacity=".75"><rect x="93" y="28.5" width="18" height="2.4" rx="1.2"/><rect x="86" y="38.5" width="25" height="2.4" rx="1.2"/>'
+        '<rect x="86" y="44.5" width="19" height="2.4" rx="1.2"/></g>'
+    ),
+    # 노인보호구역 입지: 길과 사고가 몰린 칸(빨강의 진하기), 고른 자리 점선 원과 핀
+    "zone": (
+        '<rect x="4" y="4" width="112" height="56" rx="3" fill="#fff" fill-opacity=".6" stroke="currentColor" stroke-opacity=".3" stroke-width="1.2"/>'
+        '<g fill="none" stroke="currentColor" stroke-opacity=".26"><path d="M4 22h112M4 44h112M30 4v56M62 4v56M94 4v56" stroke-width="2.4"/>'
+        '<path d="M4 58 58 4" stroke-width="1.6"/></g>'
+        '<g fill="#e8112d"><rect x="64" y="24" width="8" height="8" fill-opacity=".55"/><rect x="72" y="24" width="8" height="8" fill-opacity=".32"/>'
+        '<rect x="64" y="32" width="8" height="8" fill-opacity=".28"/><rect x="72" y="32" width="8" height="8" fill-opacity=".62"/>'
+        '<rect x="80" y="32" width="8" height="8" fill-opacity=".22"/><rect x="34" y="46" width="8" height="8" fill-opacity=".2"/>'
+        '<rect x="96" y="8" width="8" height="8" fill-opacity=".16"/></g>'
+        '<circle cx="74" cy="33" r="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3.5 2.5"/>'
+        '<path d="M74 19.5c-3.3 0-6 2.6-6 5.9 0 4.4 6 10.1 6 10.1s6-5.7 6-10.1c0-3.3-2.7-5.9-6-5.9z" fill="currentColor"/>'
+        '<circle cx="74" cy="25.4" r="2.2" fill="#fff"/>'
     ),
 }
+
+
+def mini_art(item):
+    """작은 봉지의 그림: 실제 화면(image) 또는 하는 일을 보여 주는 도식(art)."""
+    if item.get("image"):
+        return f'<div class="mini__art"><img src="{esc(item["image"])}" width="600" height="316" alt="" loading="lazy"></div>'
+    if item.get("art") in ART:
+        return (
+            '<div class="mini__art"><svg viewBox="0 0 120 64" aria-hidden="true" focusable="false">'
+            f'{ART[item["art"]]}</svg></div>'
+        )
+    return ""
 
 
 def mini_pack(item, place=""):
@@ -350,8 +423,9 @@ def mini_pack(item, place=""):
       <p class="card__line">{esc(item["kind"])}</p>
     </div>
     <div class="bag">
-      {ART.get(item.get("art"), "")}<p class="mini__line">{esc(item["line"])}</p>
-      <div class="label label--sticker">{barcode(item["code"])}<span class="label__id">{esc(item["code"])}</span><span class="label__go" aria-hidden="true">{go}</span></div>
+      {mini_art(item)}
+      <p class="mini__line">{esc(item["line"])}</p>
+      <span class="mini__go" aria-hidden="true">{go}</span>
     </div>
     <span class="pack__holo" aria-hidden="true"></span>
     <span class="pack__glare" aria-hidden="true"></span>
@@ -374,7 +448,7 @@ SIZE = {
     "mini": ((4, 0.55), (8, 1.2)),
     "wide": ((6, 0.55), (12, 1.2)),
 }
-HEIGHT = {"big": 17.5, "mini": 12.4, "wide": 14.6}  # 봉지 높이(봉지의 p 단위)
+HEIGHT = {"big": 17.5, "mini": 13.6, "wide": 15}  # 봉지 높이(봉지의 p 단위)
 SHADOW = 1  # 봉지 아래 그림자가 잘리지 않게 줄 아래에 두는 칸
 
 
@@ -411,9 +485,42 @@ def aisle(row):
             f'<div class="line" style="--h:{height};--nh:{narrow_height}">\n<ul class="hooks">\n{chr(10).join(pegs)}\n</ul>\n</div>'
         )
     count = sum(len(items) for items in row["lines"])
+    pop = row.get("pop")
+    pop_html = (
+        f'\n<a class="pop" href="{esc(pop["href"])}"><b>{esc(pop["top"])}</b><span>{esc(pop["sub"])}</span></a>' if pop else ""
+    )
     return f"""<section class="aisle aisle--{row["id"]}" aria-labelledby="a-{row["id"]}">
-<h2 class="aisle__name" id="a-{row["id"]}">{esc(row["name"])} <span class="aisle__count">{count}</span></h2>
+<h2 class="aisle__name" id="a-{row["id"]}">{esc(row["name"])} <span class="aisle__count">{count}</span></h2>{pop_html}
 {chr(10).join(lines)}
+</section>"""
+
+
+# ── 만든 사람: 진열대 벽에 붙인 스티커 묶음(사진, 이름표, 학력·자격 딱지) ──
+
+
+def maker(profile):
+    if profile.get("photo"):
+        photo = f'<img src="{esc(profile["photo"])}" width="400" height="400" alt="">'
+    else:
+        photo = f'<span class="maker__mono">{esc(profile["monogram"])}</span>'
+    stickers = "\n".join(
+        f'<li class="sticker sticker--{x["shape"]}" style="--tone:{x["tone"]};--tone-ink:{x["ink"]};--tilt:{x["tilt"]}deg">'
+        f'<b>{esc(x["top"])}</b><span>{esc(x["sub"])}</span></li>'
+        for x in profile["stickers"]
+    )
+    href = esc(profile["href"])
+    return f"""<section class="maker" aria-label="{esc(profile["label"])}">
+<a class="maker__photo" href="{href}" tabindex="-1" aria-hidden="true">{photo}</a>
+<a class="maker__card" href="{href}">
+  <span class="maker__tag">{esc(profile["label"])}</span>
+  <strong class="maker__role">{esc(profile["role"])}</strong>
+  <span class="maker__org">{esc(profile["org"])}</span>
+  <span class="maker__line">{esc(profile["line"])}</span>
+  <span class="maker__go">소개 보기 {ICON_GO}</span>
+</a>
+<ul class="maker__stickers" aria-label="학력과 자격">
+{stickers}
+</ul>
 </section>"""
 
 
@@ -451,6 +558,7 @@ write(
 <div class="wall">
 {sign(True)}
 <main id="apps" class="aisles">
+{maker(SHELF["profile"])}
 {chr(10).join(aisle(row) for row in SHELF["rows"])}
 </main>
 {FOOT}
