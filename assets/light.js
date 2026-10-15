@@ -127,6 +127,22 @@
     card.css[name] = value;
     card.el.style.setProperty(name, value);
   };
+  // 화면 밖의 봉지는 등이 움직여도 그림자를 다시 계산하지 않는다(진열대가 길어 봉지가 스무 개 가까이 된다).
+  // 화면에 들어오면 그때 한 번 맞춘다.
+  if ("IntersectionObserver" in window) {
+    const byEl = new Map(cards.map((card) => [card.el, card]));
+    const watch = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) byEl.get(entry.target).seen = entry.isIntersecting;
+        wake();
+      },
+      { rootMargin: "120px 0px" },
+    );
+    for (const card of cards) {
+      card.seen = false;
+      watch.observe(card.el);
+    }
+  }
 
   const measure = () => {
     const body = document.body.getBoundingClientRect();
@@ -163,6 +179,7 @@
     holes.style.transform = `translate3d(${(-mod(x - grid.r - grid.mid, grid.p)).toFixed(2)}px, ${(-mod(y - grid.r, grid.p)).toFixed(2)}px, 0)`;
 
     for (const card of cards) {
+      if (card.seen === false) continue;
       card.rx += (card.trx - card.rx) * k;
       card.ry += (card.try_ - card.ry) * k;
       card.gx += (card.tgx - card.gx) * k;

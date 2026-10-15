@@ -23,6 +23,7 @@ site.json 의 keep 에 적은 파일은 앱 안과 플레이 콘솔에 주소가
 
 import html
 import json
+import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -104,7 +105,9 @@ def load(app_id):
 
 
 APPS = [load(app_id) for app_id in SITE["apps"]]
+APP_BY_ID = {app["id"]: app for app in APPS}
 ABOUT = json.loads((TOOL / "about.json").read_text()) if (TOOL / "about.json").exists() else None
+SHELF = json.loads((TOOL / "shelf.json").read_text())
 GITHUB_HOST = SITE["github"].split("://", 1)[-1].rstrip("/")
 ABOUT_STYLE_WALL = "--rest:-0.8deg;--tone:#ffffff;--tone-ink:#17171a;--accent:#17171a;--bag:#f5f4ef;--mark-size:2.8"
 ABOUT_STYLE_PAGE = "--tone:#ffe55c;--tone-ink:#17171a;--accent:#17171a"
@@ -214,15 +217,15 @@ def tag(app):
     return esc(first) + (f"<br>{esc(rest)}" if rest else "")
 
 
-def pack(app):
+def pack(app, place=""):
     app_id = app["id"]
     platforms = compat(app) if len(app["platforms"]) == 1 else " · ".join(p.get("short", p["name"]) for p in app["platforms"])
     line = app.get("labelLine") or f'{app["version"]} · {platforms}'
-    return f"""<li class="peg">
+    return f"""<li class="peg"{place}>
   {HOOK.format(style="")}
   <article class="pack pack--{app["pack"]} pack--{app_id}" data-sway style="--rest:{app.get("rest", 0)}deg;{tone_style(app)};view-transition-name:pack-{app_id}">
     <div class="card">
-      <h2 class="card__name"><a class="pack__link" href="/{app_id}/">{name_html(app)}</a></h2>
+      <h3 class="card__name"><a class="pack__link" href="/{app_id}/">{name_html(app)}</a></h3>
       <p class="card__line">{esc(app["line"])}</p>
     </div>
     <p class="tag">{tag(app)}</p>
@@ -280,14 +283,14 @@ def news(app):
     </section>"""
 
 
-def about_pack():
+def about_pack(place=""):
     a = ABOUT
     orgs = "<br>".join(esc(line) for line in a["card"])
-    return f"""<li class="peg">
+    return f"""<li class="peg"{place}>
   {HOOK.format(style="")}
   <article class="pack pack--bag pack--about" data-sway style="{ABOUT_STYLE_WALL};view-transition-name:pack-about">
     <div class="card">
-      <h2 class="card__name"><a class="pack__link" href="/about/">소개</a></h2>
+      <h3 class="card__name"><a class="pack__link" href="/about/">소개</a></h3>
       <p class="card__line">{esc(a["packLine"])}</p>
     </div>
     <div class="bag">
@@ -307,6 +310,113 @@ def about_pack():
   </article>
   {TIP.format(style="")}
 </li>"""
+
+
+# ── 작은 봉지: 스펙·도구·회사 프로젝트처럼 따로 뒷면이 없는 물건. 누르면 소개나 GitHub 로 간다 ──
+
+ART = {
+    # 주차장을 위에서 본 그림: 주차면 선, 서 있는 차, 차를 찾은 상자
+    "parking": (
+        '<svg class="mini__art" viewBox="0 0 120 54" aria-hidden="true" focusable="false">'
+        '<path d="M4 4h112M4 50h112M24 4v18M44 4v18M64 4v18M84 4v18M104 4v18M24 50V32M44 50V32M64 50V32M84 50V32M104 50V32" '
+        'fill="none" stroke="currentColor" stroke-width="1.6" opacity=".55"/>'
+        '<g fill="currentColor"><rect x="7" y="7" width="13" height="12" rx="3"/><rect x="47" y="7" width="13" height="12" rx="3"/>'
+        '<rect x="67" y="7" width="13" height="12" rx="3"/><rect x="27" y="35" width="13" height="12" rx="3"/>'
+        '<rect x="87" y="35" width="13" height="12" rx="3"/></g>'
+        '<g fill="none" stroke="#e8112d" stroke-width="1.6"><rect x="5" y="5" width="17" height="16" rx="2"/>'
+        '<rect x="45" y="5" width="17" height="16" rx="2"/><rect x="65" y="5" width="17" height="16" rx="2"/>'
+        '<rect x="25" y="33" width="17" height="16" rx="2"/><rect x="85" y="33" width="17" height="16" rx="2"/></g></svg>'
+    ),
+}
+
+
+def mini_pack(item, place=""):
+    href = item["href"]
+    if href.startswith("http"):
+        go = f'{"GitHub" if "github.com" in href else "열기"} {ICON_OUT}'
+    else:
+        go = f"보기 {ICON_GO}"
+    wide = " pack--wide" if item.get("wide") else ""
+    style = (
+        f'--rest:{item.get("rest", 0)}deg;--tone:{item["tone"]};--tone-ink:{item["ink"]};'
+        f'--accent:{item["ink"]};--mark-size:{item.get("size", 1.3)}'
+    )
+    return f"""<li class="peg"{place}>
+  {HOOK.format(style="")}
+  <article class="pack pack--card pack--mini{wide}" data-sway style="{style}">
+    <div class="card">
+      <h3 class="card__name"><a class="pack__link" href="{esc(href)}">{esc(item["name"])}</a></h3>
+      <p class="card__line">{esc(item["kind"])}</p>
+    </div>
+    <div class="bag">
+      {ART.get(item.get("art"), "")}<p class="mini__line">{esc(item["line"])}</p>
+      <div class="label label--sticker">{barcode(item["code"])}<span class="label__id">{esc(item["code"])}</span><span class="label__go" aria-hidden="true">{go}</span></div>
+    </div>
+    <span class="pack__holo" aria-hidden="true"></span>
+    <span class="pack__glare" aria-hidden="true"></span>
+    <a class="pack__cover" href="{esc(href)}" tabindex="-1" aria-hidden="true"></a>
+  </article>
+  {TIP.format(style="")}
+</li>"""
+
+
+# ── 진열대의 칸 ──
+# 칸(aisle)마다 벽에 박은 이름 띠 하나와 고리 줄(line)이 있다. 길이의 단위는 벽의 구멍 간격이다.
+# 넓은 화면은 벽이 36칸, 좁은 화면(935px 이하)은 22칸이고 줄마다 옆으로 밀어 본다.
+# 물건의 폭은 늘 짝수 칸이고 칸 경계에서 시작하므로, 가운데에 건 고리의 두 다리는 늘 구멍에 꽂힌다.
+# 봉지 크기는 구멍 간격에 대한 비(s)로 정한다. 큰 봉지는 폭이 봉지 단위 10, 작은 봉지는 20/3, 넓은 작은 봉지는 10.
+
+WALL_COLS = 36
+GAP = 2  # 물건 사이(칸)
+SCALE = {"big": (0.6, 1.0), "mini": (0.6, 1.2), "wide": (0.6, 1.2)}  # (넓은 화면, 좁은 화면)
+SPAN = {"big": 10, "mini": 20 / 3, "wide": 10}
+HEIGHT = {"big": 17.5, "mini": 12.4, "wide": 14.6}
+
+
+def kind_of(item):
+    if isinstance(item, str):
+        return "big"
+    return "wide" if item.get("wide") else "mini"
+
+
+def reach(kind, s):
+    """고리 꼭대기부터 봉지 아래까지(칸). 봉지 구멍(위에서 0.5625)이 고리 끝(2칸)에 걸린다."""
+    return math.ceil(2 - 0.5625 * s + HEIGHT[kind] * s)
+
+
+def render_item(item, place):
+    if item == "about":
+        return about_pack(place)
+    if isinstance(item, str):
+        return pack(APP_BY_ID[item.removeprefix("app:")], place)
+    return mini_pack(item, place)
+
+
+def aisle(row):
+    lines = []
+    top = 3  # 1줄은 이름 띠, 2줄은 비우고 3줄에 고리
+    for items in row["lines"]:
+        kinds = [kind_of(item) for item in items]
+        wide = [round(SPAN[k] * SCALE[k][0]) for k in kinds]
+        narrow = [round(SPAN[k] * SCALE[k][1]) for k in kinds]
+        total = sum(wide) + GAP * (len(items) - 1)
+        if total > WALL_COLS:
+            raise SystemExit(f'「{row["name"]}」 한 줄이 벽보다 넓습니다({total}칸)')
+        col = 1 + (WALL_COLS - total) // 2
+        height = max(reach(k, SCALE[k][0]) for k in kinds)
+        narrow_height = max(reach(k, SCALE[k][1]) for k in kinds)
+        pegs = []
+        for item, k, w, nw in zip(items, kinds, wide, narrow):
+            place = f' style="--c:{col};--w:{w};--s:{SCALE[k][0]};--nw:{nw};--ns:{SCALE[k][1]}"'
+            pegs.append(render_item(item, place))
+            col += w + GAP
+        lines.append(f'<ul class="hooks" style="--r:{top};--h:{height};--nh:{narrow_height}">\n{chr(10).join(pegs)}\n</ul>')
+        top += height + GAP
+    count = sum(len(items) for items in row["lines"])
+    return f"""<section class="aisle aisle--{row["id"]}" aria-labelledby="a-{row["id"]}">
+<h2 class="aisle__name" id="a-{row["id"]}">{esc(row["name"])} <span class="aisle__count">{count}</span></h2>
+{chr(10).join(lines)}
+</section>"""
 
 
 ABOUT_ICON = (
@@ -342,10 +452,8 @@ write(
 <a class="skip" href="#apps">목록으로 건너뛰기</a>
 <div class="wall">
 {sign(True)}
-<main id="apps">
-<ul class="rail">
-{about_pack() + chr(10) if ABOUT else ""}{chr(10).join(pack(app) for app in APPS)}
-</ul>
+<main id="apps" class="aisles">
+{chr(10).join(aisle(row) for row in SHELF["rows"])}
 </main>
 {FOOT}
 </div>
@@ -362,14 +470,15 @@ PLAY_LEGAL = "Google Play 및 Google Play 로고는 Google LLC의 상표입니�
 
 
 def has_play(app):
-    return any(p["name"] == "Android" for p in app["platforms"])
+    """플레이에 낼 안드로이드 앱인지. 시험용 APK 로만 나눈 앱은 platforms 에 "play": false 를 적는다."""
+    return any(p["name"] == "Android" and p.get("play", True) for p in app["platforms"])
 
 
 def get_buttons(app):
     """받기 단추. 안드로이드 앱은 Google Play 배지를 늘 보이고, 스토어 주소(store)가 생기면 그 주소로 잇는다."""
     parts = []
     for p in app["platforms"]:
-        if p["name"] == "Android":
+        if p["name"] == "Android" and p.get("play", True):
             if p.get("store"):
                 parts.append(f'<a class="store-badge" href="{esc(p["store"])}">{PLAY_BADGE.format(alt="Google Play에서 다운로드")}</a>')
             else:
@@ -564,10 +673,33 @@ if ABOUT:
     a = ABOUT
     about_facts = "\n      ".join(fact(f["label"], f["value"], f.get("note", "")) for f in a["facts"])
     about_text = "\n      ".join(f"<p>{esc(t)}</p>" for t in a["about"])
-    cv = "\n        ".join(
-        f'<li><div class="cv__head"><b>{esc(x["org"])}</b><span>{esc(x["unit"])}</span><time>{esc(x["period"])}</time></div>'
-        + (f'<p>{esc(x["notes"])}</p>' if x.get("notes") else "") + "</li>"
-        for x in a["career"] + a.get("education", [])
+    def cv_list(entries):
+        rows = []
+        for x in entries:
+            link = f' <a href="{esc(x["link"])}">{esc(x["linkLabel"])}</a>' if x.get("link") else ""
+            notes = f'<p>{esc(x["notes"])}{link}</p>' if x.get("notes") else ""
+            rows.append(
+                f'<li><div class="cv__head"><b>{esc(x["org"])}</b><span>{esc(x["unit"])}</span><time>{esc(x["period"])}</time></div>{notes}</li>'
+            )
+        return "\n        ".join(rows)
+
+    def cv_section(key, title, entries):
+        if not entries:
+            return ""
+        return f"""<section class="sec" aria-labelledby="h-{key}">
+      <h2 id="h-{key}">{title}</h2>
+      <ol class="cv">
+        {cv_list(entries)}
+      </ol>
+    </section>"""
+
+    cv = cv_list(a["career"] + a.get("education", []))
+    more_cv = "\n    ".join(
+        filter(None, [
+            cv_section("certs", "자격증", a.get("certs")),
+            cv_section("work", "회사 프로젝트", a.get("work")),
+            cv_section("startup", "대회·창업", a.get("startup")),
+        ])
     )
     skills = "\n        ".join(
         f'<div><dt>{esc(g["group"])}</dt><dd><ul class="chips">{"".join(f"<li>{esc(i)}</li>" for i in g["items"])}</ul></dd></div>'
@@ -592,7 +724,7 @@ if ABOUT:
     </section>""" if a.get("tools") else ""
     write(
         "about/index.html",
-        head(f"소개 | {DEV}", f'{DEV} · ' + " · ".join(f'{x["org"]} {x["unit"]}' for x in a["career"] + a.get("education", [])) + ".", "/about/", ["light.js"])
+        head(f"소개 | {DEV}", f'{DEV} · ' + " · ".join(f'{x["org"]} {x["unit"]}' for x in a["career"][:1] + a.get("education", [])[:1]) + ".", "/about/", ["light.js"])
         + f"""<body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
 <div class="wall">
@@ -628,6 +760,7 @@ if ABOUT:
         {cv}
       </ol>
     </section>
+    {more_cv}
     <section class="sec" aria-labelledby="h-skills">
       <h2 id="h-skills">다루는 기술</h2>
       <dl class="skills">
