@@ -2,6 +2,7 @@
   "profile": {
     "photo": null,
     "monogram": "NJ",
+    "caption": "NamJuKim",
     "label": "만든 사람",
     "role": "비전 AI 연구원",
     "org": "신라이앤씨 개발팀",
@@ -10,26 +11,51 @@
     "stickers": [
       {
         "kind": "note",
+        "title": "학력",
         "tone": "#fff0a0",
-        "tilt": -3,
-        "logo": "/assets/img/marks/knu.svg",
-        "top": "경북대학교 대학원",
-        "mid": "인공지능학과 석사과정",
-        "sub": "2025 – 재학 중"
+        "tilt": -2.5,
+        "rows": [
+          {
+            "logo": "/assets/img/marks/knu.webp",
+            "name": "경북대학교 대학원",
+            "detail": "인공지능학과 석사과정",
+            "when": "2025 – 재학 중"
+          },
+          {
+            "logo": "/assets/img/marks/daegu.webp",
+            "name": "대구대학교",
+            "detail": "AI학부 AI소프트웨어전공 학사",
+            "when": "2018 – 2024"
+          }
+        ]
       },
       {
         "kind": "note",
+        "title": "경력",
         "tone": "#ffd6e0",
-        "tilt": 2.5,
-        "logo": "/assets/img/marks/daegu.svg",
-        "top": "대구대학교",
-        "mid": "AI소프트웨어전공 학사",
-        "sub": "2018 – 2024"
+        "tilt": 2,
+        "rows": [
+          {
+            "name": "신라이앤씨",
+            "detail": "개발팀 연구원",
+            "when": "2026.6 – 현재"
+          },
+          {
+            "name": "패턴앤",
+            "detail": "AI개발팀 연구원",
+            "when": "2025.8 – 2026.5"
+          },
+          {
+            "name": "제이솔루션",
+            "detail": "ABB연구개발팀 사원",
+            "when": "2024.6 – 2025.2"
+          }
+        ]
       },
       {
         "kind": "seal",
         "tone": "#ffffff",
-        "tilt": 7,
+        "tilt": 8,
         "logo": "/assets/img/marks/hrdk.svg",
         "top": "정보처리기사",
         "sub": "2024"

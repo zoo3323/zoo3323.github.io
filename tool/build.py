@@ -505,10 +505,12 @@ def aisle(row):
 
 
 def maker(profile):
+    # 폴라로이드 사진: 사진이 있으면 그 사진, 없으면 이름 글자. 아래 넓은 여백에 이름을 적는다.
     if profile.get("photo"):
-        photo = f'<img src="{esc(profile["photo"])}" width="400" height="400" alt="">'
+        pic = f'<img src="{esc(profile["photo"])}" width="400" height="400" alt="">'
     else:
-        photo = f'<span class="maker__mono">{esc(profile["monogram"])}</span>'
+        pic = f'<span class="maker__mono">{esc(profile["monogram"])}</span>'
+    photo = f'<span class="polaroid__pic">{pic}</span><span class="polaroid__cap">{esc(profile.get("caption", DEV))}</span>'
     def mark(x, cls):
         """학교·기관 마크. 파일이 있을 때만 붙인다(글자가 이름을 알리므로 그림은 꾸밈)."""
         logo = x.get("logo")
@@ -516,28 +518,40 @@ def maker(profile):
             return ""
         return f'<img class="{cls}" src="{esc(logo)}" alt="" loading="lazy">'
 
-    def sticker(x):
-        style = f'--tone:{x["tone"]};--tilt:{x["tilt"]}deg'
-        if x["kind"] == "note":
-            return (
-                f'<li class="note" style="{style}">{mark(x, "note__logo")}<b>{esc(x["top"])}</b>'
-                f'<span>{esc(x["mid"])}</span><small>{esc(x["sub"])}</small></li>'
-            )
-        return f'<li class="seal" style="{style}">{mark(x, "seal__logo")}<b>{esc(x["top"])}</b><small>{esc(x["sub"])}</small></li>'
+    def note(x):
+        """포스트잇 한 장: 제목(학력·경력)과 줄마다 마크·이름·기간·한 줄."""
+        rows = "".join(
+            f'<li>{mark(r, "note__logo")}<span class="note__text"><span class="note__head"><b>{esc(r["name"])}</b>'
+            f'<small>{esc(r["when"])}</small></span><span>{esc(r["detail"])}</span></span></li>'
+            for r in x["rows"]
+        )
+        return (
+            f'<li class="note" style="--tone:{x["tone"]};--tilt:{x["tilt"]}deg">'
+            f'<p class="note__title">{esc(x["title"])}</p><ul class="note__rows">{rows}</ul></li>'
+        )
 
-    stickers = "\n".join(sticker(x) for x in profile["stickers"])
+    def seal(x):
+        """인증 스티커. 이름표 모서리에 도장처럼 붙인다."""
+        return (
+            f'<span class="seal" style="--tone:{x["tone"]};--tilt:{x["tilt"]}deg">{mark(x, "seal__logo")}'
+            f'<b>{esc(x["top"])}</b><small>{esc(x["sub"])}</small></span>'
+        )
+
+    notes = "\n".join(note(x) for x in profile["stickers"] if x["kind"] == "note")
+    seals = "".join(seal(x) for x in profile["stickers"] if x["kind"] == "seal")
     href = esc(profile["href"])
     return f"""<section class="maker" aria-label="{esc(profile["label"])}">
-<a class="maker__photo" href="{href}" tabindex="-1" aria-hidden="true">{photo}</a>
+<a class="maker__photo polaroid" href="{href}" tabindex="-1" aria-hidden="true">{photo}</a>
 <a class="maker__card" href="{href}">
   <span class="maker__tag">{esc(profile["label"])}</span>
   <strong class="maker__role">{esc(profile["role"])}</strong>
   <span class="maker__org">{esc(profile["org"])}</span>
   <span class="maker__line">{esc(profile["line"])}</span>
   <span class="maker__go">소개 보기 {ICON_GO}</span>
+  {seals}
 </a>
-<ul class="maker__stickers" aria-label="학력과 자격">
-{stickers}
+<ul class="maker__stickers" aria-label="학력과 경력">
+{notes}
 </ul>
 </section>"""
 
