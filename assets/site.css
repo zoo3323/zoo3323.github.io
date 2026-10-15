@@ -359,6 +359,29 @@ a {
   width: calc(var(--P) * var(--w));
   scroll-snap-align: start;
 }
+/* 다 들어가는 줄은 가운데로 모은다. 넘치면 양 끝 여백이 0 이 되어 그냥 밀린다.
+   물건 폭과 사이가 모두 짝수 칸이라 가운데로 모아도 고리는 구멍 자리에 선다. */
+.hooks > .peg:first-child {
+  margin-left: auto;
+}
+.hooks > .peg:last-child {
+  margin-right: auto;
+}
+/* 작게 건 봉지의 둥근 딱지는 글씨가 원 안에 들어가는 크기 아래로 줄이지 않는다 */
+.aisle .tag {
+  width: max(calc(var(--p) * 2.6), 3.4rem);
+  height: max(calc(var(--p) * 2.6), 3.4rem);
+  font-size: max(0.6875rem, calc(var(--p) * 0.5));
+}
+/* 작게 건 큰 봉지의 딱지에는 바코드와 「뒷면 보기」만 둔다 */
+.aisle .pack:not(.pack--mini) .label__id,
+.aisle .pack:not(.pack--mini) .label__ver {
+  display: none;
+}
+.aisle .pack:not(.pack--mini) .label {
+  grid-template-columns: 1fr;
+  justify-items: end;
+}
 .aisle .hook {
   top: 0;
   width: calc(var(--P) * 2);
@@ -2017,7 +2040,7 @@ svg.app-icon {
   }
 }
 
-/* 좁은 화면의 진열대: 벽은 22칸, 이름 띠는 두 칸 높이(네 귀퉁이에 나사), 작은 봉지는 조금 크게 */
+/* 좁은 화면의 진열대: 벽은 22칸 */
 @media (max-width: 935px) {
   .home {
     --p: min(32px, calc((100vw - 32px) / 22));
@@ -2025,6 +2048,9 @@ svg.app-icon {
   .home .wall {
     width: calc(var(--p) * 22);
   }
+}
+/* 폰: 이름 띠는 두 칸 높이(네 귀퉁이에 나사), 봉지는 원래 크기로 걸고 줄마다 옆으로 민다 */
+@media (max-width: 735px) {
   .aisle__name {
     height: calc(var(--P) * 2);
     padding: 0 calc(var(--P) * 1.1);

@@ -195,8 +195,9 @@
       put(card, "--gy", `${card.gy.toFixed(1)}%`);
       put(card, "--hx", card.gx.toFixed(1));
       put(card, "--hy", card.gy.toFixed(1));
-      put(card, "--shx", `${shx.toFixed(1)}px`);
-      put(card, "--shy", `${shy.toFixed(1)}px`);
+      // 그림자는 0.5px 단위로만 옮긴다. 흐린 그림자라 눈에 띄지 않고, 봉지가 많이 보일 때 다시 그리는 횟수가 준다.
+      put(card, "--shx", `${(Math.round(shx * 2) / 2).toFixed(1)}px`);
+      put(card, "--shy", `${(Math.round(shy * 2) / 2).toFixed(1)}px`);
     }
     frame = moving ? requestAnimationFrame(step) : 0;
   };
