@@ -376,6 +376,20 @@ ART = {
         '<g fill="#fff" fill-opacity=".75"><rect x="93" y="28.5" width="18" height="2.4" rx="1.2"/><rect x="86" y="38.5" width="25" height="2.4" rx="1.2"/>'
         '<rect x="86" y="44.5" width="19" height="2.4" rx="1.2"/></g>'
     ),
+    # 논문: 제목과 저자 줄, 두 단 본문, 오른쪽 단의 그림 상자
+    "paper": (
+        '<rect x="31" y="3" width="58" height="58" rx="2" fill="#fff" stroke="currentColor" stroke-opacity=".35" stroke-width="1.2"/>'
+        '<rect x="38" y="9" width="44" height="4" rx="1" fill="currentColor"/>'
+        '<rect x="45" y="15.5" width="30" height="2" rx="1" fill="currentColor" fill-opacity=".45"/>'
+        '<g fill="currentColor" fill-opacity=".28"><rect x="36" y="22" width="22" height="1.8" rx=".9"/><rect x="36" y="25.5" width="22" height="1.8" rx=".9"/>'
+        '<rect x="36" y="29" width="22" height="1.8" rx=".9"/><rect x="36" y="32.5" width="19" height="1.8" rx=".9"/>'
+        '<rect x="36" y="38" width="22" height="1.8" rx=".9"/><rect x="36" y="41.5" width="22" height="1.8" rx=".9"/>'
+        '<rect x="36" y="45" width="22" height="1.8" rx=".9"/><rect x="36" y="48.5" width="17" height="1.8" rx=".9"/>'
+        '<rect x="62" y="38" width="22" height="1.8" rx=".9"/><rect x="62" y="41.5" width="22" height="1.8" rx=".9"/>'
+        '<rect x="62" y="45" width="22" height="1.8" rx=".9"/><rect x="62" y="48.5" width="20" height="1.8" rx=".9"/></g>'
+        '<rect x="62" y="22" width="22" height="13" rx="1" fill="#e8112d" fill-opacity=".14" stroke="#e8112d" stroke-width="1"/>'
+        '<path d="m64 33 5-6 4 4 3-3 6 5" fill="none" stroke="#e8112d" stroke-width="1" stroke-linejoin="round"/>'
+    ),
     # 노인보호구역 입지: 길과 사고가 몰린 칸(빨강의 진하기), 고른 자리 점선 원과 핀
     "zone": (
         '<rect x="4" y="4" width="112" height="56" rx="3" fill="#fff" fill-opacity=".6" stroke="currentColor" stroke-opacity=".3" stroke-width="1.2"/>'
@@ -835,7 +849,8 @@ if ABOUT:
     more_cv = "\n    ".join(
         filter(None, [
             cv_section("certs", "자격증", a.get("certs")),
-            cv_section("work", "회사 프로젝트", a.get("work")),
+            cv_section("work", "회사 프로젝트", [dict(w, link=f'/work/{w["slug"]}/', linkLabel="자세히 보기") for w in a.get("work", [])]),
+            cv_section("research", "연구·논문", a.get("research")),
             cv_section("startup", "대회·창업", a.get("startup")),
         ])
     )
@@ -923,6 +938,116 @@ if ABOUT:
 </html>
 """,
     )
+
+# ── 회사 프로젝트: 진열대 작은 봉지의 뒷면. 앱 페이지와 같은 틀에 개요·맡은 일·쓴 기술·자료(이미지·영상) ──
+# 자료는 about.json 의 work[].media 에 {"type": "image"|"video", "src", "poster", "w", "h", "alt"} 로 적으면 나온다.
+
+if ABOUT and ABOUT.get("work"):
+    minis = {it["href"]: it for row in SHELF["rows"] for line in row["lines"] for it in line if isinstance(it, dict)}
+    works = ABOUT["work"]
+
+    def work_tone(w):
+        mini = minis.get(f'/work/{w["slug"]}/', {})
+        return mini, f'--tone:{mini.get("tone", "#ffffff")};--tone-ink:{mini.get("ink", "#17171a")};--accent:{mini.get("ink", "#17171a")}'
+
+    def work_art(mini, cls):
+        art = ART.get(mini.get("art"))
+        return f'<span class="{cls}"><svg viewBox="0 0 120 64" aria-hidden="true" focusable="false">{art}</svg></span>' if art else ""
+
+    def media_html(w):
+        items = []
+        for m in w.get("media", []):
+            if m["type"] == "video":
+                poster = f' poster="{esc(m["poster"])}"' if m.get("poster") else ""
+                items.append(
+                    f'<li class="shots__video"><video src="{esc(m["src"])}"{poster} width="{m["w"]}" height="{m["h"]}" '
+                    f'muted loop playsinline controls preload="metadata" aria-label="{esc(m.get("alt", ""))}"></video></li>'
+                )
+            else:
+                items.append(f'<li><img src="{esc(m["src"])}" width="{m["w"]}" height="{m["h"]}" alt="{esc(m.get("alt", ""))}" loading="lazy"></li>')
+        if not items:
+            return ""
+        return f"""<section class="sec" aria-labelledby="h-media">
+      <h2 id="h-media">자료</h2>
+      <ul class="shots shots--wide">
+        {chr(10).join(items)}
+      </ul>
+    </section>"""
+
+    for w in works:
+        mini, style = work_tone(w)
+        did = "\n        ".join(f"<li>{esc(x)}</li>" for x in w.get("did", []))
+        stack = "".join(f"<li>{esc(x)}</li>" for x in w.get("stack", []))
+        others_rows = []
+        for o in works:
+            if o is w:
+                continue
+            omini, ostyle = work_tone(o)
+            others_rows.append(
+                f'<li><a href="/work/{o["slug"]}/">{work_art(omini, "work-thumb").replace("<span class=", f"<span style={chr(34)}{ostyle}{chr(34)} class=", 1)}'
+                f'<span><b>{esc(o["org"])}</b><span>{esc(o["unit"])} · {esc(o["period"])}</span></span><span class="get get--small">보기</span></a></li>'
+            )
+        scripts = ["shots.js", "light.js"] if w.get("media") else ["light.js"]
+        write(
+            f'work/{w["slug"]}/index.html',
+            head(f'{w["org"]} · {w["unit"]} | {DEV}', w["summary"], f'/work/{w["slug"]}/', scripts)
+            + f"""<body>
+<a class="skip" href="#app">본문으로 건너뛰기</a>
+<div class="wall">
+{sign(False)}
+<main id="app">
+<article class="back back--work" style="{style}">
+  {HOOK.format(style=' style="--hx:-7"')}
+  {TIP.format(style=' style="--hx:-7"')}
+  {HOOK.format(style=' style="--hx:7"')}
+  {TIP.format(style=' style="--hx:7"')}
+  <div class="listing">
+  <div class="listing__paper"></div>
+  <div class="listing__in">
+    <header class="app-head work-head">
+      {work_art(mini, "work-art")}
+      <div>
+        <h1 class="app-name">{esc(w["org"])}</h1>
+        <p class="app-sub">{esc(w["summary"])}</p>
+        <p class="app-dev"><a href="/about/#h-work">{esc(DEV)}</a></p>
+      </div>
+    </header>
+    <ul class="app-facts" aria-label="한눈에 보기">
+      {fact("회사", w["unit"])}
+      {fact("기간", w["period"])}
+      {fact("맡은 일", w["role"])}
+    </ul>
+    <section class="sec desc" aria-label="설명">
+      <p>{esc(w["notes"])}</p>
+    </section>
+    <section class="sec desc" aria-labelledby="h-did">
+      <h2 id="h-did">맡은 일</h2>
+      <ul>
+        {did}
+      </ul>
+    </section>
+    <section class="sec" aria-labelledby="h-stack">
+      <h2 id="h-stack">쓴 기술</h2>
+      <ul class="chips">{stack}</ul>
+    </section>
+    {media_html(w)}
+    <section class="sec" aria-labelledby="h-others">
+      <h2 id="h-others">다른 회사 프로젝트</h2>
+      <ul class="others">
+      {chr(10).join("      " + r for r in others_rows).strip()}
+      </ul>
+    </section>
+    <footer class="imprint">{barcode(w["slug"])}<span>{esc(w["slug"])}</span></footer>
+  </div>
+  </div>
+</article>
+</main>
+{FOOT}
+</div>
+</body>
+</html>
+""",
+        )
 
 # ── 빈 고리(404) ──
 

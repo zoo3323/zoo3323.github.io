@@ -16,7 +16,7 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `tool/apps/<앱>/demo.html` | (있으면) 미리보기 아래의 따로 해 보는 구역 |
 | `tool/about.json` | 소개 페이지 `/about/`의 내용(경력·학력·자격증·회사 프로젝트·대회·창업) |
 | `tool/build.py` | 위 파일들로 HTML을 만든다 |
-| `index.html`, `<앱>/index.html`, `about/index.html`, `404.html` | 만들어진 결과. 직접 고치지 않는다 |
+| `index.html`, `<앱>/index.html`, `work/<이름>/index.html`, `about/index.html`, `404.html` | 만들어진 결과. 직접 고치지 않는다 |
 | `assets/site.css` | 화면 전체의 모양 |
 | `assets/wall.js`, `light.js` | 봉지의 흔들림, 빛(PC는 마우스를 따르는 등빛과 봉지의 반사·무지개 결, 안드로이드 폰은 기울기를 따르는 봉지의 반사) |
 | `assets/aisle.js` | 첫 화면 진열대 줄을 미는 화살표 단추 |
@@ -73,6 +73,18 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 - 고리는 봉지 크기와 상관없이 벽의 크기입니다.
   - 물건은 줄 왼쪽에서 정수 칸만큼 떨어져 놓이고, 밀다가 물건의 시작에서 멈춥니다(scroll-snap). 그래서 멈추면 고리의 두 다리가 늘 구멍에 꽂힙니다.
   - 스티커 묶음의 높이도 구멍 간격의 정수배라서, 그 아래 칸의 고리가 구멍 자리에 섭니다.
+
+### 회사 프로젝트 자세히 보기(`/work/<이름>/`)
+
+- 내용은 `tool/about.json`의 `work`에 있습니다. 줄마다 `slug`(주소), `org`(이름), `unit`(회사), `period`, `role`, `summary`, `notes`, `did`(맡은 일), `stack`(쓴 기술)을 적습니다.
+- 진열대의 회사 프로젝트 봉지와 소개 페이지의 「자세히 보기」가 이 페이지로 이어집니다. 색과 도식은 진열대 봉지(`tool/shelf.json`)의 `tone`·`ink`·`art`를 따릅니다.
+- 이미지·영상은 `work[].media`에 `{"type": "image" 또는 "video", "src", "w", "h", "alt"}`로 적습니다(영상은 `poster`도). 적은 것이 있을 때만 「자료」 구역이 생깁니다. 파일은 `assets/img/work/<이름>/`에 둡니다.
+- 회사 자료는 공개해도 되는 것만 싣습니다(현장·고객이 드러나면 가립니다).
+
+### 연구·논문
+
+- 소개 페이지의 「연구·논문」 구역은 `tool/about.json`의 `research`, 진열대의 「연구·논문」 칸은 `tool/shelf.json`입니다.
+- 투고 전 논문의 제목·방법·수치는 본인이 공개해도 된다고 준 문구만 적습니다.
 
 앱에 딸린 문서는 그 앱의 경로 아래에 둡니다(예: `pocketpet/privacy.html` 파일 → `https://zoo3323.github.io/pocketpet/privacy`).
 
