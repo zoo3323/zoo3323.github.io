@@ -9,28 +9,30 @@
     "href": "/about/",
     "stickers": [
       {
-        "top": "정보처리기사",
-        "sub": "2024",
-        "shape": "round",
-        "tone": "#ffe55c",
-        "ink": "#17171a",
-        "tilt": 7
+        "kind": "note",
+        "tone": "#fff0a0",
+        "tilt": -3,
+        "logo": "/assets/img/marks/knu.svg",
+        "top": "경북대학교 대학원",
+        "mid": "인공지능학과 석사과정",
+        "sub": "2025 – 재학 중"
       },
       {
-        "top": "경북대 AI 석사과정",
-        "sub": "2025 –",
-        "shape": "pill",
+        "kind": "note",
+        "tone": "#ffd6e0",
+        "tilt": 2.5,
+        "logo": "/assets/img/marks/daegu.svg",
+        "top": "대구대학교",
+        "mid": "AI소프트웨어전공 학사",
+        "sub": "2018 – 2024"
+      },
+      {
+        "kind": "seal",
         "tone": "#ffffff",
-        "ink": "#1f1b4d",
-        "tilt": -3
-      },
-      {
-        "top": "대구대 AI학부 학사",
-        "sub": "2024",
-        "shape": "pill",
-        "tone": "#d9d2ff",
-        "ink": "#1f1b4d",
-        "tilt": 2.5
+        "tilt": 7,
+        "logo": "/assets/img/marks/hrdk.svg",
+        "top": "정보처리기사",
+        "sub": "2024"
       }
     ]
   },

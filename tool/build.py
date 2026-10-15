@@ -442,12 +442,14 @@ def mini_pack(item, place=""):
 # 물건마다 (폭 칸, 봉지 크기 비 s)를 넓은 화면과 폰(735px 이하)에 따로 둔다.
 
 GAP = 2  # 물건 사이(칸)
-# 넓은 화면은 한 화면에 칸이 두 줄쯤 보이게 작게(큰 봉지 4칸), 폰(735px 이하)은 원래 크기 그대로다.
+# 넓은 화면은 한 화면에 칸이 1.5~2줄 보이게(큰 봉지 5칸), 폰(735px 이하)은 원래 크기 그대로다.
+# 넓은 화면의 폭은 홀수 칸이라 줄을 반 칸 들여 시작한다(가운데가 칸 경계에 와야 고리 두 다리가 구멍에 꽂힌다).
 SIZE = {
-    "big": ((4, 0.4), (10, 1.0)),
-    "mini": ((4, 0.55), (8, 1.2)),
-    "wide": ((6, 0.55), (12, 1.2)),
+    "big": ((5, 0.5), (10, 1.0)),
+    "mini": ((5, 0.65), (8, 1.2)),
+    "wide": ((7, 0.65), (12, 1.2)),
 }
+WALL = {"wide": 36, "tablet": 22}  # 벽의 칸 수(넓은 화면, 936px 미만 태블릿)
 HEIGHT = {"big": 17.5, "mini": 13.6, "wide": 15}  # 봉지 높이(봉지의 p 단위)
 SHADOW = 1  # 봉지 아래 그림자가 잘리지 않게 줄 아래에 두는 칸
 
@@ -477,12 +479,16 @@ def aisle(row):
         kinds = [kind_of(item) for item in items]
         height = max(reach(k, SIZE[k][0][1]) for k in kinds) + SHADOW
         narrow_height = max(reach(k, SIZE[k][1][1]) for k in kinds) + SHADOW
+        total = sum(SIZE[k][0][0] for k in kinds) + GAP * (len(items) - 1)
+        # 다 들어가는 줄은 가운데 가까이 둔다. 들여 쓰는 칸은 1.5 + 정수라 시작이 늘 반 칸에 선다.
+        lead = {key: 1.5 + max(0, (cols - 3 - total) // 2) for key, cols in WALL.items()}
         pegs = []
         for item, k in zip(items, kinds):
             (w, s), (nw, ns) = SIZE[k]
             pegs.append(render_item(item, f' style="--w:{w};--s:{s};--nw:{nw};--ns:{ns}"'))
         lines.append(
-            f'<div class="line" style="--h:{height};--nh:{narrow_height}">\n<ul class="hooks">\n{chr(10).join(pegs)}\n</ul>\n</div>'
+            f'<div class="line" style="--h:{height};--nh:{narrow_height};--lead:{lead["wide"]};--tlead:{lead["tablet"]}">'
+            f'\n<ul class="hooks">\n{chr(10).join(pegs)}\n</ul>\n</div>'
         )
     count = sum(len(items) for items in row["lines"])
     pop = row.get("pop")
@@ -503,11 +509,23 @@ def maker(profile):
         photo = f'<img src="{esc(profile["photo"])}" width="400" height="400" alt="">'
     else:
         photo = f'<span class="maker__mono">{esc(profile["monogram"])}</span>'
-    stickers = "\n".join(
-        f'<li class="sticker sticker--{x["shape"]}" style="--tone:{x["tone"]};--tone-ink:{x["ink"]};--tilt:{x["tilt"]}deg">'
-        f'<b>{esc(x["top"])}</b><span>{esc(x["sub"])}</span></li>'
-        for x in profile["stickers"]
-    )
+    def mark(x, cls):
+        """학교·기관 마크. 파일이 있을 때만 붙인다(글자가 이름을 알리므로 그림은 꾸밈)."""
+        logo = x.get("logo")
+        if not logo or not (ROOT / logo.lstrip("/")).exists():
+            return ""
+        return f'<img class="{cls}" src="{esc(logo)}" alt="" loading="lazy">'
+
+    def sticker(x):
+        style = f'--tone:{x["tone"]};--tilt:{x["tilt"]}deg'
+        if x["kind"] == "note":
+            return (
+                f'<li class="note" style="{style}">{mark(x, "note__logo")}<b>{esc(x["top"])}</b>'
+                f'<span>{esc(x["mid"])}</span><small>{esc(x["sub"])}</small></li>'
+            )
+        return f'<li class="seal" style="{style}">{mark(x, "seal__logo")}<b>{esc(x["top"])}</b><small>{esc(x["sub"])}</small></li>'
+
+    stickers = "\n".join(sticker(x) for x in profile["stickers"])
     href = esc(profile["href"])
     return f"""<section class="maker" aria-label="{esc(profile["label"])}">
 <a class="maker__photo" href="{href}" tabindex="-1" aria-hidden="true">{photo}</a>
