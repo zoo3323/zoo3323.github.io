@@ -49,9 +49,7 @@
         [
           "app:pocketpet",
           "app:mylittlecloset",
-          "app:moacam"
-        ],
-        [
+          "app:moacam",
           {
             "name": "paper-summary",
             "kind": "Claude Code 플러그인",

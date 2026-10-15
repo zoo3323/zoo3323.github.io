@@ -243,6 +243,17 @@
     measure();
     wake();
   });
+  // 진열대 줄을 옆으로 밀면 봉지 자리가 바뀌므로 그림자 방향을 다시 잰다
+  for (const row of document.querySelectorAll(".hooks")) {
+    row.addEventListener(
+      "scroll",
+      () => {
+        measure();
+        wake();
+      },
+      { passive: true },
+    );
+  }
 
   for (const card of cards) {
     const { el } = card;

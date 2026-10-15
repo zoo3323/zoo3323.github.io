@@ -7,9 +7,13 @@
   const K = 42; // 되돌리는 힘
   const C = 3.4; // 잦아드는 정도
   // 처음 열 때는 첫 화면에 걸린 봉지만 살짝 흔들린 채로 시작한다. 이웃끼리 반대로, 폭은 0.6~1.8도.
+  const onScreen = (el) => {
+    const r = el.getBoundingClientRect();
+    return r.top < innerHeight && r.bottom > 0 && r.left < innerWidth && r.right > 0;
+  };
   const bobs = packs.map((el, i) => ({
     el,
-    angle: el.getBoundingClientRect().top < innerHeight ? (i % 2 ? 1 : -1) * (1.8 - (i % 5) * 0.3) : 0,
+    angle: onScreen(el) ? (i % 2 ? 1 : -1) * (1.8 - (i % 5) * 0.3) : 0,
     speed: 0,
     shown: "",
     seen: true,
@@ -74,6 +78,21 @@
     },
     { passive: true },
   );
+
+  // 진열대 줄을 옆으로 밀면 그 줄의 봉지들이 밀린 반대쪽으로 늦게 따라오며 흔들린다
+  for (const row of document.querySelectorAll(".hooks")) {
+    const inRow = bobs.filter((bob) => row.contains(bob.el));
+    let lastX = row.scrollLeft;
+    row.addEventListener(
+      "scroll",
+      () => {
+        const delta = Math.max(-10, Math.min(10, (row.scrollLeft - lastX) * 0.15));
+        lastX = row.scrollLeft;
+        for (const bob of inRow) if (bob.seen) push(bob, -delta);
+      },
+      { passive: true },
+    );
+  }
 
   wake();
 })();

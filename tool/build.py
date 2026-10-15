@@ -361,16 +361,19 @@ def mini_pack(item, place=""):
 
 
 # ── 진열대의 칸 ──
-# 칸(aisle)마다 벽에 박은 이름 띠 하나와 고리 줄(line)이 있다. 길이의 단위는 벽의 구멍 간격이다.
-# 넓은 화면은 벽이 36칸, 좁은 화면(935px 이하)은 22칸이고 줄마다 옆으로 밀어 본다.
-# 물건의 폭은 늘 짝수 칸이고 칸 경계에서 시작하므로, 가운데에 건 고리의 두 다리는 늘 구멍에 꽂힌다.
-# 봉지 크기는 구멍 간격에 대한 비(s)로 정한다. 큰 봉지는 폭이 봉지 단위 10, 작은 봉지는 20/3, 넓은 작은 봉지는 10.
+# 칸(aisle)마다 벽에 박은 이름 띠 하나와 고리 줄(line)이 있고, 줄은 옆으로 밀어 본다. 길이의 단위는 벽의 구멍 간격이다.
+# 큰 봉지는 원래 크기 그대로(폭 10칸)다. 물건의 폭은 늘 짝수 칸이고 줄의 왼쪽 끝에서 정수 칸만큼 떨어져 놓이며,
+# 밀다가 멈추는 자리도 물건의 시작(scroll-snap)이라, 가운데에 건 고리의 두 다리는 멈추면 늘 벽의 구멍에 꽂힌다.
+# 물건마다 (폭 칸, 봉지 크기 비 s)를 넓은 화면과 좁은 화면(935px 이하)에 따로 둔다.
 
-WALL_COLS = 36
 GAP = 2  # 물건 사이(칸)
-SCALE = {"big": (0.6, 1.0), "mini": (0.6, 1.2), "wide": (0.6, 1.2)}  # (넓은 화면, 좁은 화면)
-SPAN = {"big": 10, "mini": 20 / 3, "wide": 10}
-HEIGHT = {"big": 17.5, "mini": 12.4, "wide": 14.6}
+SIZE = {
+    "big": ((10, 1.0), (10, 1.0)),
+    "mini": ((6, 0.9), (8, 1.2)),
+    "wide": ((10, 0.9), (12, 1.2)),
+}
+HEIGHT = {"big": 17.5, "mini": 12.4, "wide": 14.6}  # 봉지 높이(봉지의 p 단위)
+SHADOW = 2  # 봉지 아래 그림자가 잘리지 않게 줄 아래에 두는 칸
 
 
 def kind_of(item):
@@ -394,24 +397,17 @@ def render_item(item, place):
 
 def aisle(row):
     lines = []
-    top = 3  # 1줄은 이름 띠, 2줄은 비우고 3줄에 고리
     for items in row["lines"]:
         kinds = [kind_of(item) for item in items]
-        wide = [round(SPAN[k] * SCALE[k][0]) for k in kinds]
-        narrow = [round(SPAN[k] * SCALE[k][1]) for k in kinds]
-        total = sum(wide) + GAP * (len(items) - 1)
-        if total > WALL_COLS:
-            raise SystemExit(f'「{row["name"]}」 한 줄이 벽보다 넓습니다({total}칸)')
-        col = 1 + (WALL_COLS - total) // 2
-        height = max(reach(k, SCALE[k][0]) for k in kinds)
-        narrow_height = max(reach(k, SCALE[k][1]) for k in kinds)
+        height = max(reach(k, SIZE[k][0][1]) for k in kinds) + SHADOW
+        narrow_height = max(reach(k, SIZE[k][1][1]) for k in kinds) + SHADOW
         pegs = []
-        for item, k, w, nw in zip(items, kinds, wide, narrow):
-            place = f' style="--c:{col};--w:{w};--s:{SCALE[k][0]};--nw:{nw};--ns:{SCALE[k][1]}"'
-            pegs.append(render_item(item, place))
-            col += w + GAP
-        lines.append(f'<ul class="hooks" style="--r:{top};--h:{height};--nh:{narrow_height}">\n{chr(10).join(pegs)}\n</ul>')
-        top += height + GAP
+        for item, k in zip(items, kinds):
+            (w, s), (nw, ns) = SIZE[k]
+            pegs.append(render_item(item, f' style="--w:{w};--s:{s};--nw:{nw};--ns:{ns}"'))
+        lines.append(
+            f'<div class="line" style="--h:{height};--nh:{narrow_height}">\n<ul class="hooks">\n{chr(10).join(pegs)}\n</ul>\n</div>'
+        )
     count = sum(len(items) for items in row["lines"])
     return f"""<section class="aisle aisle--{row["id"]}" aria-labelledby="a-{row["id"]}">
 <h2 class="aisle__name" id="a-{row["id"]}">{esc(row["name"])} <span class="aisle__count">{count}</span></h2>
@@ -447,7 +443,7 @@ def write(path, text):
 names = ", ".join(app["name"] for app in APPS[:6]) + (" 등" if len(APPS) > 6 else "")
 write(
     "index.html",
-    head(f"{DEV} · {SITE['tagline']}", f"{DEV} · {SITE['tagline']}. {names}.", "/", ["wall.js", "light.js"])
+    head(f"{DEV} · {SITE['tagline']}", f"{DEV} · {SITE['tagline']}. {names}.", "/", ["wall.js", "light.js", "aisle.js"])
     + f"""<body class="home">
 <a class="skip" href="#apps">목록으로 건너뛰기</a>
 <div class="wall">

@@ -274,36 +274,24 @@ a {
   transform: translateY(1px);
 }
 
-/* ── 진열대의 칸: 벽에 박은 이름 띠 아래로 고리 줄 ──────────
-   길이의 단위는 벽의 구멍 간격(--P)이다. 칸은 벽과 같은 격자(넓은 화면 36칸)에 놓인다.
-   봉지는 줄마다 정한 비(--s)만큼 작게 걸고, 고리는 봉지와 상관없이 벽의 크기라서 두 다리가 늘 구멍에 꽂힌다.
-   물건의 자리(--c, --w)와 줄의 자리(--r, --h)는 build.py 가 계산해 넣는다. */
+/* ── 진열대의 칸: 벽에 박은 이름 띠 아래로 옆으로 미는 고리 줄 ──────────
+   길이의 단위는 벽의 구멍 간격(--P)이다. 봉지는 원래 크기 그대로 걸고(--s 는 작은 봉지만 다르다),
+   고리는 봉지와 상관없이 벽의 크기다. 물건은 줄 왼쪽에서 정수 칸만큼 떨어져 놓이고 밀다가 물건의 시작에서 멈추므로,
+   멈추면 고리의 두 다리가 늘 벽의 구멍에 꽂힌다. 물건의 폭(--w)과 줄 높이(--h)는 build.py 가 넣는다. */
 
-/* 진열대는 아래로 길게 이어지므로 구멍 간격을 창 높이에 맞춰 줄이지 않는다(작은 봉지 글씨가 끼지 않게) */
-@media (min-width: 936px) {
-  .home {
-    --p: clamp(24px, calc((100vw - 48px) / 37), 40px);
-  }
-}
 .aisles {
   --P: var(--p);
   margin-top: var(--P);
 }
-.aisle {
-  display: grid;
-  grid-template-columns: repeat(36, var(--P));
-  grid-auto-rows: var(--P);
-}
 .aisle + .aisle {
-  margin-top: calc(var(--P) * 2);
+  margin-top: var(--P);
 }
 .aisle__name {
   position: relative;
-  grid-column: 1 / -1;
-  grid-row: 1;
   display: flex;
   align-items: center;
   gap: 0.45em;
+  height: var(--P);
   margin: 0;
   padding: 0 calc(var(--P) * 0.9);
   font: 400 calc(var(--P) * 0.66) / 1 var(--shop);
@@ -343,20 +331,33 @@ a {
   background: var(--ink);
   border-radius: 999px;
 }
+.line {
+  position: relative;
+  margin-top: var(--P);
+}
+/* 줄 양 끝은 한 칸씩 비운다. 흔들리는 봉지 모서리가 잘리지 않게 */
 .hooks {
-  display: grid;
-  grid-template-columns: subgrid;
-  grid-column: 1 / -1;
-  grid-row: var(--r) / span var(--h);
+  display: flex;
+  gap: calc(var(--P) * 2);
+  height: calc(var(--P) * var(--h));
   margin: 0;
-  padding: 0;
+  padding: 0 var(--P);
   list-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--P);
+  scrollbar-width: none;
+}
+.hooks::-webkit-scrollbar {
+  display: none;
 }
 .aisle .peg {
   --p: calc(var(--P) * var(--s));
-  grid-column: var(--c) / span var(--w);
-  grid-row: 1;
-  width: auto;
+  flex: none;
+  width: calc(var(--P) * var(--w));
+  scroll-snap-align: start;
 }
 .aisle .hook {
   top: 0;
@@ -375,7 +376,50 @@ a {
 .aisle .pack {
   margin-top: calc(var(--P) * 2 - var(--p) * 0.5625);
 }
-/* 진열대에 건 큰 봉지는 작게 걸리므로 한 줄 소개를 한 줄까지만 둔다. 전체 문구는 앱 페이지에 있다. */
+
+/* 마우스로 미는 단추. 줄 양 끝에 붙고, 더 갈 곳이 없으면 숨는다. 손가락이 닿는 화면에는 두지 않는다. */
+.line__go {
+  position: absolute;
+  z-index: 5;
+  top: calc(var(--P) * (var(--h) - 2) / 2 - 22px);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 0 8px 16px -10px rgb(52 48 70 / 0.6);
+  cursor: pointer;
+  transition: background-color 0.18s var(--out), transform 0.18s var(--out);
+}
+.line__go:hover {
+  background: var(--lemon);
+}
+.line__go:active {
+  transform: translateY(1px);
+}
+.line__go svg {
+  width: 16px;
+  height: 16px;
+}
+.line__go--prev {
+  left: calc(var(--P) * -0.6);
+}
+.line__go--next {
+  right: calc(var(--P) * -0.6);
+}
+.line__go[hidden] {
+  display: none;
+}
+@media (hover: none), (pointer: coarse) {
+  .line__go {
+    display: none;
+  }
+}
+/* 큰 봉지의 한 줄 소개는 한 줄까지만 둔다. 전체 문구는 앱 페이지에 있다. */
 .aisle .pack:not(.pack--mini) .card__line {
   display: -webkit-box;
   overflow: hidden;
@@ -1973,8 +2017,7 @@ svg.app-icon {
   }
 }
 
-/* 좁은 화면의 진열대: 벽은 22칸, 고리 줄마다 옆으로 밀어 본다.
-   줄 안의 구멍 무늬는 줄과 함께 밀리고(local), 멈추면 물건 경계(짝수 칸)에 서므로 벽의 구멍과 다시 맞는다. */
+/* 좁은 화면의 진열대: 벽은 22칸, 이름 띠는 두 칸 높이(네 귀퉁이에 나사), 작은 봉지는 조금 크게 */
 @media (max-width: 935px) {
   .home {
     --p: min(32px, calc((100vw - 32px) / 22));
@@ -1982,44 +2025,24 @@ svg.app-icon {
   .home .wall {
     width: calc(var(--p) * 22);
   }
-  .aisle {
-    display: block;
-  }
   .aisle__name {
     height: calc(var(--P) * 2);
     padding: 0 calc(var(--P) * 1.1);
     font-size: calc(var(--P) * 1.05);
   }
-  /* 두 칸 높이 띠는 네 귀퉁이에 나사 */
   .aisle__name::before,
   .aisle__name::after {
     box-shadow: 0 var(--P) 0 var(--hole-deep);
   }
   .hooks {
-    display: flex;
-    gap: calc(var(--P) * 2);
     height: calc(var(--P) * var(--nh));
-    margin-top: var(--P);
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    background:
-      radial-gradient(circle at center, var(--hole) 0 calc(var(--P) * 0.1), transparent calc(var(--P) * 0.1 + 0.75px))
-        0 0 / var(--P) var(--P) local,
-      var(--board);
   }
-  .hooks::-webkit-scrollbar {
-    display: none;
-  }
-  .hooks + .hooks {
-    margin-top: calc(var(--P) * 2);
+  .line__go {
+    top: calc(var(--P) * (var(--nh) - 2) / 2 - 22px);
   }
   .aisle .peg {
     --p: calc(var(--P) * var(--ns));
-    flex: none;
     width: calc(var(--P) * var(--nw));
-    scroll-snap-align: start;
   }
 }
 
