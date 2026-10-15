@@ -1545,6 +1545,29 @@ svg.app-icon {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+/* 정보 맨 끝의 「개인정보처리방침」: 줄 전체가 눌린다 */
+.info .info__more {
+  position: relative;
+}
+.info__more a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  color: var(--accent, var(--ink));
+  text-decoration: none;
+}
+.info__more a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.info__more a svg {
+  width: 0.75em;
+  height: 0.75em;
+}
+.info__more:hover a {
+  text-decoration: underline;
+}
 
 /* 같은 사람이 만든 다른 앱 */
 .others {
@@ -1641,6 +1664,115 @@ svg.app-icon {
   text-align: center;
   font-size: 0.75rem;
   font-weight: 400;
+}
+
+/* ── 문서: 벽에 붙인 흰 종이 한 장 ─────────────
+   개인정보처리방침처럼 읽기만 하는 글. 고리·등빛·흔들림 없이 글만 둔다. */
+
+.doc {
+  width: 46rem;
+  max-width: 100%;
+  margin: var(--p) auto 0;
+  padding: 2.5rem 3rem 2.75rem;
+  font-size: 1rem;
+  line-height: 1.75;
+  background: var(--paper);
+  border-radius: calc(var(--p) * 0.44);
+  box-shadow: 0 calc(var(--p) * 0.35) calc(var(--p) * 0.9) calc(var(--p) * -0.35) rgb(52 48 70 / 0.24);
+}
+.doc__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.doc__icon {
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 22.5%;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+.doc h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.doc__meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--sub);
+}
+.doc .doc__lead {
+  margin-top: 1.5rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.65;
+}
+.doc h2 {
+  margin: 2.25rem 0 0.55rem;
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.doc p {
+  margin: 0;
+  max-width: 40rem;
+}
+.doc p + p,
+.doc ul + p,
+.doc dl + p {
+  margin-top: 0.65rem;
+}
+.doc ul {
+  margin: 0.6rem 0 0;
+  padding: 0;
+  max-width: 40rem;
+  list-style: none;
+}
+.doc li {
+  position: relative;
+  padding: 0.1rem 0 0.1rem 1.1rem;
+}
+.doc li::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 0.95em;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--tone-ink, var(--ink));
+}
+.doc__list {
+  margin: 0.7rem 0 0;
+  max-width: 40rem;
+  border-top: 1px solid var(--rule);
+}
+.doc__list div {
+  display: grid;
+  grid-template-columns: 10.5rem minmax(0, 1fr);
+  gap: 0.2rem 1.25rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.doc__list dt {
+  font-weight: 700;
+}
+.doc__list dd {
+  margin: 0;
+}
+.doc a {
+  font-weight: 600;
+  color: var(--accent, var(--ink));
 }
 
 /* ── 빈 고리: 고리에 꼬리표 한 장만 걸려 있다 ───── */
@@ -1842,6 +1974,24 @@ svg.app-icon {
   }
   .info {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .doc {
+    margin-top: calc(var(--p) * 0.5);
+    padding: 1.5rem 1.25rem 2rem;
+  }
+  .doc__icon {
+    width: 3rem;
+    height: 3rem;
+  }
+  .doc h1 {
+    font-size: 1.375rem;
+  }
+  .doc h2 {
+    margin-top: 2rem;
+  }
+  .doc__list div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
   }
   .skills div {
     grid-template-columns: minmax(0, 1fr);

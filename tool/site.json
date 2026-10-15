@@ -3,11 +3,16 @@
   "tagline": "1인 개발자 개발 기록",
   "github": "https://github.com/zoo3323",
   "site": "https://zoo3323.github.io",
+  "email": "joo24587@gmail.com",
   "year": 2026,
   "apps": [
     "pocketpet",
     "mylittlecloset",
     "moacam",
     "scorelab"
+  ],
+  "keep": [
+    "pocketpet/privacy.html",
+    "mylittlecloset/privacy.html"
   ]
 }

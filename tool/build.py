@@ -8,10 +8,14 @@
   tool/apps/<앱>/pack.html  진열대의 봉지 속에 넣을 물건
   tool/apps/<앱>/preview.html  앱 페이지의 「미리보기」에 넣을 내용
   tool/apps/<앱>/demo.html  (있으면) 미리보기 아래에 따로 두는 구역. 제목은 app.json 의 demoTitle
+  tool/apps/<앱>/privacy.html  (app.json 에 privacy 가 있으면) 그 앱 개인정보처리방침의 본문
+  tool/privacy-common.html  모든 방침 끝에 붙는 문의처·구제 기관·변경 안내
   tool/about.json           (있으면) 진열대 맨 앞의 명함과 소개 페이지(/about/)
 
 쓰는 것
-  index.html, <앱>/index.html, about/index.html, 404.html
+  index.html, <앱>/index.html, <앱>/privacy.html, about/index.html, 404.html
+
+site.json 의 keep 에 적은 파일은 앱 안과 플레이 콘솔에 주소가 걸려 있다. 하나라도 만들지 못하면 멈춘다.
 
 앱을 더할 때는 tool/apps/_template 을 복사해 고치고, site.json 의 apps 에 폴더 이름을 넣은 뒤
 이 파일을 다시 돌린다. 만들어진 HTML 은 직접 고치지 않는다.
@@ -94,6 +98,8 @@ def load(app_id):
     app["preview_html"] = (folder / "preview.html").read_text().strip()
     demo = folder / "demo.html"
     app["demo_html"] = demo.read_text().strip() if demo.exists() else ""
+    if app.get("privacy"):
+        app["privacy_html"] = (folder / "privacy.html").read_text().strip()
     return app
 
 
@@ -178,13 +184,13 @@ def head(title, desc, path, scripts=(), index=True):
 """
 
 
-def sign(home):
+def sign(home, back=("/", "진열대")):
     if home:
         who = f'<h1 class="sign__name">{esc(DEV)}</h1>'
         link = f'<a class="btn" href="{SITE["github"]}" rel="me">GitHub {ICON_OUT}</a>'
     else:
         who = f'<p class="sign__name"><a href="/">{esc(DEV)}</a></p>'
-        link = f'<a class="btn" href="/">{ICON_BACK} 진열대</a>'
+        link = f'<a class="btn" href="{back[0]}">{ICON_BACK} {esc(back[1])}</a>'
     return f"""<header class="sign">
   {who}
   {link}
@@ -315,10 +321,14 @@ ABOUT_ICON = (
 )
 
 
+WRITTEN = set()
+
+
 def write(path, text):
     target = ROOT / path
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(text)
+    WRITTEN.add(path)
     print(path)
 
 
@@ -392,7 +402,11 @@ def info(app):
     if app.get("package"):
         rows.append(("패키지 이름", app["package"]))
     rows.append(("저작권", f'© {SITE["year"]} {DEV}'))
-    return "\n      ".join(f"<div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in rows)
+    cells = [f"<div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in rows]
+    # 방침을 쓴 앱에만 단다. 앱 장터처럼 정보 맨 끝에 둔다.
+    if app.get("privacy"):
+        cells.append(f'<div class="info__more"><dt>개인정보처리방침</dt><dd><a href="/{app["id"]}/privacy">보기 {ICON_GO}</a></dd></div>')
+    return "\n      ".join(cells)
 
 
 def demo(app):
@@ -478,6 +492,63 @@ for app in APPS:
     <footer class="imprint">{barcode(code(app))}<span>{esc(code(app))}</span>{f'<small class="imprint__legal">{PLAY_LEGAL}</small>' if has_play(app) else ""}</footer>
   </div>
   </div>
+</article>
+</main>
+{FOOT}
+</div>
+</body>
+</html>
+""",
+    )
+
+# ── 개인정보처리방침: 벽에 붙인 흰 종이 한 장. 효과 없이 글만 둔다 ──
+# 앱 안에서 누르고 들어오는 일이 많아 폰 화면을 먼저 생각한다. 주소는 /<앱>/privacy 로 고정이다.
+
+COMMON_PRIVACY = (TOOL / "privacy-common.html").read_text().strip()
+
+
+def date_long(text):
+    year, month, day = text.split("-")
+    return f"{int(year)}년 {int(month)}월 {int(day)}일"
+
+
+def fill(text, app):
+    """방침 본문의 {{...}} 자리를 채운다."""
+    email = esc(SITE["email"])
+    for key, value in {
+        "{{app}}": esc(app["name"]),
+        "{{developer}}": esc(DEV),
+        "{{email}}": f'<a href="mailto:{email}">{email}</a>',
+        "{{date}}": date_long(app["privacy"]["date"]),
+    }.items():
+        text = text.replace(key, value)
+    return text
+
+
+for app in APPS:
+    if not app.get("privacy"):
+        continue
+    app_id = app["id"]
+    policy = app["privacy"]
+    title = f'{app["name"]} 개인정보처리방침'
+    write(
+        f"{app_id}/privacy.html",
+        head(f"{title} | {DEV}", f"{title}. 다루는 정보와 쓰는 권한, 문의처를 적었습니다.", f"/{app_id}/privacy")
+        + f"""<body>
+<a class="skip" href="#doc">본문으로 건너뛰기</a>
+<div class="wall">
+{sign(False, (f"/{app_id}/", app["name"]))}
+<main id="doc">
+<article class="doc" style="{tone_style(app)}">
+  <header class="doc__head">
+    <img class="doc__icon" src="/assets/img/{app_id}/icon.webp" width="256" height="256" alt="">
+    <div>
+      <h1>{esc(title)}</h1>
+      <p class="doc__meta">시행일 <time datetime="{policy["date"]}">{date_ko(policy["date"])}</time> · {esc(DEV)}</p>
+    </div>
+  </header>
+  {fill(app["privacy_html"], app)}
+  {fill(COMMON_PRIVACY, app)}
 </article>
 </main>
 {FOOT}
@@ -611,3 +682,10 @@ write(
 </html>
 """,
 )
+
+# ── 한 번 공개한 주소는 지키기 ──
+# keep 의 페이지는 앱 안 링크와 플레이 콘솔에 걸려 있다. 빠지면 구글 심사에서 걸리므로 여기서 멈춘다.
+
+missing = [path for path in SITE.get("keep", []) if path not in WRITTEN]
+if missing:
+    raise SystemExit("만들지 못한 페이지가 있습니다(앱과 플레이 콘솔에 주소가 걸려 있어 지우면 안 됩니다): " + ", ".join(missing))

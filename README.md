@@ -51,13 +51,20 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 
 앱에 딸린 문서는 그 앱의 경로 아래에 둡니다(예: `pocketpet/privacy.html` 파일 → `https://zoo3323.github.io/pocketpet/privacy`).
 
+### 개인정보처리방침
+
+- 본문은 `tool/apps/<앱>/privacy.html`에 쓰고, `app.json`에 `"privacy": {"date": "시행일"}`을 넣습니다. 그러면 `<앱>/privacy.html`이 만들어지고 앱 페이지 「정보」 맨 끝에 「개인정보처리방침」 줄이 생깁니다.
+- 모든 방침 끝에 붙는 문의처·구제 기관·변경 안내는 `tool/privacy-common.html` 한 곳에 있습니다. 본문의 `{{email}}`, `{{developer}}`, `{{date}}`, `{{app}}`은 만들 때 채워집니다. 문의 메일은 `tool/site.json`의 `email`이고, 사이트에서는 방침 페이지에만 보입니다.
+- 공개한 방침 주소는 앱 안과 플레이 콘솔에 걸립니다. `tool/site.json`의 `keep`에 적어 두면, 그 페이지를 만들지 못할 때 `build.py`가 멈춥니다. 주소(앱 폴더 이름)는 바꾸지 않습니다.
+- 내용을 바꾸면 `date`를 새 시행일로 고칩니다.
+
 ## 그 밖에 고칠 때
 
 - **개발자 이름, 소개 한 줄**: `tool/site.json`의 `developer`, `tagline`을 고치고 다시 만듭니다. 링크 미리보기 그림 `assets/img/og.png`는 첫 화면을 1200×630으로 다시 찍어 바꿉니다.
 - **버전 기록**: 그 앱의 `app.json`에서 `version`을 올리고 `history` 맨 위에 `{"version", "date", "notes"}`를 하나 더합니다. 앱 페이지의 「새로운 기능」에는 지금 버전의 기록이, 그 아래 접힌 「버전 기록」에는 나머지가 나옵니다. 버전이 없는 웹 서비스는 `version`을 `null`로 두면 「업데이트 기록」이 됩니다.
 - **소개**: `tool/about.json`의 경력·학력·기술·공개한 도구를 고칩니다. 앱 페이지의 개발자 이름은 소개 페이지로 이어집니다.
 - **이름 글씨를 따로 쓰는 앱**: 이름 글자만 담은 글꼴 조각을 `tool/wordmarks.py`로 만들고 `assets/site.css` 맨 위에 `@font-face`를 한 줄 더한 뒤 `app.json`의 `mark.font`에 그 이름을 적습니다.
-- **포켓펫 동물 추가**: `assets/img/pocketpet/`의 `thumb/`, `atlas/`(스프라이트 위 다섯 줄, 1536×1040), 보송 그림체면 `stage/`에 그림을 넣고 `tool/apps/pocketpet/demo.html`의 선반에 버튼 한 줄을 더합니다.
+- **포켓펫 동물 추가**: `assets/img/pocketpet/`의 `thumb/`, `atlas/`(스프라이트 위 다섯 줄, 1536×1040), 큐티 그림체면 `stage/`에 그림을 넣고 `tool/apps/pocketpet/demo.html`의 선반에 버튼 한 줄을 더합니다.
 
 ## 그림과 글꼴
 
