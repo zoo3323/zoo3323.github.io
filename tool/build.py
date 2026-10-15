@@ -22,6 +22,7 @@ site.json 의 keep 에 적은 파일은 앱 안과 플레이 콘솔에 주소가
 """
 
 import html
+import itertools
 import json
 import math
 from pathlib import Path
@@ -218,7 +219,7 @@ def tag(app):
     return esc(first) + (f"<br>{esc(rest)}" if rest else "")
 
 
-def pack(app, place=""):
+def pack(app, place="", level=3):
     app_id = app["id"]
     platforms = compat(app) if len(app["platforms"]) == 1 else " · ".join(p.get("short", p["name"]) for p in app["platforms"])
     line = app.get("labelLine") or f'{app["version"]} · {platforms}'
@@ -226,7 +227,7 @@ def pack(app, place=""):
   {HOOK.format(style="")}
   <article class="pack pack--{app["pack"]} pack--{app_id}" data-sway style="--rest:{app.get("rest", 0)}deg;{tone_style(app)};view-transition-name:pack-{app_id}">
     <div class="card">
-      <h3 class="card__name"><a class="pack__link" href="/{app_id}/">{name_html(app)}</a></h3>
+      <h{level} class="card__name"><a class="pack__link" href="/{app_id}/">{name_html(app)}</a></h{level}>
       <p class="card__line">{esc(app["line"])}</p>
     </div>
     <p class="tag">{tag(app)}</p>
@@ -284,14 +285,14 @@ def news(app):
     </section>"""
 
 
-def about_pack(place=""):
+def about_pack(place="", level=3):
     a = ABOUT
     orgs = "<br>".join(esc(line) for line in a["card"])
     return f"""<li class="peg"{place}>
   {HOOK.format(style="")}
   <article class="pack pack--bag pack--about" data-sway style="{ABOUT_STYLE_WALL};view-transition-name:pack-about">
     <div class="card">
-      <h3 class="card__name"><a class="pack__link" href="/about/">소개</a></h3>
+      <h{level} class="card__name"><a class="pack__link" href="/about/">소개</a></h{level}>
       <p class="card__line">{esc(a["packLine"])}</p>
     </div>
     <div class="bag">
@@ -418,7 +419,7 @@ def mini_art(item):
     return ""
 
 
-def mini_pack(item, place=""):
+def mini_pack(item, place="", level=3):
     href = item["href"]
     if href.startswith("http"):
         go = f'{"GitHub" if "github.com" in href else "열기"} {ICON_OUT}'
@@ -433,7 +434,7 @@ def mini_pack(item, place=""):
   {HOOK.format(style="")}
   <article class="pack pack--card pack--mini{wide}" data-sway style="{style}">
     <div class="card">
-      <h3 class="card__name"><a class="pack__link" href="{esc(href)}">{esc(item["name"])}</a></h3>
+      <h{level} class="card__name"><a class="pack__link" href="{esc(href)}">{esc(item["name"])}</a></h{level}>
       <p class="card__line">{esc(item["kind"])}</p>
     </div>
     <div class="bag">
@@ -479,40 +480,171 @@ def reach(kind, s):
     return math.ceil(2 - 0.5625 * s + HEIGHT[kind] * s)
 
 
-def render_item(item, place):
+def render_item(item, place, level=3):
     if item == "about":
-        return about_pack(place)
+        return about_pack(place, level)
     if isinstance(item, str):
-        return pack(APP_BY_ID[item.removeprefix("app:")], place)
-    return mini_pack(item, place)
+        return pack(APP_BY_ID[item.removeprefix("app:")], place, level)
+    return mini_pack(item, place, level)
+
+
+def item_style(item):
+    (w, s), (nw, ns) = SIZE[kind_of(item)]
+    return f' style="--w:{w};--s:{s};--nw:{nw};--ns:{ns}"'
+
+
+def heights(items):
+    """줄 높이(칸): 넓은 화면, 폰"""
+    kinds = [kind_of(item) for item in items]
+    return tuple(max(reach(k, SIZE[k][i][1]) for k in kinds) + SHADOW for i in (0, 1))
+
+
+def pop_html(pop):
+    if not pop:
+        return ""
+    return f'\n<a class="pop" href="{esc(pop["href"])}"><b>{esc(pop["top"])}</b><span>{esc(pop["sub"])}</span></a>'
 
 
 def aisle(row):
-    lines = []
-    for items in row["lines"]:
-        kinds = [kind_of(item) for item in items]
-        height = max(reach(k, SIZE[k][0][1]) for k in kinds) + SHADOW
-        narrow_height = max(reach(k, SIZE[k][1][1]) for k in kinds) + SHADOW
-        total = sum(SIZE[k][0][0] for k in kinds) + GAP * (len(items) - 1)
-        # 다 들어가는 줄은 가운데 가까이 둔다. 들여 쓰는 칸은 1.5 + 정수라 시작이 늘 반 칸에 선다.
-        lead = {key: 1.5 + max(0, (cols - 3 - total) // 2) for key, cols in WALL.items()}
-        pegs = []
-        for item, k in zip(items, kinds):
-            (w, s), (nw, ns) = SIZE[k]
-            pegs.append(render_item(item, f' style="--w:{w};--s:{s};--nw:{nw};--ns:{ns}"'))
-        lines.append(
-            f'<div class="line" style="--h:{height};--nh:{narrow_height};--lead:{lead["wide"]};--tlead:{lead["tablet"]}">'
-            f'\n<ul class="hooks">\n{chr(10).join(pegs)}\n</ul>\n</div>'
-        )
-    count = sum(len(items) for items in row["lines"])
-    pop = row.get("pop")
-    pop_html = (
-        f'\n<a class="pop" href="{esc(pop["href"])}"><b>{esc(pop["top"])}</b><span>{esc(pop["sub"])}</span></a>' if pop else ""
-    )
+    if row.get("bays"):
+        return bay_aisle(row)
+    items = row["items"]
+    height, narrow_height = heights(items)
+    total = sum(SIZE[kind_of(item)][0][0] for item in items) + GAP * (len(items) - 1)
+    # 다 들어가는 줄은 가운데 가까이 둔다. 들여 쓰는 칸은 1.5 + 정수라 시작이 늘 반 칸에 선다.
+    lead = {key: 1.5 + max(0, (cols - 3 - total) // 2) for key, cols in WALL.items()}
+    pegs = "\n".join(render_item(item, item_style(item)) for item in items)
     return f"""<section class="aisle aisle--{row["id"]}" aria-labelledby="a-{row["id"]}">
-<h2 class="aisle__name" id="a-{row["id"]}">{esc(row["name"])} <span class="aisle__count">{count}</span></h2>{pop_html}
-{chr(10).join(lines)}
+<h2 class="aisle__name" id="a-{row["id"]}">{esc(row["name"])} <span class="aisle__count">{len(items)}</span></h2>{pop_html(row.get("pop"))}
+<div class="line" style="--h:{height};--nh:{narrow_height};--lead:{lead["wide"]};--tlead:{lead["tablet"]}">
+<ul class="hooks">
+{pegs}
+</ul>
+</div>
 </section>"""
+
+
+# ── 한 줄을 나눈 칸(bay) ──
+# 한 줄에 칸을 여럿 두면 칸마다 띠를 따로 박고, 띠도 물건과 함께 옆으로 밀린다.
+#  - 이름이 있는 줄(개인 프로젝트)은 한 갈래를 나눈 것이라 띠마다 줄 이름을 작게 앞에 적는다(개인 프로젝트 › 앱).
+#  - 이름이 없는 줄(연구·논문 + 대회·창업)은 갈래 둘이 한 줄을 나눠 쓰는 것이라 띠가 곧 칸 이름이다.
+# 띠는 정수 칸에서 시작하고 끝나야 양 끝 나사가 구멍에 박힌다. 넓은 크기의 물건은 폭이 홀수라 칸 안에서 반 칸 들여 놓는다.
+# 다 들어가는 줄은 띠가 벽 양 끝까지 닿게 칸을 늘리고 물건을 칸 가운데로 모은다.
+
+MODES = {
+    # 벽 칸 수, 물건 크기(SIZE 의 앞·뒤), 줄 끝에서 첫 물건까지, 칸 경계에서 물건까지, 띠 사이, 띠 글씨·안쪽 여백(칸)
+    "wide": {"wall": WALL["wide"], "size": 0, "edge": 1.5, "inner": 0.5, "gap": 2, "font": 0.66, "pad": 0.9},
+    "tablet": {"wall": WALL["tablet"], "size": 0, "edge": 1.5, "inner": 0.5, "gap": 2, "font": 0.66, "pad": 0.9},
+    "narrow": {"wall": 22, "size": 1, "edge": 1, "inner": 1, "gap": 1, "font": 1.05, "pad": 1.1},
+}
+
+
+def text_em(text):
+    """글자 폭 어림(em): 한글 0.95, 가운뎃점·띄어쓰기 0.32, 그 밖 0.56"""
+    return sum(0.95 if ord(ch) > 0x2E80 else 0.32 if ch in " ·" else 0.56 for ch in text)
+
+
+def label_cols(bay, kicker, m):
+    """띠 글씨가 차지하는 폭(칸). 이름, 개수 딱지(0.88em), 사이(0.45em), 앞에 작게 적는 줄 이름(0.78배와 › 표)."""
+    em = text_em(bay["name"]) + 0.45 + 0.88
+    if kicker:
+        em += 0.78 * text_em(kicker) + 1.0
+    return 2 * m["pad"] + m["font"] * em + 1
+
+
+def place_bays(bays, kicker, m):
+    """칸마다 (띠 폭, 첫 물건까지 들인 칸)과 띠 사이를 정한다. 단위는 벽의 칸."""
+    n = len(bays)
+    spans, lows, highs = [], [], []
+    for i, bay in enumerate(bays):
+        spans.append(sum(SIZE[kind_of(it)][m["size"]][0] for it in bay["items"]) + GAP * (len(bay["items"]) - 1))
+        lows.append(m["edge"] if i == 0 else m["inner"])
+        highs.append(m["edge"] if i == n - 1 else m["inner"])
+    natural = [
+        max(int(lows[i] + spans[i] + highs[i]), math.ceil(label_cols(bay, kicker, m))) for i, bay in enumerate(bays)
+    ]
+
+    def inset(i, width):
+        """칸 가운데에 가장 가까운 들임. 넓은 크기는 반 칸(x.5), 폰은 정수 칸이고, 양쪽 최소 여백을 지킨다."""
+        base = 0.5 if m["size"] == 0 else 0
+        best = None
+        for k in range(int(width) + 1):
+            left = base + k
+            if left < lows[i] or width - spans[i] - left < highs[i]:
+                continue
+            err = abs(left - (width - spans[i]) / 2)
+            if best is None or err < best[0]:
+                best = (err, left)
+        return best
+
+    choices = []
+    for gap in (1, 2, 3):
+        room = m["wall"] - gap * (n - 1)
+        if sum(natural) > room:
+            continue
+        # 늘린 칸 폭을 모두 해 보고(칸은 두세 개뿐), 가운데에 가깝고 원래 폭의 비율에 가까운 것을 고른다
+        for extra in itertools.product(range(room - sum(natural) + 1), repeat=n - 1):
+            widths = [natural[i] + extra[i] for i in range(n - 1)]
+            widths.append(room - sum(widths))
+            if widths[-1] < natural[-1]:
+                continue
+            spots = [inset(i, w) for i, w in enumerate(widths)]
+            if None in spots:
+                continue
+            score = (
+                10 * sum(s[0] for s in spots)
+                + sum(abs(w - natural[i] * room / sum(natural)) for i, w in enumerate(widths))
+                + abs(gap - m["gap"])
+            )
+            choices.append((score, gap, [(w, s[1]) for w, s in zip(widths, spots)]))
+    if choices:
+        _, gap, plan = min(choices, key=lambda c: c[0])
+        return gap, plan
+    # 다 들어가지 않으면 원래 폭대로 놓고 옆으로 민다
+    return m["gap"], [(w, lows[i]) for i, w in enumerate(natural)]
+
+
+def bay_aisle(row):
+    bays = row["bays"]
+    kicker = row.get("name")
+    height, narrow_height = heights([it for bay in bays for it in bay["items"]])
+    plans = {mode: place_bays(bays, kicker, m) for mode, m in MODES.items()}
+    prefix = {"wide": "", "tablet": "t", "narrow": "n"}
+    # 이름이 있는 줄은 줄 이름이 h2, 띠가 h3, 물건이 h4. 이름이 없는 줄은 띠가 곧 칸 이름(h2)이다.
+    level = 3 if kicker else 2
+    parts = []
+    for i, bay in enumerate(bays):
+        style = ";".join(
+            f"--{prefix[mode]}bw:{plan[1][i][0]};--{prefix[mode]}bo:{plan[1][i][1]:g}" for mode, plan in plans.items()
+        )
+        small = f'<small class="aisle__kicker" aria-hidden="true">{esc(kicker)}</small>' if kicker else ""
+        pegs = "\n".join(render_item(item, item_style(item), level + 1) for item in bay["items"])
+        # 판촉 스티커는 그 칸의 띠 오른쪽 끝에 붙어 칸과 함께 밀린다
+        parts.append(
+            f'<section class="bay bay--{bay["id"]}" style="{style}" aria-labelledby="a-{bay["id"]}">\n'
+            f'<h{level} class="aisle__name" id="a-{bay["id"]}">{small}{esc(bay["name"])} '
+            f'<span class="aisle__count">{len(bay["items"])}</span></h{level}>{pop_html(bay.get("pop"))}\n'
+            f'<ul class="bay__pegs">\n{pegs}\n</ul>\n</section>'
+        )
+    gaps = ";".join(f"--{prefix[mode]}g:{plan[0]}" for mode, plan in plans.items())
+    label = kicker or ", ".join(bay["name"] for bay in bays)
+    tag = "section" if kicker else "div"
+    labelled = f' aria-labelledby="a-{row["id"]}"' if kicker else ""
+    title = f'\n<h2 class="vh" id="a-{row["id"]}">{esc(kicker)}</h2>' if kicker else ""
+    return f"""<{tag} class="aisle aisle--bays aisle--{row["id"]}"{labelled}>{title}
+<div class="line line--bays" data-name="{esc(label)}" style="--h:{height};--nh:{narrow_height};{gaps}">
+<div class="hooks">
+{chr(10).join(parts)}
+</div>
+</div>
+</{tag}>"""
+
+
+def shelf_items():
+    """진열대에 건 물건 모두(칸을 나눈 줄 포함)"""
+    for row in SHELF["rows"]:
+        for items in [bay["items"] for bay in row["bays"]] if row.get("bays") else [row["items"]]:
+            yield from items
 
 
 # ── 만든 사람: 진열대 벽에 붙인 스티커 묶음(사진, 이름표, 학력·자격 딱지) ──
@@ -943,7 +1075,7 @@ if ABOUT:
 # 자료는 about.json 의 work[].media 에 {"type": "image"|"video", "src", "poster", "w", "h", "alt"} 로 적으면 나온다.
 
 if ABOUT and ABOUT.get("work"):
-    minis = {it["href"]: it for row in SHELF["rows"] for line in row["lines"] for it in line if isinstance(it, dict)}
+    minis = {it["href"]: it for it in shelf_items() if isinstance(it, dict)}
     works = ABOUT["work"]
 
     def work_tone(w):

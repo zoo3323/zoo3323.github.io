@@ -10,7 +10,8 @@
 
   for (const line of lines) {
     const row = line.querySelector(".hooks");
-    const name = line.closest(".aisle")?.querySelector(".aisle__name")?.firstChild?.textContent.trim() || "진열대";
+    const name =
+      line.dataset.name || line.closest(".aisle")?.querySelector(".aisle__name")?.firstChild?.textContent.trim() || "진열대";
 
     const button = (dir, label, d) => {
       const el = document.createElement("button");

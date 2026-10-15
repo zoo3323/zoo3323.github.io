@@ -683,6 +683,73 @@ a {
   margin-top: calc(var(--P) * 2 - var(--p) * 0.5625);
 }
 
+/* 한 줄을 나눈 칸(bay). 칸마다 띠를 따로 박고, 띠도 물건과 함께 옆으로 밀린다.
+   띠 폭(--bw), 칸 안에서 첫 물건까지 들인 칸(--bo), 띠 사이(--g)는 build.py 가 넣는다(태블릿은 --t…, 폰은 --n…).
+   띠는 정수 칸에서 시작하고 끝나서, 밀다가 멈추면 띠 양 끝 나사도 구멍에 박힌다. */
+/* 띠 위의 판촉 스티커가 잘리지 않게, 줄 사이 한 칸을 밀리는 줄 안(위 여백)으로 옮긴다. 쌓인 높이는 그대로다. */
+.aisle--bays {
+  margin-top: calc(var(--P) * -1);
+}
+.aisle + .aisle--bays {
+  margin-top: 0;
+}
+.line--bays {
+  margin-top: 0;
+}
+.line--bays .hooks {
+  gap: calc(var(--P) * var(--g));
+  height: calc(var(--P) * (var(--h) + 3));
+  padding: var(--P) 0 0;
+}
+.bay {
+  position: relative;
+  flex: none;
+  width: calc(var(--P) * var(--bw));
+}
+.bay > .pop {
+  top: calc(var(--P) * -0.7);
+  right: calc(var(--P) * 0.9);
+}
+.bay__pegs {
+  display: flex;
+  gap: calc(var(--P) * 2);
+  margin: var(--P) 0 0;
+  padding: 0 0 0 calc(var(--P) * var(--bo));
+  list-style: none;
+}
+/* 한 갈래를 나눈 줄은 띠마다 줄 이름을 작게 앞에 적는다(개인 프로젝트 › 앱) */
+.aisle__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-right: 0.1em;
+  font: 400 max(0.8125rem, 0.78em) / 1 var(--shop);
+  color: var(--sub);
+}
+.aisle__kicker::after {
+  content: "";
+  width: 0.42em;
+  height: 0.42em;
+  margin-left: -0.1em;
+  border: solid currentColor;
+  border-width: 0.14em 0.14em 0 0;
+  transform: rotate(45deg);
+}
+.line--bays .line__go {
+  top: calc(var(--P) * (var(--h) + 4) / 2 - 22px);
+}
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* 마우스로 미는 단추. 줄 양 끝에 붙고, 더 갈 곳이 없으면 숨는다. 손가락이 닿는 화면에는 두지 않는다. */
 .line__go {
   position: absolute;
@@ -2427,6 +2494,16 @@ svg.app-icon {
   .hooks {
     padding-left: calc(var(--P) * var(--tlead));
   }
+  .line--bays .hooks {
+    gap: calc(var(--P) * var(--tg));
+    padding-left: 0;
+  }
+  .bay {
+    width: calc(var(--P) * var(--tbw));
+  }
+  .bay__pegs {
+    padding-left: calc(var(--P) * var(--tbo));
+  }
 }
 @media (max-width: 735px) {
   .maker {
@@ -2483,6 +2560,36 @@ svg.app-icon {
   .aisle .peg {
     --p: calc(var(--P) * var(--ns));
     width: calc(var(--P) * var(--nw));
+  }
+  /* 나눈 칸: 띠가 두 칸 높이라 고리 줄은 위 여백 한 칸, 띠 두 칸, 사이 한 칸 아래에서 시작한다 */
+  .line--bays .hooks {
+    gap: calc(var(--P) * var(--ng));
+    height: calc(var(--P) * (var(--nh) + 4));
+    padding: var(--P) 0 0;
+  }
+  .line--bays .line__go {
+    top: calc(var(--P) * (var(--nh) + 6) / 2 - 22px);
+  }
+  /* 폰은 칸이 좁아 둥근 스티커가 고리와 봉지 딱지에 닿으므로, 띠 오른쪽 끝 안에 길쭉하게 붙인다 */
+  .bay > .pop {
+    top: calc(var(--P) * 0.35);
+    grid-auto-flow: column;
+    gap: 0.45em;
+    width: auto;
+    height: calc(var(--P) * 1.3);
+    padding: 0 0.75em;
+    border-width: 2px;
+    border-radius: 999px;
+    transform: rotate(-1.5deg);
+  }
+  .bay > .pop:hover {
+    transform: rotate(-1.5deg) scale(1.04);
+  }
+  .bay {
+    width: calc(var(--P) * var(--nbw));
+  }
+  .bay__pegs {
+    padding-left: calc(var(--P) * var(--nbo));
   }
 }
 
