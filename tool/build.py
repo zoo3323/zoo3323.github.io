@@ -518,8 +518,8 @@ def maker(profile):
             return ""
         return f'<img class="{cls}" src="{esc(logo)}" alt="" loading="lazy">'
 
-    def note(x):
-        """포스트잇 한 장: 제목(학력·경력)과 줄마다 마크·이름·기간·한 줄."""
+    def note(x, extra=""):
+        """포스트잇 한 장: 제목(학력·경력)과 줄마다 마크·이름·기간·한 줄. extra 는 모서리에 붙일 작은 딱지."""
         rows = "".join(
             f'<li>{mark(r, "note__logo")}<span class="note__text"><span class="note__head"><b>{esc(r["name"])}</b>'
             f'<small>{esc(r["when"])}</small></span><span>{esc(r["detail"])}</span></span></li>'
@@ -527,18 +527,19 @@ def maker(profile):
         )
         return (
             f'<li class="note" style="--tone:{x["tone"]};--tilt:{x["tilt"]}deg">'
-            f'<p class="note__title">{esc(x["title"])}</p><ul class="note__rows">{rows}</ul></li>'
+            f'<p class="note__title">{esc(x["title"])}</p><ul class="note__rows">{rows}</ul>{extra}</li>'
         )
 
     def seal(x):
-        """인증 스티커. 이름표 모서리에 도장처럼 붙인다."""
+        """자격증 딱지. 소개 묶음 맨 끝(마지막 포스트잇의 오른쪽 아래 모서리)에 작게 붙인다."""
         return (
             f'<span class="seal" style="--tone:{x["tone"]};--tilt:{x["tilt"]}deg">{mark(x, "seal__logo")}'
             f'<b>{esc(x["top"])}</b><small>{esc(x["sub"])}</small></span>'
         )
 
-    notes = "\n".join(note(x) for x in profile["stickers"] if x["kind"] == "note")
+    note_items = [x for x in profile["stickers"] if x["kind"] == "note"]
     seals = "".join(seal(x) for x in profile["stickers"] if x["kind"] == "seal")
+    notes = "\n".join(note(x, seals if i == len(note_items) - 1 else "") for i, x in enumerate(note_items))
     href = esc(profile["href"])
     return f"""<section class="maker" aria-label="{esc(profile["label"])}">
 <a class="maker__photo polaroid" href="{href}" tabindex="-1" aria-hidden="true">{photo}</a>
@@ -548,7 +549,6 @@ def maker(profile):
   <span class="maker__org">{esc(profile["org"])}</span>
   <span class="maker__line">{esc(profile["line"])}</span>
   <span class="maker__go">소개 보기 {ICON_GO}</span>
-  {seals}
 </a>
 <ul class="maker__stickers" aria-label="학력과 경력">
 {notes}
