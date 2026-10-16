@@ -663,9 +663,10 @@ def shelf_items():
 
 def maker(profile):
     # 폴라로이드 사진: 사진이 있으면 그 사진, 없으면 이름 글자. 아래 넓은 여백에 이름을 적는다.
+    # 사진 칸은 증명사진 비율(3.5×4.5)이고, 다른 비율의 사진은 칸에 맞춰 가장자리가 잘린다(object-fit: cover).
     # 사진과 포스트잇은 걸린 봉지처럼 흔들리고 마우스·기울기를 따른다(data-sway, wall.js·light.js). 이름표는 통째로 붙인 스티커라 그대로다.
     if profile.get("photo"):
-        pic = f'<img src="{esc(profile["photo"])}" width="400" height="400" alt="">'
+        pic = f'<img src="{esc(profile["photo"])}" width="350" height="450" alt="">'
     else:
         pic = f'<span class="maker__mono">{esc(profile["monogram"])}</span>'
     photo = f'<span class="polaroid__pic">{pic}</span><span class="polaroid__cap">{esc(profile.get("caption", DEV))}</span>'

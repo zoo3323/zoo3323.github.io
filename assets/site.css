@@ -294,9 +294,10 @@ a {
     0 calc(var(--P) * 0.3) calc(var(--P) * 0.6) calc(var(--P) * -0.2) rgb(52 48 70 / 0.32);
 }
 /* 폴라로이드 사진: 흰 테두리에 아래 여백이 넓고, 위에 마스킹 테이프 한 조각으로 벽에 붙였다.
+   사진 칸은 증명사진 비율(3.5×4.5)의 세로 칸이다. 정사각형으로 자르면 얼굴만 꽉 차 보여서, 어깨까지 그대로 담는다.
    크기는 폭(--pw, 구멍 간격의 몇 배) 하나로 정한다. 테두리·아래 여백·글자·테이프는 폭을 따라 함께 큰다. */
 .maker__photo {
-  --pw: 5.4;
+  --pw: 4.4;
   --edge: calc(var(--P) * var(--pw) * 0.06);
   --tilt: -4deg;
   position: relative;
@@ -337,7 +338,7 @@ a {
   top: var(--edge);
   left: var(--edge);
   right: var(--edge);
-  aspect-ratio: 1;
+  aspect-ratio: 35 / 45;
   pointer-events: none;
   background: radial-gradient(
     farthest-corner circle at var(--gx) var(--gy),
@@ -361,7 +362,7 @@ a {
   position: relative;
   display: grid;
   place-items: center;
-  aspect-ratio: 1;
+  aspect-ratio: 35 / 45;
   overflow: hidden;
   background:
     radial-gradient(circle at 30% 26%, rgb(255 255 255 / 0.65), transparent 46%),
@@ -2567,7 +2568,7 @@ svg.app-icon {
 }
 @media (max-width: 735px) {
   .maker__photo {
-    --pw: 6.2;
+    --pw: 5.1;
   }
   .note__logo {
     width: calc(var(--P) * 1.7);
@@ -2575,15 +2576,6 @@ svg.app-icon {
   }
   .maker__role {
     font-size: calc(var(--P) * 1.3);
-  }
-}
-/* 아주 좁은 폰: 사진을 조금 작게, 사진과 이름표 사이를 조금 좁게 해서 이름표의 한 줄 소개가 줄바뀜하지 않게 한다 */
-@media (max-width: 380px) {
-  .maker {
-    column-gap: calc(var(--P) * 0.6);
-  }
-  .maker__photo {
-    --pw: 5.8;
   }
 }
 /* 폰: 이름 띠는 두 칸 높이(네 귀퉁이에 나사), 봉지는 원래 크기로 걸고 줄마다 옆으로 민다 */
