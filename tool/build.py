@@ -158,10 +158,20 @@ def tone_style(app):
     return ";".join(parts)
 
 
-def head(title, desc, path, scripts=(), index=True):
+def head(title, desc, path, scripts=(), index=True, preview=True):
+    """preview=False 면 링크 미리보기에 첫 화면 그림(og.png)을 쓰지 않는다(개인정보처리방침)."""
     site = SITE["site"]
     tags = "".join(f'\n<script src="/assets/{name}" defer></script>' for name in scripts)
     canonical = f'<link rel="canonical" href="{site}{path}">' if index else '<meta name="robots" content="noindex">'
+    if preview:
+        image = (
+            f'<meta property="og:image" content="{site}/assets/img/og.png">\n'
+            '<meta property="og:image:width" content="1200">\n'
+            '<meta property="og:image:height" content="630">\n'
+            '<meta name="twitter:card" content="summary_large_image">'
+        )
+    else:
+        image = '<meta name="twitter:card" content="summary">'
     return f"""<!doctype html>
 <html lang="ko">
 <head>
@@ -176,10 +186,7 @@ def head(title, desc, path, scripts=(), index=True):
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:url" content="{site}{path}">
-<meta property="og:image" content="{site}/assets/img/og.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
+{image}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
@@ -205,6 +212,10 @@ def sign(home, back=("/", "진열대")):
 FOOT = f"""<footer class="foot">
   <p>© {SITE["year"]} {esc(DEV)}</p>
   <a href="{SITE["github"]}" rel="me">GitHub</a>
+</footer>"""
+# 개인정보처리방침의 발치: 링크 없이 이름만
+FOOT_PLAIN = f"""<footer class="foot">
+  <p>© {SITE["year"]} {esc(DEV)}</p>
 </footer>"""
 
 
@@ -897,6 +908,8 @@ for app in APPS:
 
 # ── 개인정보처리방침: 벽에 붙인 흰 종이 한 장. 효과 없이 글만 둔다 ──
 # 앱 안에서 누르고 들어오는 일이 많아 폰 화면을 먼저 생각한다. 주소는 /<앱>/privacy 로 고정이다.
+# 플레이 스토어와 앱에서 누구나 들어오는 곳이라, 포트폴리오(첫 화면·앱 페이지·소개·GitHub)로 가는 길을 두지 않는다.
+#   팻말(이름 링크·뒤로 단추)과 발치의 GitHub 링크를 빼고, 링크 미리보기에도 첫 화면 그림(og.png)을 쓰지 않는다.
 
 COMMON_PRIVACY = (TOOL / "privacy-common.html").read_text().strip()
 
@@ -927,11 +940,9 @@ for app in APPS:
     title = f'{app["name"]} 개인정보처리방침'
     write(
         f"{app_id}/privacy.html",
-        head(f"{title} | {DEV}", f"{title}. 다루는 정보와 쓰는 권한, 문의처를 적었습니다.", f"/{app_id}/privacy")
+        head(f"{title} | {DEV}", f"{title}. 다루는 정보와 쓰는 권한, 문의처를 적었습니다.", f"/{app_id}/privacy", preview=False)
         + f"""<body>
-<a class="skip" href="#doc">본문으로 건너뛰기</a>
 <div class="wall">
-{sign(False, (f"/{app_id}/", app["name"]))}
 <main id="doc">
 <article class="doc" style="{tone_style(app)}">
   <header class="doc__head">
@@ -945,7 +956,7 @@ for app in APPS:
   {fill(COMMON_PRIVACY, app)}
 </article>
 </main>
-{FOOT}
+{FOOT_PLAIN}
 </div>
 </body>
 </html>
