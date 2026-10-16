@@ -14,7 +14,7 @@ from fontTools.ttLib import TTFont
 
 OUT = Path(__file__).resolve().parent.parent / "assets" / "fonts"
 MARKS = {
-    "mark-pocketpet.woff2": ("bold", "포켓펫"),
+    "mark-pocketpet.woff2": ("bold", "스크린펫"),
     "mark-mylittlecloset.woff2": ("extrabold", "마이리틀클로젯"),
     "mark-moacam.woff2": ("blackhan", "모아캠"),
     "mark-scorelab.woff2": ("nunito", "Scorelab"),
