@@ -358,6 +358,7 @@ a {
     rotateY(var(--ry)) translateZ(calc(var(--lift) * 8px));
 }
 .polaroid__pic {
+  position: relative;
   display: grid;
   place-items: center;
   aspect-ratio: 1;
@@ -365,7 +366,14 @@ a {
   background:
     radial-gradient(circle at 30% 26%, rgb(255 255 255 / 0.65), transparent 46%),
     linear-gradient(160deg, #ffe98a, #ffcf9e 55%, #f4b7c8);
-  box-shadow: inset 0 0 0 1px rgb(52 48 70 / 0.08);
+}
+/* 사진 둘레의 옅은 선. 사진 위에 덧대야 흰 바탕 사진(증명사진)도 폴라로이드 틀과 경계가 보인다. */
+.polaroid__pic::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgb(52 48 70 / 0.1);
+  pointer-events: none;
 }
 .polaroid__pic img {
   width: 100%;
