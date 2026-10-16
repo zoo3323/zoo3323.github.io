@@ -293,22 +293,26 @@ a {
     0 1px 2px rgb(52 48 70 / 0.22),
     0 calc(var(--P) * 0.3) calc(var(--P) * 0.6) calc(var(--P) * -0.2) rgb(52 48 70 / 0.32);
 }
-/* 폴라로이드 사진: 흰 테두리에 아래 여백이 넓고, 위에 마스킹 테이프 한 조각으로 벽에 붙였다 */
+/* 폴라로이드 사진: 흰 테두리에 아래 여백이 넓고, 위에 마스킹 테이프 한 조각으로 벽에 붙였다.
+   크기는 폭(--pw, 구멍 간격의 몇 배) 하나로 정한다. 테두리·아래 여백·글자·테이프는 폭을 따라 함께 큰다. */
 .maker__photo {
+  --pw: 5.4;
+  --edge: calc(var(--P) * var(--pw) * 0.06);
+  --tilt: -4deg;
   position: relative;
   flex: none;
   display: grid;
   grid-template-rows: auto 1fr;
-  width: calc(var(--P) * 4.6);
-  padding: calc(var(--P) * 0.28) calc(var(--P) * 0.28) 0;
+  width: calc(var(--P) * var(--pw));
+  padding: var(--edge) var(--edge) 0;
   color: var(--ink);
   text-decoration: none;
   background: #fffefa;
   border-radius: 2px;
   box-shadow:
-    0 1px 1px rgb(52 48 70 / 0.16),
-    0 calc(var(--P) * 0.32) calc(var(--P) * 0.55) calc(var(--P) * -0.2) rgb(52 48 70 / 0.34);
-  transform: rotate(-4deg);
+    0 1px 1px rgb(52 48 70 / calc(0.16 - var(--lift) * 0.12)),
+    calc(var(--shx) * 0.5) calc(var(--P) * 0.32 + var(--shy) * 0.5 + var(--lift) * 6px)
+      calc(var(--P) * 0.55 + var(--lift) * 8px) calc(var(--P) * -0.2) rgb(52 48 70 / 0.34);
 }
 .maker__photo::before {
   content: "";
@@ -316,12 +320,42 @@ a {
   z-index: 1;
   top: calc(var(--P) * -0.28);
   left: 50%;
-  width: calc(var(--P) * 2);
+  width: calc(var(--P) * var(--pw) * 0.42);
   height: calc(var(--P) * 0.6);
-  margin-left: calc(var(--P) * -1);
+  margin-left: calc(var(--P) * var(--pw) * -0.21);
   background: rgb(240 228 190 / 0.78);
   box-shadow: 0 1px 1px rgb(52 48 70 / 0.12);
   transform: rotate(5deg);
+}
+/* 사진 면의 반사. 손이 닿은 자리에 부드러운 빛만 서고, 인화지라 봉지 같은 무지개 결은 없다. */
+.maker__photo::after {
+  --lift: inherit;
+  --gx: inherit;
+  --gy: inherit;
+  content: "";
+  position: absolute;
+  top: var(--edge);
+  left: var(--edge);
+  right: var(--edge);
+  aspect-ratio: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    farthest-corner circle at var(--gx) var(--gy),
+    rgb(255 255 255 / 0.55) 0%,
+    rgb(255 255 255 / 0.16) 26%,
+    rgb(255 255 255 / 0) 60%
+  );
+  mix-blend-mode: soft-light;
+  opacity: calc(var(--lift) * 0.8);
+}
+/* 사진과 포스트잇도 걸린 봉지처럼 움직인다. 축은 벽에 붙인 윗변(테이프·접착 띠)이고, 붙어 있어 봉지의 반만 흔들린다.
+   화면을 굴리면 조금 흔들리고(--sway, wall.js), 마우스를 대면 손이 가까운 쪽이 벽에서 살짝 들린다(--rx·--ry·--lift, light.js).
+   그림자는 등(마우스) 반대쪽으로 지고 들릴수록 길어지며, 벽에 닿아 생긴 짧은 그림자는 옅어진다. */
+.maker__photo,
+.note {
+  transform-origin: 50% 0;
+  transform: perspective(1400px) rotate(calc(var(--tilt, 0deg) + var(--sway) * 0.5)) rotateX(var(--rx))
+    rotateY(var(--ry)) translateZ(calc(var(--lift) * 8px));
 }
 .polaroid__pic {
   display: grid;
@@ -341,12 +375,12 @@ a {
 .polaroid__cap {
   display: grid;
   place-items: center;
-  height: calc(var(--P) * 1.05);
-  font: 400 max(0.8125rem, calc(var(--P) * 0.42)) / 1 var(--shop);
+  height: calc(var(--P) * var(--pw) * 0.23);
+  font: 400 max(0.8125rem, calc(var(--P) * var(--pw) * 0.09)) / 1 var(--shop);
   color: color-mix(in srgb, var(--ink) 78%, transparent);
 }
 .maker__mono {
-  font: 400 calc(var(--P) * 1.7) / 1 var(--shop);
+  font: 400 calc(var(--P) * var(--pw) * 0.37) / 1 var(--shop);
   letter-spacing: -0.03em;
   color: rgb(23 23 26 / 0.82);
 }
@@ -434,9 +468,9 @@ a {
     linear-gradient(165deg, var(--tone) 72%, color-mix(in srgb, var(--tone) 90%, #6a5a20) 100%);
   border-radius: 2px 2px 3px 3px;
   box-shadow:
-    0 1px 1px rgb(52 48 70 / 0.12),
-    calc(var(--P) * 0.1) calc(var(--P) * 0.34) calc(var(--P) * 0.42) calc(var(--P) * -0.2) rgb(52 48 70 / 0.38);
-  transform: rotate(var(--tilt, 0deg));
+    0 1px 1px rgb(52 48 70 / calc(0.12 - var(--lift) * 0.09)),
+    calc(var(--P) * 0.1 + var(--shx) * 0.5) calc(var(--P) * 0.34 + var(--shy) * 0.5 + var(--lift) * 6px)
+      calc(var(--P) * 0.42 + var(--lift) * 8px) calc(var(--P) * -0.2) rgb(52 48 70 / 0.38);
 }
 .note__title {
   margin: 0 0 calc(var(--P) * 0.22);
@@ -1298,7 +1332,7 @@ a {
   line-height: 1.45;
 }
 
-/* 포켓펫: 분홍 판에 투명 덮개 */
+/* 스크린펫: 분홍 판에 투명 덮개 */
 .bubble {
   position: absolute;
   left: calc(var(--p) * 1);
@@ -1847,9 +1881,11 @@ a.get:hover {
   scrollbar-width: thin;
   scrollbar-color: var(--rule) transparent;
 }
+/* 폰 화면 그림은 보통 720×1560 이다. 비율이 다른 그림은 --k(보통 그림보다 몇 배 넓은가)를 받아
+   폭만 늘리고 높이는 옆 그림과 같게 선다. 예: 720×1440 이면 --k:calc(1560 / 1440). */
 .shots li {
   flex: 0 0 auto;
-  width: 13.75rem;
+  width: calc(13.75rem * var(--k, 1));
   scroll-snap-align: start;
 }
 .shots img {
@@ -1876,7 +1912,7 @@ a.get:hover {
   border-radius: 0.7rem;
 }
 
-/* 포켓펫: 꺼내 보기 */
+/* 스크린펫: 꺼내 보기 */
 .demo--pet {
   padding: 1.5rem;
   color: var(--pink-ink);
@@ -2472,7 +2508,7 @@ svg.app-icon {
       "stickers stickers";
     align-content: center;
     gap: calc(var(--P) * 0.7) calc(var(--P) * 0.8);
-    height: calc(var(--P) * 11);
+    height: calc(var(--P) * 12);
     padding: 0;
   }
   .maker__photo {
@@ -2523,7 +2559,7 @@ svg.app-icon {
 }
 @media (max-width: 735px) {
   .maker__photo {
-    width: calc(var(--P) * 5.2);
+    --pw: 6.2;
   }
   .note__logo {
     width: calc(var(--P) * 1.7);
@@ -2531,6 +2567,15 @@ svg.app-icon {
   }
   .maker__role {
     font-size: calc(var(--P) * 1.3);
+  }
+}
+/* 아주 좁은 폰: 사진을 조금 작게, 사진과 이름표 사이를 조금 좁게 해서 이름표의 한 줄 소개가 줄바뀜하지 않게 한다 */
+@media (max-width: 380px) {
+  .maker {
+    column-gap: calc(var(--P) * 0.6);
+  }
+  .maker__photo {
+    --pw: 5.8;
   }
 }
 /* 폰: 이름 띠는 두 칸 높이(네 귀퉁이에 나사), 봉지는 원래 크기로 걸고 줄마다 옆으로 민다 */
@@ -2694,7 +2739,7 @@ svg.app-icon {
     scroll-padding-inline: 1.25rem;
   }
   .shots li {
-    width: 58%;
+    width: calc(58% * var(--k, 1));
   }
   .shots--wide li {
     width: 88%;
@@ -2757,7 +2802,7 @@ svg.app-icon {
   }
 }
 
-/* ── 움직임: 걸린 봉지의 흔들림과 고리에서 떼기, 둘뿐이다 ── */
+/* ── 움직임: 걸린 봉지(와 벽에 붙인 사진·포스트잇)의 흔들림과 고리에서 떼기, 둘뿐이다 ── */
 
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {

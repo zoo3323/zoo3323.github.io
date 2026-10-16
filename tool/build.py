@@ -652,6 +652,7 @@ def shelf_items():
 
 def maker(profile):
     # 폴라로이드 사진: 사진이 있으면 그 사진, 없으면 이름 글자. 아래 넓은 여백에 이름을 적는다.
+    # 사진과 포스트잇은 걸린 봉지처럼 흔들리고 마우스·기울기를 따른다(data-sway, wall.js·light.js). 이름표는 통째로 붙인 스티커라 그대로다.
     if profile.get("photo"):
         pic = f'<img src="{esc(profile["photo"])}" width="400" height="400" alt="">'
     else:
@@ -672,7 +673,7 @@ def maker(profile):
             for r in x["rows"]
         )
         return (
-            f'<li class="note" style="--tone:{x["tone"]};--tilt:{x["tilt"]}deg">'
+            f'<li class="note" data-sway style="--tone:{x["tone"]};--tilt:{x["tilt"]}deg">'
             f'<p class="note__title">{esc(x["title"])}</p><ul class="note__rows">{rows}</ul>{extra}</li>'
         )
 
@@ -688,7 +689,7 @@ def maker(profile):
     notes = "\n".join(note(x, seals if i == len(note_items) - 1 else "") for i, x in enumerate(note_items))
     href = esc(profile["href"])
     return f"""<section class="maker" aria-label="{esc(profile["label"])}">
-<a class="maker__photo polaroid" href="{href}" tabindex="-1" aria-hidden="true">{photo}</a>
+<a class="maker__photo polaroid" href="{href}" tabindex="-1" aria-hidden="true" data-sway>{photo}</a>
 <a class="maker__card" href="{href}">
   <span class="maker__tag">{esc(profile["label"])}</span>
   <strong class="maker__role">{esc(profile["role"])}</strong>

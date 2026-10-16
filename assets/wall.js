@@ -1,5 +1,6 @@
 // 걸린 봉지의 흔들림. 봉지마다 진자 하나이고, 모두 같은 박자(K, C)로 움직인다.
 // 진열대가 길어 봉지가 스무 개 가까이 되므로, 화면에 보이는 봉지만 흔든다. 멈춘 봉지는 값을 다시 쓰지 않는다.
+// 벽에 붙인 사진과 포스트잇도 data-sway 가 있어 같이 흔들린다(붙어 있으니 CSS 에서 폭을 반으로 줄여 쓴다).
 (() => {
   const packs = [...document.querySelectorAll("[data-sway]")];
   if (!packs.length || matchMedia("(prefers-reduced-motion: reduce)").matches) return;

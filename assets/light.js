@@ -6,17 +6,21 @@
 // 기울기(안드로이드 폰): 폰을 기울이면 걸린 봉지들이 그만큼 살짝 돌고, 반사와 무지개 결이 기운 쪽으로 흐른다.
 //   들고 있는 자세가 곧 가운데라서, 가만히 들고 있으면 빛은 천천히 사라진다. 벽의 등빛은 쓰지 않는다.
 //   허락 창은 띄우지 않는다. 허락이 있어야 기울기를 주는 아이폰에서는 그래서 이 효과가 없다.
+// 벽에 붙인 사진과 포스트잇도 같이 움직인다. 다만 윗변이 벽에 붙어 있어서, 손을 대면 눌려 들어가지 않고
+//   손이 가까운 쪽(주로 아랫부분)이 벽에서 살짝 들린다. 폰을 기울일 때도 봉지의 반만 돌고 벽 안쪽으로는 들어가지 않는다.
 (() => {
   const fine = matchMedia("(hover: hover) and (pointer: fine)");
   const still = matchMedia("(prefers-reduced-motion: reduce)");
   if (still.matches) return;
+  const MOVERS = ".pack, .maker__photo, .note";
+  const stuck = (el) => !el.classList.contains("pack"); // 걸지 않고 붙인 것
 
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
   const settled = (a, b) => Math.abs(a - b) < 0.01;
 
   // ── 폰의 기울기 ──
   const tilt = () => {
-    const packs = [...document.querySelectorAll(".pack")];
+    const packs = [...document.querySelectorAll(MOVERS)].map((el) => ({ el, peel: stuck(el) }));
     if (!packs.length || !("DeviceOrientationEvent" in window)) return;
     // 허락을 묻지 않는다. 허락이 있어야 신호가 오는 폰(아이폰)에서는 신호가 오지 않으니 아무 일도 없다.
 
@@ -38,10 +42,10 @@
       x += (tx - x) * k;
       y += (ty - y) * k;
       const lift = Math.min(1, Math.hypot(x, y)) * 0.85;
-      for (const el of packs) {
+      for (const { el, peel } of packs) {
         const s = el.style;
-        s.setProperty("--rx", `${(-y * 6).toFixed(2)}deg`);
-        s.setProperty("--ry", `${(x * 8).toFixed(2)}deg`);
+        s.setProperty("--rx", `${(peel ? Math.max(0, -y * 3) : -y * 6).toFixed(2)}deg`);
+        s.setProperty("--ry", `${(peel ? x * 4 : x * 8).toFixed(2)}deg`);
         s.setProperty("--lift", lift.toFixed(3));
         s.setProperty("--gx", `${(50 + x * 45).toFixed(1)}%`);
         s.setProperty("--gy", `${(50 + y * 45).toFixed(1)}%`);
@@ -114,8 +118,9 @@
   const lamp = { x: 0, y: 0, tx: 0, ty: 0, lit: 0, tlit: 0, placed: false };
   let touching = 0; // 손이 올라가 있는 봉지 수
   const LIT_ON_CARD = 0.08;
-  const cards = [...document.querySelectorAll(".pack")].map((el) => ({
+  const cards = [...document.querySelectorAll(MOVERS)].map((el) => ({
     el,
+    peel: stuck(el),
     rx: 0, ry: 0, trx: 0, try_: 0,
     gx: 50, gy: 50, tgx: 50, tgy: 50,
     lift: 0, tlift: 0,
@@ -270,8 +275,15 @@
       const box = card.box || el.getBoundingClientRect();
       const px = Math.max(0, Math.min(1, (event.clientX - box.left) / box.width));
       const py = Math.max(0, Math.min(1, (event.clientY - box.top) / box.height));
-      card.try_ = (px - 0.5) * 10;
-      card.trx = (0.5 - py) * 8;
+      if (card.peel) {
+        // 붙인 윗변은 그대로이고, 손이 가까운 아래·옆이 벽에서 들린다
+        card.try_ = (0.5 - px) * 6;
+        card.trx = py * 7;
+      } else {
+        // 걸린 봉지는 손이 닿은 쪽이 눌려 들어간다
+        card.try_ = (px - 0.5) * 10;
+        card.trx = (0.5 - py) * 8;
+      }
       card.tgx = px * 100;
       card.tgy = py * 100;
       card.tlift = 1;

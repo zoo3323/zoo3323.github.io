@@ -18,10 +18,10 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `tool/build.py` | 위 파일들로 HTML을 만든다 |
 | `index.html`, `<앱>/index.html`, `work/<이름>/index.html`, `about/index.html`, `404.html` | 만들어진 결과. 직접 고치지 않는다 |
 | `assets/site.css` | 화면 전체의 모양 |
-| `assets/wall.js`, `light.js` | 봉지의 흔들림, 빛(PC는 마우스를 따르는 등빛과 봉지의 반사·무지개 결, 안드로이드 폰은 기울기를 따르는 봉지의 반사) |
+| `assets/wall.js`, `light.js` | 봉지와 벽에 붙인 사진·포스트잇의 흔들림, 빛(PC는 마우스를 따르는 등빛과 봉지의 반사·무지개 결, 안드로이드 폰은 기울기를 따르는 봉지의 반사) |
 | `assets/aisle.js` | 첫 화면 진열대 줄을 미는 화살표 단추 |
 | `assets/shots.js` | 미리보기 화면을 눌러 크게 보기 |
-| `assets/pet.js`, `closet.js` | 포켓펫 꺼내 보기, 옷 분류 딱지 |
+| `assets/pet.js`, `closet.js` | 스크린펫 꺼내 보기, 옷 분류 딱지 |
 | `assets/img/`, `assets/fonts/` | 그림과 글꼴 |
 
 첫 화면은 마트 진열대처럼 칸으로 나뉜 벽에 고리로 건 봉지들이고, 봉지를 누르면 나오는 앱 페이지는 앱 장터의 앱 화면처럼 짜여 있습니다.
@@ -52,7 +52,8 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 ### 진열대(`tool/shelf.json`)
 
 - `profile`은 맨 위 벽에 붙인 스티커 묶음입니다.
-  - 폴라로이드 사진: `photo`에 그림 주소를 넣으면 그 사진이, 비워 두면 `monogram` 글자가 나옵니다. 아래 여백 글씨는 `caption`입니다.
+  - 폴라로이드 사진: `photo`에 그림 주소를 넣으면 그 사진이, 비워 두면 `monogram` 글자가 나옵니다. 아래 여백 글씨는 `caption`입니다. 크기는 `assets/site.css`의 `--pw`(구멍 간격의 몇 배)이고, 테두리·글자·테이프가 따라 큽니다.
+  - 사진과 포스트잇은 봉지처럼 움직입니다. 화면을 굴리면 붙인 윗변을 축으로 봉지의 반만큼 흔들리고, PC에서 마우스를 대면 손이 가까운 쪽이 벽에서 살짝 들립니다. 이름표는 통째로 붙인 스티커라 움직이지 않습니다.
   - 이름표: `label`, `role`, `org`, `line`. 누르면 `href`(소개 페이지)로 갑니다.
   - `stickers`:
     - `kind: note`는 포스트잇입니다. `title`(학력·경력)과 `rows`(줄마다 `logo`, `name`, `detail`, `when`)를 적습니다.
@@ -105,9 +106,9 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 - **버전 기록**: 그 앱의 `app.json`에서 `version`을 올리고 `history` 맨 위에 `{"version", "date", "notes"}`를 하나 더합니다. 앱 페이지의 「새로운 기능」에는 지금 버전의 기록이, 그 아래 접힌 「버전 기록」에는 나머지가 나옵니다. 버전이 없는 웹 서비스는 `version`을 `null`로 두면 「업데이트 기록」이 됩니다.
 - **소개**: `tool/about.json`의 경력·학력·기술·공개한 도구를 고칩니다. 앱 페이지의 개발자 이름은 소개 페이지로 이어집니다.
 - **이름 글씨를 따로 쓰는 앱**: 이름 글자만 담은 글꼴 조각을 `tool/wordmarks.py`로 만들고 `assets/site.css` 맨 위에 `@font-face`를 한 줄 더한 뒤 `app.json`의 `mark.font`에 그 이름을 적습니다.
-- **포켓펫 동물 추가**: `assets/img/pocketpet/`의 `thumb/`, `atlas/`(스프라이트 위 다섯 줄, 1536×1040), 큐티 그림체면 `stage/`에 그림을 넣고 `tool/apps/pocketpet/demo.html`의 선반에 버튼 한 줄을 더합니다.
+- **스크린펫 동물 추가**: `assets/img/pocketpet/`의 `thumb/`, `atlas/`(스프라이트 위 다섯 줄, 1536×1040), 큐티 그림체면 `stage/`에 그림을 넣고 `tool/apps/pocketpet/demo.html`의 선반에 버튼 한 줄을 더합니다.
 
 ## 그림과 글꼴
 
-- 포켓펫 동물 그림, 옷 스티커, 앱 화면은 각 앱에서 가져온 것입니다. 옷 스티커와 모아캠·Scorelab 화면은 견본 데이터로 만든 것입니다.
+- 스크린펫 동물 그림, 옷 스티커, 앱 화면은 각 앱에서 가져온 것입니다. 옷 스티커와 모아캠·Scorelab 화면은 견본 데이터로 만든 것입니다.
 - 글꼴은 SIL Open Font License로 배포된 Do Hyeon, Black Han Sans, Pretendard, Nunito(이름 글자만 추린 조각)입니다. 라이선스 전문은 `assets/fonts/`에 있습니다.
