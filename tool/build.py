@@ -469,13 +469,14 @@ def mini_pack(item, place="", level=3):
 # 물건마다 (폭 칸, 봉지 크기 비 s)를 넓은 화면과 폰(735px 이하)에 따로 둔다.
 
 GAP = 2  # 물건 사이(칸)
-# 넓은 화면은 한 화면에 칸이 1.5~2줄 보이게(큰 봉지 5칸), 폰(735px 이하)은 원래 크기 그대로다.
+# 진열대의 물건은 모두 같은 비(넓은 화면 0.7, 폰 1.2)로 건다. 그래서 봉지와 카드의 글씨 크기가 같다.
+# 기준은 회사 프로젝트의 그림 카드(9칸, 폰 16칸)이고, 앱 봉지는 같은 비로 7칸(폰 12칸)이다.
 # 넓은 화면의 폭은 홀수 칸이라 줄을 반 칸 들여 시작한다(가운데가 칸 경계에 와야 고리 두 다리가 구멍에 꽂힌다).
 SIZE = {
-    "big": ((5, 0.5), (10, 1.0)),
+    "big": ((7, 0.7), (12, 1.2)),
     "mini": ((5, 0.65), (8, 1.2)),
     "wide": ((7, 0.65), (12, 1.2)),
-    "photo": ((9, 0.65), (16, 1.2)),
+    "photo": ((9, 0.7), (16, 1.2)),
 }
 WALL = {"wide": 36, "tablet": 22}  # 벽의 칸 수(넓은 화면, 936px 미만 태블릿)
 HEIGHT = {"big": 17.5, "mini": 13.6, "wide": 15}  # 봉지 높이(봉지의 p 단위)
@@ -484,7 +485,7 @@ SHADOW = 1  # 봉지 아래 그림자가 잘리지 않게 줄 아래에 두는 �
 # 넓은 카드라 이름이 한 줄이어서 이름 칸은 작은 봉지(5.6)보다 낮다. 그림 칸 = 위 여백 + 그림(카드 폭 - 좌우 여백, 3:2)
 # + 한 줄(두 줄까지)과 「보기」. 아래 글은 글씨에 px 하한이 있어 칸(P)이 가장 작을 때 가장 길므로, 줄 높이는 그때로 잡는다.
 # CSS(.pack--photo)가 같은 값으로 그린다.
-PHOTO = {"head": 4.6, "top": 0.15, "inset": 0.35, "ratio": 1.5}
+PHOTO = {"head": 4.6, "top": 0.15, "inset": 0.35}
 P_MIN = (24, (320 - 32) / 22)  # 가장 작은 칸(px): 넓은 화면·태블릿, 폰
 
 
@@ -496,9 +497,15 @@ def kind_of(item):
     return "wide" if item.get("wide") else "mini"
 
 
-def photo_img(w, s):
+def photo_ratio(item):
+    """그림의 가로/세로. 회사 프로젝트 그림은 3:2, 도구 화면은 가로로 길다."""
+    w, h = item.get("imageSize", [600, 316])
+    return w / h
+
+
+def photo_img(w, s, ratio):
     """그림 카드의 그림 높이(봉지의 p). 카드 폭(w 칸 = w/s p)을 따라 커진다."""
-    return (w / s - 2 * PHOTO["inset"]) / PHOTO["ratio"]
+    return (w / s - 2 * PHOTO["inset"]) / ratio
 
 
 def photo_tail(s, i):
@@ -507,10 +514,12 @@ def photo_tail(s, i):
     return 1.2 + max(33.6 / p, 1.4) + max(15.6 / p, 0.6)
 
 
-def reach(kind, w, s, i):
+def reach(item, i):
     """고리 꼭대기부터 봉지 아래까지(칸). 봉지 구멍(위에서 0.5625)이 고리 끝(2칸)에 걸린다. i: 0 넓은 화면, 1 폰"""
+    kind = kind_of(item)
+    w, s = SIZE[kind][i]
     if kind == "photo":
-        height = PHOTO["head"] + PHOTO["top"] + photo_img(w, s) + photo_tail(s, i)
+        height = PHOTO["head"] + PHOTO["top"] + photo_img(w, s, photo_ratio(item)) + photo_tail(s, i)
     else:
         height = HEIGHT[kind]
     return math.ceil(2 - 0.5625 * s + height * s)
@@ -527,14 +536,16 @@ def render_item(item, place, level=3):
 def item_style(item):
     kind = kind_of(item)
     (w, s), (nw, ns) = SIZE[kind]
-    img = f";--pi:{photo_img(w, s):.3f};--npi:{photo_img(nw, ns):.3f}" if kind == "photo" else ""
+    img = ""
+    if kind == "photo":
+        ratio = photo_ratio(item)
+        img = f";--ar:{ratio:.4f};--pi:{photo_img(w, s, ratio):.3f};--npi:{photo_img(nw, ns, ratio):.3f}"
     return f' style="--w:{w};--s:{s};--nw:{nw};--ns:{ns}{img}"'
 
 
 def heights(items):
     """줄 높이(칸): 넓은 화면, 폰"""
-    kinds = [kind_of(item) for item in items]
-    return tuple(max(reach(k, *SIZE[k][i], i) for k in kinds) + SHADOW for i in (0, 1))
+    return tuple(max(reach(item, i) for item in items) + SHADOW for i in (0, 1))
 
 
 def pop_html(pop):
@@ -573,8 +584,10 @@ MODES = {
     # 벽 칸 수, 물건 크기(SIZE 의 앞·뒤), 줄 끝에서 첫 물건까지, 칸 경계에서 물건까지, 띠 사이, 띠 글씨·안쪽 여백(칸)
     "wide": {"wall": WALL["wide"], "size": 0, "edge": 1.5, "inner": 0.5, "gap": 2, "font": 0.66, "pad": 0.9},
     "tablet": {"wall": WALL["tablet"], "size": 0, "edge": 1.5, "inner": 0.5, "gap": 2, "font": 0.66, "pad": 0.9},
-    "narrow": {"wall": 22, "size": 1, "edge": 1, "inner": 1, "gap": 1, "font": 1.05, "pad": 1.1},
+    "narrow": {"wall": 22, "size": 1, "edge": 1, "inner": 1, "gap": 1, "font": 1.05, "pad": 1.1, "end": 2},
 }
+# end: 줄 맨 끝 칸의 오른쪽 여백. 폰은 봉지 오른쪽 위의 둥근 딱지가 봉지 밖으로 나와 있어(돌린 상자까지 한 칸 넘게),
+#      한 칸이면 딱지가 줄 끝을 넘어 미는 길이가 칸의 정수배에서 어긋난다(끝까지 밀면 고리가 구멍에서 비킨다).
 
 
 def text_em(text):
@@ -597,7 +610,7 @@ def place_bays(bays, kicker, m):
     for i, bay in enumerate(bays):
         spans.append(sum(SIZE[kind_of(it)][m["size"]][0] for it in bay["items"]) + GAP * (len(bay["items"]) - 1))
         lows.append(m["edge"] if i == 0 else m["inner"])
-        highs.append(m["edge"] if i == n - 1 else m["inner"])
+        highs.append(m.get("end", m["edge"]) if i == n - 1 else m["inner"])
     natural = [
         max(int(lows[i] + spans[i] + highs[i]), math.ceil(label_cols(bay, kicker, m))) for i, bay in enumerate(bays)
     ]

@@ -180,7 +180,12 @@
               "rest": -0.9,
               "size": 1.05,
               "href": "https://github.com/zoo3323/paper-summary",
-              "image": "/assets/img/tools/paper-summary.webp"
+              "image": "/assets/img/tools/paper-summary.webp",
+              "photo": true,
+              "imageSize": [
+                600,
+                316
+              ]
             },
             {
               "name": "ezet",
@@ -191,7 +196,12 @@
               "rest": 0.7,
               "size": 1.6,
               "href": "https://github.com/zoo3323/ezet",
-              "image": "/assets/img/tools/ezet.svg"
+              "image": "/assets/img/tools/ezet.svg",
+              "photo": true,
+              "imageSize": [
+                817,
+                419
+              ]
             },
             {
               "name": "audioswitch",
@@ -202,7 +212,12 @@
               "rest": -0.5,
               "size": 0.86,
               "href": "https://github.com/zoo3323/audioswitch",
-              "image": "/assets/img/tools/audioswitch.webp"
+              "image": "/assets/img/tools/audioswitch.webp",
+              "photo": true,
+              "imageSize": [
+                600,
+                316
+              ]
             },
             {
               "name": "usage-statusline",
@@ -213,7 +228,12 @@
               "rest": 0.9,
               "size": 0.95,
               "href": "https://github.com/zoo3323/usage-statusline",
-              "image": "/assets/img/tools/usage-statusline.webp"
+              "image": "/assets/img/tools/usage-statusline.webp",
+              "photo": true,
+              "imageSize": [
+                600,
+                316
+              ]
             }
           ]
         }

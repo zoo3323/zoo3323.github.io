@@ -278,13 +278,23 @@ a {
    사진 스티커, 이름표, 학력·자격 딱지. 모두 흰 테두리로 오려 낸 스티커처럼 붙인다.
    아래 칸의 고리가 구멍에 맞도록 묶음의 높이는 구멍 간격의 정수배다. */
 
+/* 묶음 안의 길이 단위(--P)는 벽 칸(--p)에 묶음 비(--mk)를 곱한 것이다. 진열대의 카드(물건 비 0.7)에 맞춰 스티커도
+   1.2배로 키운다. 넓은 화면 1200px 아래는 한 줄에 들어가는 1.15배다. 묶음의 높이와 아래 여백은 벽 칸의 정수배라
+   아래 줄의 고리가 구멍에 서고, 높이는 화면 폭마다 스티커가 들어가는 칸 수로 잡았다(여러 폭에서 잼). */
 .maker {
+  --mk: 1.15;
+  --P: calc(var(--p) * var(--mk));
   display: flex;
   align-items: center;
-  gap: calc(var(--P) * 0.9);
-  height: calc(var(--P) * 7);
-  margin: 0 0 var(--P);
+  gap: calc(var(--P) * 0.75);
+  height: calc(var(--p) * 9);
+  margin: 0 0 var(--p);
   padding: 0 calc(var(--P) * 0.4);
+}
+@media (min-width: 1200px) {
+  .maker {
+    --mk: 1.2;
+  }
 }
 .maker__card,
 .pop {
@@ -469,7 +479,7 @@ a {
 .note {
   display: grid;
   align-content: start;
-  width: calc(var(--P) * 8.6);
+  width: calc(var(--P) * 7.8);
   padding: calc(var(--P) * 0.5) calc(var(--P) * 0.6) calc(var(--P) * 0.55);
   color: var(--ink);
   background:
@@ -1262,7 +1272,7 @@ a {
 }
 .pack--photo .mini__art {
   margin: calc(var(--p) * 0.15) calc(var(--p) * 0.35) 0;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: var(--ar, 1.5);
   border-radius: calc(var(--p) * 0.26);
 }
 .pack--photo .mini__line {
@@ -2589,8 +2599,9 @@ svg.app-icon {
       "photo card"
       "stickers stickers";
     align-content: center;
+    --mk: 1.2;
     gap: calc(var(--P) * 0.7) calc(var(--P) * 0.8);
-    height: calc(var(--P) * 12);
+    height: calc(var(--p) * 15);
     padding: 0;
   }
   .maker__photo {
@@ -2625,18 +2636,39 @@ svg.app-icon {
 }
 @media (max-width: 735px) {
   .maker {
-    height: calc(var(--P) * 18);
+    height: calc(var(--p) * 18);
   }
 }
-/* 아주 좁은 폰은 포스트잇 글이 더 줄바뀜하므로 묶음을 몇 칸 더 높게(칸의 정수배라 고리 맞춤은 그대로) */
+/* 좁은 폰은 포스트잇 글씨가 px 하한에 걸려 더 줄바뀜하므로 묶음을 몇 칸 더 높게(칸의 정수배라 고리 맞춤은 그대로).
+   폭마다 스티커가 들어가는 가장 낮은 칸 수다(320~735px 를 잘게 나눠 잼). */
+@media (max-width: 519px) {
+  .maker {
+    height: calc(var(--p) * 19);
+  }
+}
+@media (max-width: 479px) {
+  .maker {
+    height: calc(var(--p) * 20);
+  }
+}
+@media (max-width: 399px) {
+  .maker {
+    height: calc(var(--p) * 22);
+  }
+}
 @media (max-width: 380px) {
   .maker {
-    height: calc(var(--P) * 22);
+    height: calc(var(--p) * 24);
+  }
+}
+@media (max-width: 359px) {
+  .maker {
+    height: calc(var(--p) * 26);
   }
 }
 @media (max-width: 340px) {
   .maker {
-    height: calc(var(--P) * 30);
+    height: calc(var(--p) * 27);
   }
 }
 @media (max-width: 735px) {
