@@ -25,6 +25,7 @@ import html
 import itertools
 import json
 import math
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -828,9 +829,14 @@ def get_buttons(app):
     return "".join(parts) or f'<span class="get get--wait">{esc(app["status"])}</span>'
 
 
+def keep_dots(text):
+    """「연구·개발」처럼 가운뎃점으로 이은 말은 줄바꿈하지 않게 묶는다(좁은 칸에서 점 뒤에서 끊기지 않게)."""
+    return re.sub(r"[^\s·]+(?:·[^\s·]+)+", lambda m: f'<span class="nobr">{m.group(0)}</span>', esc(text))
+
+
 def fact(label, value, note=""):
     note_html = f'<span class="fact__note">{esc(note)}</span>' if note else ""
-    return f'<li><span class="fact__label">{esc(label)}</span><span class="fact__value">{esc(value)}</span>{note_html}</li>'
+    return f'<li><span class="fact__label">{esc(label)}</span><span class="fact__value">{keep_dots(value)}</span>{note_html}</li>'
 
 
 def facts(app):
@@ -1030,6 +1036,11 @@ if ABOUT:
       </ol>
     </section>"""
 
+    # 소개 머리의 아이콘 자리: 첫 화면 폴라로이드와 같은 사진(없으면 명함 그림)
+    photo = SHELF.get("profile", {}).get("photo")
+    about_icon = (
+        f'<img class="app-icon app-icon--photo" src="{esc(photo)}" width="350" height="450" alt="">' if photo else ABOUT_ICON
+    )
     cv = cv_list(a["career"] + a.get("education", []))
     more_cv = "\n    ".join(
         filter(None, [
@@ -1079,7 +1090,7 @@ if ABOUT:
   <div class="listing__paper"></div>
   <div class="listing__in">
     <header class="app-head">
-      {ABOUT_ICON}
+      {about_icon}
       <div>
         <h1 class="app-name">{esc(DEV)}</h1>
         <p class="app-sub">{esc(a["headline"])}</p>

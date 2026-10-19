@@ -19,7 +19,7 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `index.html`, `<앱>/index.html`, `work/<이름>/index.html`, `about/index.html`, `404.html` | 만들어진 결과. 직접 고치지 않는다 |
 | `assets/site.css` | 화면 전체의 모양 |
 | `assets/wall.js`, `light.js` | 봉지와 벽에 붙인 사진·포스트잇의 흔들림, 빛(PC는 마우스를 따르는 등빛과 봉지의 반사·무지개 결, 안드로이드 폰은 기울기를 따르는 봉지의 반사) |
-| `assets/aisle.js` | 첫 화면 진열대 줄을 미는 화살표 단추 |
+| `assets/aisle.js` | 첫 화면 진열대 줄을 미는 화살표 단추, 줄 아래 위치 막대(손가락으로 미는 폰에서 「옆에 더 있다」를 알려 줌) |
 | `assets/shots.js` | 미리보기 화면을 눌러 크게 보기 |
 | `assets/pet.js`, `closet.js` | 스크린펫 꺼내 보기, 옷 분류 딱지 |
 | `assets/img/`, `assets/fonts/` | 그림과 글꼴 |
@@ -120,5 +120,5 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 
 ## 그림과 글꼴
 
-- 스크린펫 동물 그림, 옷 스티커, 앱 화면은 각 앱에서 가져온 것입니다. 옷 스티커와 모아캠·Scorelab 화면은 견본 데이터로 만든 것입니다.
+- 스크린펫 동물 그림, 옷 스티커, 앱 화면은 각 앱에서 가져온 것입니다. 옷 스티커와 모아캠·Scorelab 화면은 견본 데이터로 만든 것입니다. 마이리틀클로젯 화면은 플레이 스토어 스크린샷(가상 기기, 견본 옷과 지어 넣은 기록)입니다.
 - 글꼴은 SIL Open Font License로 배포된 Do Hyeon, Black Han Sans, Pretendard, Nunito(이름 글자만 추린 조각)입니다. 라이선스 전문은 `assets/fonts/`에 있습니다.

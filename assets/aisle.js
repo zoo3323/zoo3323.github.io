@@ -1,4 +1,5 @@
 // 진열대 줄 밀기. 손가락이나 트랙패드로는 그냥 밀고, 마우스가 있는 화면에서는 줄 양 끝의 화살표 단추로도 민다.
+// 줄 아래에는 지금 어디쯤인지 보여 주는 짧은 막대를 둔다.
 // 멈추는 자리는 물건의 시작(scroll-snap)이라, 멈추면 고리의 두 다리가 늘 벽의 구멍에 꽂힌다.
 (() => {
   const lines = [...document.querySelectorAll(".line")];
@@ -31,10 +32,26 @@
     const prev = button("prev", "앞으로 밀기", "M12 7H2.5M6.5 3 2.5 7l4 4");
     const next = button("next", "뒤로 밀기", "M2 7h9.5M7.5 3l4 4-4 4");
 
+    // 줄이 얼마나 길고 지금 어디쯤인지: 줄 아래 가운데의 짧은 막대. 짙은 칸의 길이가 보이는 몫, 자리가 민 정도다.
+    // 손가락으로 미는 폰에는 화살표 단추가 없어서 이것이 「옆에 더 있다」를 알려 준다.
+    const track = document.createElement("div");
+    track.className = "line__track";
+    track.setAttribute("aria-hidden", "true");
+    track.innerHTML = '<span class="line__thumb"></span>';
+    line.append(track);
+    const thumb = track.firstElementChild;
+
     const update = () => {
       const end = row.scrollWidth - row.clientWidth;
       prev.hidden = row.scrollLeft <= 1;
       next.hidden = row.scrollLeft >= end - 1;
+      track.hidden = end <= 1;
+      if (end > 1) {
+        const shown = row.clientWidth / row.scrollWidth;
+        const at = Math.min(1, Math.max(0, row.scrollLeft / end));
+        thumb.style.width = `${(shown * 100).toFixed(2)}%`;
+        thumb.style.transform = `translateX(${(((at * (1 - shown)) / shown) * 100).toFixed(2)}%)`;
+      }
     };
     row.addEventListener("scroll", update, { passive: true });
     addEventListener("resize", update);

@@ -677,6 +677,25 @@ a {
   position: relative;
   margin-top: var(--P);
 }
+/* 옆으로 미는 줄의 위치 막대(aisle.js): 줄 아래 가운데, 봉지 그림자 칸 안. 짙은 칸의 길이가 보이는 몫, 자리가 민 정도다. */
+.line__track {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--P) * 0.3);
+  width: min(8rem, 30%);
+  height: 4px;
+  overflow: hidden;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+  pointer-events: none;
+}
+.line__thumb {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--ink) 42%, transparent);
+}
 /* 줄 양 끝은 한 칸 반쯤 비운다(흔들리는 봉지 모서리가 잘리지 않게). 다 들어가는 줄은 build.py 가 준 --lead 만큼 들여 가운데 가까이 둔다. */
 .hooks {
   display: flex;
@@ -1514,6 +1533,12 @@ a {
   border-radius: 22.5%;
   box-shadow: 0 0 0 1px var(--rule);
 }
+/* 소개 머리의 사진: 증명사진(세로)을 아이콘 칸에 맞춰 얼굴 쪽으로 자른다 */
+.app-icon--photo {
+  object-fit: cover;
+  object-position: 50% 22%;
+  background: #fff;
+}
 /* 회사 프로젝트 페이지: 앱 아이콘 자리에 하는 일을 보여 주는 도식을 크게 */
 .work-art,
 .work-thumb {
@@ -1687,6 +1712,18 @@ a.get:hover {
   font-size: 0.8125rem;
   line-height: 1.4;
   color: var(--sub);
+}
+.nobr {
+  white-space: nowrap;
+}
+/* 아주 좁은 폰: 한눈에 보기 값을 조금 작게, 그래도 넘치면 묶음도 끊는다(칸 밖으로 나가지 않게) */
+@media (max-width: 359px) {
+  .app-facts .fact__value {
+    font-size: 1.0625rem;
+  }
+  .app-facts .nobr {
+    white-space: normal;
+  }
 }
 
 /* 구역 */
@@ -2609,6 +2646,7 @@ svg.app-icon {
   }
   .maker__card {
     grid-area: card;
+    justify-self: start;
     min-width: 0;
   }
   .maker__stickers {
@@ -2833,13 +2871,38 @@ svg.app-icon {
   .badge-play {
     height: 2.75rem;
   }
+  /* 한눈에 보기: 폰에서는 옆으로 밀지 않고 칸에 나눠 담는다(끝 칸이 잘려 보이지 않게).
+     셋이면 세 칸(앞 두 칸은 글만큼, 마지막 칸이 나머지), 둘·넷이면 두 칸씩, 다섯 이상은 세 칸씩 줄을 바꾼다.
+     줄의 첫 칸은 왼쪽 선이 없다. */
   .app-facts {
-    margin-inline: -1.25rem;
-    padding-inline: 0.25rem;
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, auto) minmax(0, 1fr);
+    row-gap: 0.95rem;
+    overflow: visible;
+  }
+  .app-facts:has(> li:nth-child(2):last-child),
+  .app-facts:has(> li:nth-child(4):last-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .app-facts li {
-    min-width: 5.5rem;
-    padding: 0 0.9rem;
+    min-width: 0;
+    padding: 0 0.6rem;
+  }
+  .app-facts li:nth-child(3n + 1) {
+    border-left: 0;
+  }
+  .app-facts:has(> li:nth-child(2):last-child) li,
+  .app-facts:has(> li:nth-child(4):last-child) li {
+    border-left: 1px solid var(--rule);
+  }
+  .app-facts:has(> li:nth-child(2):last-child) li:nth-child(2n + 1),
+  .app-facts:has(> li:nth-child(4):last-child) li:nth-child(2n + 1) {
+    border-left: 0;
+  }
+  .fact__value {
+    font-size: 1.1875rem;
+    overflow-wrap: break-word;
+    text-wrap: balance;
   }
   .shots {
     margin-inline: -1.25rem;
