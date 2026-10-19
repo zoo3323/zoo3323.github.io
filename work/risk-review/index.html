@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>위험성평가 AI · 패턴앤 | NamJuKim</title>
-<meta name="description" content="위험성평가표를 올리면 AI가 분석·검토를 돕고 산업안전 법령을 근거로 답하는 웹 플랫폼">
+<meta name="description" content="위험성평가표를 올리면 로컬 LLM이 위험 등급·보완 사항을 평가하고, 법령과 내부 문서를 근거로 답하는 웹 플랫폼">
 <link rel="canonical" href="https://zoo3323.github.io/work/risk-review/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NamJuKim">
 <meta property="og:title" content="위험성평가 AI · 패턴앤 | NamJuKim">
-<meta property="og:description" content="위험성평가표를 올리면 AI가 분석·검토를 돕고 산업안전 법령을 근거로 답하는 웹 플랫폼">
+<meta property="og:description" content="위험성평가표를 올리면 로컬 LLM이 위험 등급·보완 사항을 평가하고, 법령과 내부 문서를 근거로 답하는 웹 플랫폼">
 <meta property="og:url" content="https://zoo3323.github.io/work/risk-review/">
 <meta property="og:image" content="https://zoo3323.github.io/assets/img/og.png">
 <meta property="og:image:width" content="1200">
@@ -44,28 +44,32 @@
       <span class="work-art work-art--photo"><img src="/assets/img/work/risk-review/card.webp" width="900" height="600" alt=""></span>
       <div>
         <h1 class="app-name">위험성평가 AI</h1>
-        <p class="app-sub">위험성평가표를 올리면 AI가 분석·검토를 돕고 산업안전 법령을 근거로 답하는 웹 플랫폼</p>
+        <p class="app-sub">위험성평가표를 올리면 로컬 LLM이 위험 등급·보완 사항을 평가하고, 법령과 내부 문서를 근거로 답하는 웹 플랫폼</p>
         <p class="app-dev"><a href="/about/#h-work">NamJuKim</a></p>
       </div>
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
       <li><span class="fact__label">회사</span><span class="fact__value">패턴앤</span></li>
       <li><span class="fact__label">기간</span><span class="fact__value">2026</span></li>
-      <li><span class="fact__label">맡은 일</span><span class="fact__value">웹 플랫폼 개발</span></li>
+      <li><span class="fact__label">맡은 일</span><span class="fact__value">1인 <span class="nobr">풀스택·LLM</span> 개발</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>위험성평가표를 올리면 AI가 분석과 검토를 돕고, 산업안전 법령을 근거로 답하는 웹 플랫폼을 만들었습니다.</p>
+      <p>업로드 → AI 분석 → 보완 → 현장 점검 → 보고서를 한 흐름으로 잇는 웹 플랫폼을 프런트엔드부터 AI 파이프라인까지 혼자 설계·구현했습니다. vLLM으로 서빙한 로컬 LLM·VLM에 내부 문서 RAG와 MCP 법령 조회를 붙여, 인용한 조문을 검증하고 근거와 함께 답합니다.</p>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>위험성평가표 분석과 검토 보조</li>
-        <li>산업안전 법령을 근거로 한 답변</li>
+        <li>vLLM(OpenAI 호환 API)으로 로컬 <span class="nobr">LLM·VLM을</span> 서빙하고 FastAPI 백엔드에 연동</li>
+        <li>내부 문서 RAG: 표준 <span class="nobr">절차서·작업</span> <span class="nobr">지침·사고</span> 사례를 텍스트 추출 → 문장 단위 청킹 → fastembed 임베딩 → pgvector 인덱싱</li>
+        <li>RAG 챗봇은 찾은 문서를 근거로 붙여 답하고, korean-law-mcp(MCP 서버)로 산업안전보건법 조문을 실시간 조회해 없는 조문 인용(할루시네이션) 차단</li>
+        <li><span class="nobr">ARQ·Redis</span> 워커로 항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가 2단계 비동기 분석 파이프라인</li>
+        <li>VLM으로 현장 <span class="nobr">사진·TBM</span> 회의록을 분석해 새 위험 요인 추출</li>
+        <li>병합 <span class="nobr">셀·비정형</span> 칼럼이 섞인 <span class="nobr">엑셀(.xlsx)·한글(.hwpx)</span> 평가표 파싱, 편집형 <span class="nobr">그리드·대시보드,</span> <span class="nobr">PDF·DOCX·XLSX</span> 보고서 내보내기</li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
-      <ul class="chips"><li>웹</li><li>LLM</li></ul>
+      <ul class="chips"><li>Next.js · React · TypeScript</li><li>Python · FastAPI</li><li>vLLM(로컬 LLM·VLM)</li><li>RAG · pgvector · fastembed</li><li>MCP</li><li>ARQ · Redis</li><li>Supabase(PostgreSQL)</li></ul>
     </section>
     <section class="sec" aria-labelledby="h-media">
       <h2 id="h-media">자료</h2>

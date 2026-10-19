@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>안전 영상 분석 · 패턴앤 | NamJuKim</title>
-<meta name="description" content="사업장 CCTV에서 안전모 미착용·화재·침입을 실시간으로 감지하는 영상 분석 서버">
+<meta name="description" content="사업장 CCTV의 RTSP 영상에서 안전모 미착용·화재·침입을 감지하고, 여러 카메라에 걸쳐 사람을 추적하는 실시간 영상 분석 서버">
 <link rel="canonical" href="https://zoo3323.github.io/work/safety-vision/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NamJuKim">
 <meta property="og:title" content="안전 영상 분석 · 패턴앤 | NamJuKim">
-<meta property="og:description" content="사업장 CCTV에서 안전모 미착용·화재·침입을 실시간으로 감지하는 영상 분석 서버">
+<meta property="og:description" content="사업장 CCTV의 RTSP 영상에서 안전모 미착용·화재·침입을 감지하고, 여러 카메라에 걸쳐 사람을 추적하는 실시간 영상 분석 서버">
 <meta property="og:url" content="https://zoo3323.github.io/work/safety-vision/">
 <meta property="og:image" content="https://zoo3323.github.io/assets/img/og.png">
 <meta property="og:image:width" content="1200">
@@ -44,7 +44,7 @@
       <span class="work-art work-art--photo"><img src="/assets/img/work/safety-vision/card.webp" width="900" height="600" alt=""></span>
       <div>
         <h1 class="app-name">안전 영상 분석</h1>
-        <p class="app-sub">사업장 CCTV에서 안전모 미착용·화재·침입을 실시간으로 감지하는 영상 분석 서버</p>
+        <p class="app-sub">사업장 CCTV의 RTSP 영상에서 안전모 미착용·화재·침입을 감지하고, 여러 카메라에 걸쳐 사람을 추적하는 실시간 영상 분석 서버</p>
         <p class="app-dev"><a href="/about/#h-work">NamJuKim</a></p>
       </div>
     </header>
@@ -54,18 +54,21 @@
       <li><span class="fact__label">맡은 일</span><span class="fact__value">영상 분석 서버 개발</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>사업장 CCTV에서 안전모 미착용·화재·침입을 실시간으로 감지하고, 여러 카메라에 걸쳐 사람을 추적하는 영상 분석 서버를 만들었습니다.</p>
+      <p>GPU 한 대에서 화재·안전모·침입 감지와 다중 카메라 추적 모델을 함께 운영하는 FastAPI 추론 서버를 만들었습니다. RTSP 스트림을 받아 추론하고, 결과를 하나의 스키마로 정규화해 WebSocket으로 실시간 송출합니다.</p>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>안전모 미착용·화재·침입 실시간 감지</li>
-        <li>여러 카메라에 걸쳐 같은 사람을 추적</li>
+        <li>FastAPI 다중 모델 라우팅과 동적 모델 로딩: GPU에는 한 모델만 상주시키고 요청 시 교체해 VRAM 부족(OOM) 해결</li>
+        <li>RTSP 스트림 전용 스레드 디코딩과 자동 재연결, 결과를 <span class="nobr">box·roi·count</span> 스키마로 정규화해 WebSocket 송출</li>
+        <li>YOLO 계열 검출로 <span class="nobr">화재·연기와</span> 안전모 <span class="nobr">착용(helmet)·미착용(head)</span> 감지</li>
+        <li>ArUco 마커로 침입 감지 ROI를 자동 생성해, 카메라를 다시 달아도 재설정 없이 동작</li>
+        <li>ByteTrack 추적과 ResNet50 ReID로 여러 카메라를 지나는 같은 사람에게 전역 ID 부여, 신뢰도 높은 트랙만 ReID해 GPU 부하 절감</li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
-      <ul class="chips"><li>Python</li><li>객체 검출</li><li>다중 카메라 추적</li></ul>
+      <ul class="chips"><li>Python</li><li>FastAPI · WebSocket</li><li>PyTorch · YOLO</li><li>ByteTrack · ReID</li><li>OpenCV · ArUco</li><li>Docker · CUDA</li></ul>
     </section>
     <section class="sec" aria-labelledby="h-media">
       <h2 id="h-media">자료</h2>

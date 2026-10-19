@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>라벨링 도구 · 신라이앤씨 | NamJuKim</title>
-<meta name="description" content="현장 카메라 영상을 모으고 보정해 라벨링까지 한곳에서 하는 사내 도구">
+<meta name="description" content="현장 영상 수집, 카메라 캘리브레이션, 하단면 라벨링, 학습 세트 내보내기를 한 흐름으로 잇는 사내 웹 도구">
 <link rel="canonical" href="https://zoo3323.github.io/work/labeling-tool/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NamJuKim">
 <meta property="og:title" content="라벨링 도구 · 신라이앤씨 | NamJuKim">
-<meta property="og:description" content="현장 카메라 영상을 모으고 보정해 라벨링까지 한곳에서 하는 사내 도구">
+<meta property="og:description" content="현장 영상 수집, 카메라 캘리브레이션, 하단면 라벨링, 학습 세트 내보내기를 한 흐름으로 잇는 사내 웹 도구">
 <meta property="og:url" content="https://zoo3323.github.io/work/labeling-tool/">
 <meta property="og:image" content="https://zoo3323.github.io/assets/img/og.png">
 <meta property="og:image:width" content="1200">
@@ -44,29 +44,31 @@
       <span class="work-art work-art--photo"><img src="/assets/img/work/labeling-tool/card.webp" width="900" height="600" alt=""></span>
       <div>
         <h1 class="app-name">라벨링 도구</h1>
-        <p class="app-sub">현장 카메라 영상을 모으고 보정해 라벨링까지 한곳에서 하는 사내 도구</p>
+        <p class="app-sub">현장 영상 수집, 카메라 캘리브레이션, 하단면 라벨링, 학습 세트 내보내기를 한 흐름으로 잇는 사내 웹 도구</p>
         <p class="app-dev"><a href="/about/#h-work">NamJuKim</a></p>
       </div>
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
       <li><span class="fact__label">회사</span><span class="fact__value">신라이앤씨</span></li>
       <li><span class="fact__label">기간</span><span class="fact__value">2026</span></li>
-      <li><span class="fact__label">맡은 일</span><span class="fact__value">도구 개발</span></li>
+      <li><span class="fact__label">맡은 일</span><span class="fact__value">도구 <span class="nobr">설계·개발</span></span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>현장 카메라 영상을 모으고 보정해 라벨링까지 한곳에서 하는 사내 도구를 만들었습니다.</p>
+      <p>주차면 사각형과 바닥 선으로 카메라를 보정하고, 하단면 라벨을 지면 좌표계에서 편집해 이미지로 재투영하는 라벨링 도구를 만들었습니다. 배포 모델의 예측을 사전 라벨로 띄우는 모델 보조 라벨링과 학습 세트 버전 관리까지 한곳에서 합니다.</p>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>현장 카메라 영상 수집</li>
-        <li>영상 보정과 라벨링 화면</li>
-        <li>학습 데이터로 내보내기</li>
+        <li>현장 카메라 <span class="nobr">스냅샷·기둥</span> 카메라 녹화에서 프레임 수집, 카메라 각도 변경 감지와 화소 변화 기반 중복 제거</li>
+        <li>주차면 사각형으로 OpenCV 어안 왜곡 계수와 지면 호모그래피(homography) 추정, 소실점 기반 <span class="nobr">초점거리·카메라</span> <span class="nobr">높이·롤</span> 보정</li>
+        <li>지면 좌표계에서 차급 프리셋 하단면을 놓고 원근 그대로 재투영, 실측 <span class="nobr">크기·비율을</span> 벗어난 라벨 경고</li>
+        <li>배포 모델(ONNX Runtime) 예측을 사전 라벨로 제안하는 모델 보조 라벨링, 보정이 바뀌면 라벨 자동 재정렬</li>
+        <li>모델 입력 규격(레터박스 등)에 맞춘 학습 세트 내보내기와 세트 버전 기록</li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
-      <ul class="chips"><li>Python</li></ul>
+      <ul class="chips"><li>Python</li><li>FastAPI</li><li>OpenCV</li><li>ONNX Runtime</li><li>JavaScript · Canvas</li></ul>
     </section>
     <section class="sec" aria-labelledby="h-media">
       <h2 id="h-media">자료</h2>

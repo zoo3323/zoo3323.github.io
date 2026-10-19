@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>주차면 판단 AI · 신라이앤씨 | NamJuKim</title>
-<meta name="description" content="주차장 CCTV 영상에서 차량을 찾아 주차면마다 차가 있는지 판단하는 AI 모델">
+<meta name="description" content="주차장 CCTV·기둥 카메라 영상에서 차량 하단면을 검출해 주차면 점유를 판단하는 AI 모델">
 <link rel="canonical" href="https://zoo3323.github.io/work/parking-ai/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NamJuKim">
 <meta property="og:title" content="주차면 판단 AI · 신라이앤씨 | NamJuKim">
-<meta property="og:description" content="주차장 CCTV 영상에서 차량을 찾아 주차면마다 차가 있는지 판단하는 AI 모델">
+<meta property="og:description" content="주차장 CCTV·기둥 카메라 영상에서 차량 하단면을 검출해 주차면 점유를 판단하는 AI 모델">
 <meta property="og:url" content="https://zoo3323.github.io/work/parking-ai/">
 <meta property="og:image" content="https://zoo3323.github.io/assets/img/og.png">
 <meta property="og:image:width" content="1200">
@@ -44,29 +44,32 @@
       <span class="work-art work-art--photo"><img src="/assets/img/work/parking-ai/card.webp" width="900" height="600" alt=""></span>
       <div>
         <h1 class="app-name">주차면 판단 AI</h1>
-        <p class="app-sub">주차장 CCTV 영상에서 차량을 찾아 주차면마다 차가 있는지 판단하는 AI 모델</p>
+        <p class="app-sub">주차장 CCTV·기둥 카메라 영상에서 차량 하단면을 검출해 주차면 점유를 판단하는 AI 모델</p>
         <p class="app-dev"><a href="/about/#h-work">NamJuKim</a></p>
       </div>
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
       <li><span class="fact__label">회사</span><span class="fact__value">신라이앤씨</span></li>
       <li><span class="fact__label">기간</span><span class="fact__value">2026</span></li>
-      <li><span class="fact__label">맡은 일</span><span class="fact__value">모델 <span class="nobr">연구·개발,</span> 현장 배포</span></li>
+      <li><span class="fact__label">맡은 일</span><span class="fact__value">모델 <span class="nobr">연구·개발,</span> 엣지 배포</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>주차장 CCTV 영상에서 차량을 찾아 주차면이 찼는지 판단하는 모델을 연구·개발하고, 가볍게 만들어 라즈베리파이·Jetson 같은 현장 장비에 배포합니다. 기둥에 단 앞뒤 카메라 두 대의 결과를 묶어 입차·출차 시각을 잡는 추적도 맡았습니다.</p>
+      <p>카메라 캘리브레이션 없이 이미지 한 장에서 차량 하단면(footprint)을 가려진 부분까지 볼록 사각형으로 검출하는 one-stage 모델을 연구·개발합니다. CARLA 합성 데이터와 실제 영상으로 학습하고, 지식 증류·INT8 양자화로 경량화해 라즈베리파이·Jetson·GPU 서버에 배포합니다.</p>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>학습 데이터 준비와 라벨링, 객체 검출 모델 학습</li>
-        <li>기둥에 단 앞뒤 카메라 두 대의 결과를 묶어 입차·출차 시각을 잡는 추적</li>
-        <li>모델을 가볍게 만들어 라즈베리파이·Jetson 같은 현장 장비에 배포</li>
+        <li>CFQ 표현 설계: 차량 축 기준 앞뒤 변의 <span class="nobr">폭·기울기로,</span> 꼭짓점 순서가 고정된 볼록 사각형을 항상 출력</li>
+        <li>중심점 기반 one-stage 검출기로 가려진 꼭짓점까지 추정하는 amodal 하단면 검출, 대각선 길이로 정규화한 꼭짓점 손실</li>
+        <li>CARLA 합성 데이터(어안 포함) 학습과 실제 CCTV 미세조정, <span class="nobr">열화·가림·야간</span> 조명 증강으로 sim-to-real 격차 축소</li>
+        <li>지식 증류(knowledge <span class="nobr">distillation)·INT8</span> 양자화 후 <span class="nobr">ONNX·NCNN·TensorRT로</span> 변환해 엣지 장비에 배포</li>
+        <li>앞뒤 카메라의 하단면 트랙을 결합하고, 주차면 ROI를 덮는 비율로 <span class="nobr">입차·출차</span> 판정</li>
+        <li>현장 영상 재생 벤치마크로 <span class="nobr">오검출·미검출을</span> 검증하고, 모델별 릴리스와 입출력 계약을 버전 관리</li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
-      <ul class="chips"><li>Python</li><li>객체 검출(YOLO 등)</li><li>GPU 서버 학습</li><li>Jetson·라즈베리파이</li></ul>
+      <ul class="chips"><li>Python</li><li>PyTorch</li><li>CARLA</li><li>ONNX · NCNN</li><li>TensorRT · DeepStream</li><li>라즈베리파이 · Jetson</li></ul>
     </section>
     <section class="sec" aria-labelledby="h-media">
       <h2 id="h-media">자료</h2>

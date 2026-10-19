@@ -1020,7 +1020,7 @@ if ABOUT:
         rows = []
         for x in entries:
             link = f' <a href="{esc(x["link"])}">{esc(x["linkLabel"])}</a>' if x.get("link") else ""
-            notes = f'<p>{esc(x["notes"])}{link}</p>' if x.get("notes") else ""
+            notes = f'<p>{keep_dots(x["notes"])}{link}</p>' if x.get("notes") else ""
             rows.append(
                 f'<li><div class="cv__head"><b>{esc(x["org"])}</b><span>{esc(x["unit"])}</span><time>{esc(x["period"])}</time></div>{notes}</li>'
             )
@@ -1046,6 +1046,7 @@ if ABOUT:
         filter(None, [
             cv_section("certs", "자격증", a.get("certs")),
             cv_section("work", "회사 프로젝트", [dict(w, link=f'/work/{w["slug"]}/', linkLabel="자세히 보기") for w in a.get("work", [])]),
+            cv_section("llm", "LLM·에이전트", a.get("llm")),
             cv_section("research", "연구·논문", a.get("research")),
             cv_section("startup", "대회·창업", a.get("startup")),
         ])
@@ -1181,7 +1182,7 @@ if ABOUT and ABOUT.get("work"):
 
     for w in works:
         mini, style = work_tone(w)
-        did = "\n        ".join(f"<li>{esc(x)}</li>" for x in w.get("did", []))
+        did = "\n        ".join(f"<li>{keep_dots(x)}</li>" for x in w.get("did", []))
         stack = "".join(f"<li>{esc(x)}</li>" for x in w.get("stack", []))
         others_rows = []
         for o in works:
