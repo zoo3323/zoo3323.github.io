@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=bf454d53">
+<link rel="stylesheet" href="/assets/site.css?v=78e0c270">
 <script src="/assets/light.js?v=543faa9f" defer></script>
 </head>
 <body>
@@ -79,33 +79,25 @@
     <section class="sec" aria-labelledby="h-work">
       <h2 id="h-work">회사 프로젝트</h2>
       <ol class="cv">
-        <li><div class="cv__head"><b>주차면 판단 AI</b><span>신라이앤씨</span><time>2026</time></div><p>카메라 캘리브레이션 없이 이미지 한 장에서 차량 하단면(footprint)을 가려진 부분까지 볼록 사각형으로 검출하는 one-stage 모델을 <span class="nobr">연구·개발합니다.</span> CARLA 합성 데이터와 실제 영상으로 학습하고, 지식 <span class="nobr">증류·INT8</span> 양자화로 경량화해 <span class="nobr">라즈베리파이·Jetson·GPU</span> 서버에 배포합니다. <a href="/work/parking-ai/">자세히 보기</a></p></li>
-        <li><div class="cv__head"><b>라벨링 도구</b><span>신라이앤씨</span><time>2026</time></div><p>주차면 사각형과 바닥 선으로 카메라를 보정하고, 하단면 라벨을 지면 좌표계에서 편집해 이미지로 재투영하는 라벨링 도구를 만들었습니다. 배포 모델의 예측을 사전 라벨로 띄우는 모델 보조 라벨링과 학습 세트 버전 관리까지 한곳에서 합니다. <a href="/work/labeling-tool/">자세히 보기</a></p></li>
-        <li><div class="cv__head"><b>안전 영상 분석</b><span>패턴앤</span><time>2025</time></div><p>GPU 한 대에서 <span class="nobr">화재·안전모·침입</span> 감지와 다중 카메라 추적 모델을 함께 운영하는 FastAPI 추론 서버를 만들었습니다. RTSP 스트림을 받아 추론하고, 결과를 하나의 스키마로 정규화해 WebSocket으로 실시간 송출합니다. <a href="/work/safety-vision/">자세히 보기</a></p></li>
-        <li><div class="cv__head"><b>위험성평가 AI</b><span>패턴앤</span><time>2026</time></div><p>업로드 → AI 분석 → 보완 → 현장 점검 → 보고서를 한 흐름으로 잇는 웹 플랫폼을 프런트엔드부터 AI 파이프라인까지 혼자 <span class="nobr">설계·구현했습니다.</span> vLLM으로 서빙한 로컬 <span class="nobr">LLM·VLM에</span> 내부 문서 RAG와 MCP 법령 조회를 붙여, 인용한 조문을 검증하고 근거와 함께 답합니다. <a href="/work/risk-review/">자세히 보기</a></p></li>
-        <li><div class="cv__head"><b>노인보호구역 입지 분석</b><span>제이솔루션</span><time>2024</time></div><p>프로젝트 담당자로 공간 데이터 <span class="nobr">수집·전처리부터</span> <span class="nobr">모델링·시각화까지</span> 이끌었습니다. 핫스폿(Hot Spot) 분석으로 사고 다발 구역을 찾고, Random Forest와 지리가중회귀(GWR)로 지역마다 다른 영향(공간적 이질성)을 반영해 최적입지를 도출했습니다. <a href="/work/senior-zone/">자세히 보기</a></p></li>
+        <li class="cv__row"><a class="cv__art cv__art--cover" style="--tone:#d6ecff" aria-hidden="true" href="/work/parking-ai/" tabindex="-1"><img src="/assets/img/work/parking-ai/card.webp" width="900" height="600" alt="" loading="lazy"></a><div class="cv__head"><b>2.5D 차량 하단면 검출</b><span>신라이앤씨</span><time>2026</time></div><p>카메라 캘리브레이션이나 어안 왜곡 보정 없이, 원본 영상 한 장에서 차량 하단면(footprint)의 네 꼭짓점을 가려진 부분까지 바로 출력하는 one-stage 2.5D 검출 모델을 <span class="nobr">연구·개발합니다.</span> 카메라마다 보정값을 구할 필요가 없고, CARLA 합성 데이터와 실제 영상으로 학습해 지식 <span class="nobr">증류·INT8</span> 양자화로 경량화한 뒤 <span class="nobr">라즈베리파이·Jetson·GPU</span> 서버에 배포합니다. <a href="/work/parking-ai/">자세히 보기</a></p></li>
+        <li class="cv__row"><a class="cv__art cv__art--cover" style="--tone:#d6ecff" aria-hidden="true" href="/work/labeling-tool/" tabindex="-1"><img src="/assets/img/work/labeling-tool/card.webp" width="900" height="600" alt="" loading="lazy"></a><div class="cv__head"><b>라벨링 도구</b><span>신라이앤씨</span><time>2026</time></div><p>라벨링용으로 주차면 사각형과 바닥 선에서 카메라를 보정하고, 하단면 라벨을 지면 좌표계에서 편집해 이미지로 재투영하는 라벨링 도구를 만들었습니다. 배포 모델의 예측을 사전 라벨로 띄우는 모델 보조 라벨링과 학습 세트 버전 관리까지 한곳에서 합니다. <a href="/work/labeling-tool/">자세히 보기</a></p></li>
+        <li class="cv__row"><a class="cv__art cv__art--cover" style="--tone:#d4f2e1" aria-hidden="true" href="/work/safety-vision/" tabindex="-1"><img src="/assets/img/work/safety-vision/card.webp" width="900" height="600" alt="" loading="lazy"></a><div class="cv__head"><b>안전 영상 분석</b><span>패턴앤</span><time>2025</time></div><p>GPU 한 대에서 <span class="nobr">화재·안전모·침입</span> 감지와 다중 카메라 추적 모델을 함께 운영하는 FastAPI 추론 서버를 만들었습니다. RTSP 스트림을 받아 추론하고, 결과를 하나의 스키마로 정규화해 WebSocket으로 실시간 송출합니다. <a href="/work/safety-vision/">자세히 보기</a></p></li>
+        <li class="cv__row"><a class="cv__art cv__art--cover" style="--tone:#d4f2e1" aria-hidden="true" href="/work/risk-review/" tabindex="-1"><img src="/assets/img/work/risk-review/card.webp" width="900" height="600" alt="" loading="lazy"></a><div class="cv__head"><b>위험성평가 AI</b><span>패턴앤</span><time>2026</time></div><p>업로드 → AI 분석 → 보완 → 현장 점검 → 보고서를 한 흐름으로 잇는 웹 플랫폼을 프런트엔드부터 AI 파이프라인까지 혼자 <span class="nobr">설계·구현했습니다.</span> vLLM으로 서빙한 로컬 <span class="nobr">LLM·VLM에</span> 내부 문서 RAG와 MCP 법령 조회를 붙여, 인용한 조문을 검증하고 근거와 함께 답합니다. <a href="/work/risk-review/">자세히 보기</a></p></li>
+        <li class="cv__row"><a class="cv__art cv__art--cover" style="--tone:#ece7df" aria-hidden="true" href="/work/senior-zone/" tabindex="-1"><img src="/assets/img/work/senior-zone/card.webp" width="900" height="600" alt="" loading="lazy"></a><div class="cv__head"><b>노인보호구역 입지 분석</b><span>제이솔루션</span><time>2024</time></div><p>프로젝트 담당자로 공간 데이터 <span class="nobr">수집·전처리부터</span> <span class="nobr">모델링·시각화까지</span> 이끌었습니다. 핫스폿(Hot Spot) 분석으로 사고 다발 구역을 찾고, Random Forest와 지리가중회귀(GWR)로 지역마다 다른 영향(공간적 이질성)을 반영해 최적입지를 도출했습니다. <a href="/work/senior-zone/">자세히 보기</a></p></li>
       </ol>
     </section>
-    <section class="sec" aria-labelledby="h-llm">
-      <h2 id="h-llm">LLM·에이전트</h2>
+    <section class="sec" aria-labelledby="h-projects">
+      <h2 id="h-projects">개인 프로젝트</h2>
       <ol class="cv">
-        <li><div class="cv__head"><b>위험성평가 AI</b><span>패턴앤 · 로컬 LLM·RAG·MCP</span><time>2026</time></div><p>vLLM으로 서빙한 로컬 <span class="nobr">LLM·VLM에</span> 내부 문서 <span class="nobr">RAG(fastembed·pgvector)와</span> MCP 법령 조회를 붙였습니다. 모델이 인용한 조문을 실시간으로 검증해 할루시네이션을 막고, 찾은 문서를 근거로 답합니다. <a href="/work/risk-review/">자세히 보기</a></p></li>
-        <li><div class="cv__head"><b>가나디야 AI 상담</b><span>개인 · Claude API·도구 호출</span><time>2026</time></div><p>보호자가 일상어로 적은 반려견 상태를 도구 호출(tool use)로 피할 <span class="nobr">원료·주의</span> <span class="nobr">영양소·위험</span> 신호를 담은 구조화 프로필로 바꿉니다. 추천은 검수한 규칙 엔진이, 위험 신호 판정은 서버 후처리가 맡고, 모델 호출은 서버(Edge Function)에서만 합니다. <a href="/ganadiya/">가나디야 보기</a></p></li>
-        <li><div class="cv__head"><b>스코어랩 AI 분석·리포트</b><span>개인 · OpenAI API·비전</span><time>2026</time></div><p>시험지 <span class="nobr">PDF·이미지의</span> 문항과 유형을 <span class="nobr">LLM·비전</span> 모델로 읽고 선생님이 확인합니다. 점수와 판정은 코드가 계산하고, LLM은 검증된 근거만 문장으로 옮겨 학부모 리포트를 씁니다. <a href="/scorelab/">스코어랩 보기</a></p></li>
-        <li><div class="cv__head"><b>Claude Code 플러그인</b><span>개인 · 코딩 에이전트</span><time>2026</time></div><p>paper-summary는 에이전트가 논문 원문 블록을 빠짐없이 번역하고 스크립트가 완전성을 검증하는 구조로 <span class="nobr">번역본·요약본·용어사전</span> HTML을 만듭니다. usage-statusline은 <span class="nobr">Claude·Codex</span> 사용량과 컨텍스트 게이지를 상태줄에 보여 줍니다. <a href="#h-tools">공개한 도구 보기</a></p></li>
+        <li class="cv__row"><a class="cv__art cv__art--cover" style="--tone:#a3e635" aria-hidden="true" href="/scorelab/" tabindex="-1"><img src="/assets/img/scorelab/shot-1.webp" width="1440" height="900" alt="" loading="lazy"></a><div class="cv__head"><b>스코어랩</b><span>웹 서비스 · 모두의 창업 2기 지원</span><time>2026</time></div><p>학원이 시험지 PDF를 올리면 답안 <span class="nobr">수집·자동채점·유형</span> <span class="nobr">분석·학부모</span> 리포트까지 한곳에서 잇는 웹 서비스입니다. 문항과 유형은 <span class="nobr">LLM·비전</span> 모델이 읽고 선생님이 확인하며, 점수와 판정은 코드가 계산하고 LLM은 검증된 근거만 문장으로 옮겨 리포트를 씁니다. <a href="/scorelab/">스코어랩 보기</a></p></li>
+        <li class="cv__row"><a class="cv__art cv__art--phones" style="--tone:#ffd9c2" aria-hidden="true" href="/ganadiya/" tabindex="-1"><img src="/assets/img/ganadiya/shot-home.webp" width="780" height="1688" alt="" loading="lazy"><img src="/assets/img/ganadiya/shot-2.webp" width="780" height="1688" alt="" loading="lazy"></a><div class="cv__head"><b>가나디야</b><span>앱 · 모두의 창업 1기 1라운드 선정</span><time>2026. 3. – 8.</time></div><p>반려견 맞춤 화식 밀키트 아이디어로 중소벤처기업부 창업 지원 사업 1라운드에 선정됐고, 경북대학교 멘토링을 받으며 MVP 앱을 만들어 보호자들과 시험했습니다. AI 상담은 Claude 도구 호출(tool use)로 보호자의 말을 피할 <span class="nobr">원료·주의</span> <span class="nobr">영양소·위험</span> 신호를 담은 구조화 프로필로 바꾸고, 추천은 검수한 규칙 엔진이, 위험 신호 판정은 서버 후처리가 맡습니다. <a href="/ganadiya/">가나디야 보기</a></p></li>
+        <li class="cv__row"><a class="cv__art cv__art--stack" style="--tone:#f1eeff" aria-hidden="true" href="#h-tools" tabindex="-1"><img src="/assets/img/tools/paper-summary.webp" width="600" height="316" alt="" loading="lazy"><img src="/assets/img/tools/usage-statusline.webp" width="600" height="316" alt="" loading="lazy"></a><div class="cv__head"><b>Claude Code 에이전트 플러그인</b><span>공개 저장소</span><time>2026</time></div><p>paper-summary는 에이전트가 논문 PDF의 원문 블록을 빠짐없이 번역하고 스크립트가 완전성을 검증하는 구조로 한국어 <span class="nobr">번역본·요약본·용어사전</span> HTML을 만듭니다. usage-statusline은 <span class="nobr">Claude·Codex</span> 사용량과 컨텍스트 게이지를 상태줄에 보여 줍니다. <a href="#h-tools">공개한 도구 보기</a></p></li>
       </ol>
     </section>
     <section class="sec" aria-labelledby="h-research">
       <h2 id="h-research">연구·논문</h2>
       <ol class="cv">
-        <li><div class="cv__head"><b>MDPI MAKE 투고 논문</b><span>제1저자</span><time>2026. 10. 투고</time></div><p>「Convex Footprint Quadrilateral: Axis-Based Amodal Vehicle Footprint Detection in Parking Surveillance」. 차량 축 기준 앞뒤 변의 <span class="nobr">폭·기울기로</span> 항상 볼록한 사각형을 만드는 CFQ 표현을 제안하고, 중심점 기반 one-stage 검출기에 결합해 카메라 캘리브레이션 없이 가려진 하단면까지 검출했습니다(amodal). 학술지 Machine Learning and Knowledge Extraction(MDPI)에 투고했습니다.</p></li>
-      </ol>
-    </section>
-    <section class="sec" aria-labelledby="h-startup">
-      <h2 id="h-startup">대회·창업</h2>
-      <ol class="cv">
-        <li><div class="cv__head"><b>모두의 창업 1기</b><span>가나디야 · 1라운드 선정</span><time>2026. 3. – 8.</time></div><p>중소벤처기업부의 창업 지원 사업에 반려견 맞춤 화식 밀키트 아이디어로 도전해 1라운드에 선정됐습니다. 경북대학교의 멘토링을 받으며 MVP 앱을 만들어 보호자들과 시험했습니다. <a href="/ganadiya/">가나디야 보기</a></p></li>
-        <li><div class="cv__head"><b>모두의 창업 2기</b><span>스코어랩 · 지원</span><time>2026. 9.</time></div><p>학원 시험 관리를 AI로 바꾸는 스코어랩으로 2기에 지원했습니다. <a href="/scorelab/">스코어랩 보기</a></p></li>
+        <li class="cv__row"><span class="cv__art cv__art--cover" style="--tone:#ffffff" aria-hidden="true"><img src="/assets/img/research/card.webp" width="900" height="600" alt="" loading="lazy"></span><div class="cv__head"><b>MDPI MAKE 투고 논문</b><span>제1저자</span><time>2026. 10. 투고</time></div><p>「Convex Footprint Quadrilateral: Axis-Based Amodal Vehicle Footprint Detection in Parking Surveillance」. 차량 축 기준 앞뒤 변의 <span class="nobr">폭·기울기로</span> 항상 볼록한 사각형을 만드는 CFQ 표현을 제안하고, 중심점 기반 one-stage 검출기에 결합해 카메라 캘리브레이션 없이 가려진 하단면까지 검출했습니다(amodal). 학술지 Machine Learning and Knowledge Extraction(MDPI)에 투고했습니다.</p></li>
       </ol>
     </section>
     <section class="sec" aria-labelledby="h-skills">

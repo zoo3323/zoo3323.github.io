@@ -1596,10 +1596,13 @@ a {
   border-radius: 22.5%;
   box-shadow: 0 0 0 1px var(--rule);
 }
-/* 소개 머리의 사진: 증명사진(세로)을 아이콘 칸에 맞춰 얼굴 쪽으로 자른다 */
-.app-icon--photo {
+/* 소개 머리의 사진: 증명사진(세로)을 자르지 않고 작게 둔다(정사각형으로 자르면 얼굴만 크게 보였다) */
+.app-icon.app-icon--photo {
+  width: 5.75rem;
+  height: auto;
+  aspect-ratio: 35 / 45;
   object-fit: cover;
-  object-position: 50% 22%;
+  border-radius: 0.85rem;
   background: #fff;
 }
 /* 회사 프로젝트 페이지: 앱 아이콘 자리에 하는 일을 보여 주는 도식을 크게 */
@@ -2325,6 +2328,98 @@ svg.app-icon {
   margin-top: 0.35rem;
   color: #33333a;
 }
+/* 회사·개인 프로젝트와 논문 줄: 앞에 작은 그림(진열대 카드 그림·앱 화면)을 둔다 */
+.cv:has(.cv__row) {
+  max-width: 44rem;
+}
+.cv li.cv__row {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "art head" "art notes";
+  gap: 0 1.25rem;
+  align-items: start;
+}
+.cv__row > .cv__art {
+  grid-area: art;
+}
+.cv__row > .cv__head {
+  grid-area: head;
+}
+.cv__row > p {
+  grid-area: notes;
+}
+.cv__art {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  margin-top: 0.2rem;
+  border-radius: 0.7rem;
+  background: var(--tone);
+  box-shadow: 0 0 0 1px var(--rule);
+  transition: transform 0.2s var(--out), box-shadow 0.2s var(--out);
+}
+a.cv__art:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px var(--rule), 0 10px 18px -12px rgb(52 48 70 / 0.55);
+}
+.cv__art img {
+  display: block;
+}
+.cv__art--cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cv__art--phones {
+  display: flex;
+  justify-content: center;
+  gap: 7%;
+  padding-top: 9%;
+}
+.cv__art--phones img {
+  flex: none;
+  width: 31%;
+  height: auto;
+  border-radius: 0.4rem;
+  box-shadow: 0 0 0 1px rgb(23 23 26 / 0.08), 0 6px 14px -6px rgb(52 48 70 / 0.5);
+}
+.cv__art--stack img {
+  position: absolute;
+  width: 76%;
+  height: auto;
+  border-radius: 0.35rem;
+  box-shadow: 0 0 0 1px rgb(23 23 26 / 0.08), 0 6px 14px -6px rgb(52 48 70 / 0.45);
+}
+.cv__art--stack img:first-child {
+  left: 6%;
+  top: 9%;
+}
+.cv__art--stack img:first-child {
+  width: 80%;
+}
+.cv__art--stack img:last-child {
+  right: 5%;
+  bottom: 8%;
+  width: 58%;
+}
+/* 폰: 그림 옆에는 이름·소속·기간만, 설명은 그 아래 온 폭으로 */
+@media (max-width: 560px) {
+  .cv li.cv__row {
+    grid-template-columns: 6rem minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas: "art head" "notes notes";
+    gap: 0 0.9rem;
+    align-items: center;
+  }
+  .cv__row > .cv__art {
+    margin-top: 0;
+  }
+  .sec .cv .cv__row > p {
+    margin-top: 0.6rem;
+  }
+}
 .skills {
   margin: 0;
 }
@@ -2905,6 +3000,10 @@ svg.app-icon {
   .app-icon {
     width: 6.25rem;
     height: 6.25rem;
+  }
+  .app-icon.app-icon--photo {
+    width: 4.75rem;
+    height: auto;
   }
   .work-head {
     grid-template-columns: minmax(0, 1fr);

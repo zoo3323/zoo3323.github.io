@@ -158,7 +158,7 @@
       el.scrollLeft = press.left - dx;
       const samples = event.getCoalescedEvents ? event.getCoalescedEvents() : [];
       for (const e of samples.length ? samples : [event]) press.trail.push([e.timeStamp, e.clientX]);
-      while (press.trail.length > 2 && event.timeStamp - press.trail[0][0] > 80) press.trail.shift();
+      while (press.trail.length > 2 && event.timeStamp - press.trail[0][0] > 100) press.trail.shift();
     });
 
     const end = (event) => {
@@ -177,10 +177,10 @@
       root.classList.remove("is-grabbing");
       if (event.type === "pointerup") swallow();
 
-      // 놓기 직전 80ms 의 빠르기(멈췄다 놓았으면 0)로 관성을 정한다. 손이 오른쪽으로 가면 줄은 왼쪽으로 간다.
+      // 놓기 직전 100ms 의 빠르기로 관성을 정한다(마지막 움직임에서 90ms 넘게 멈췄다 놓았으면 0). 손이 오른쪽으로 가면 줄은 왼쪽으로 간다.
       const [t0, x0] = trail[0];
       const [t1, x1] = trail[trail.length - 1];
-      const hand = event.timeStamp - t1 < 50 && t1 > t0 ? (x1 - x0) / (t1 - t0) : 0;
+      const hand = event.timeStamp - t1 < 90 && t1 > t0 ? (x1 - x0) / (t1 - t0) : 0;
       const v = Math.max(-8, Math.min(8, -hand));
       glide(target(v), Math.abs(v) < FLING ? 0 : v);
     };

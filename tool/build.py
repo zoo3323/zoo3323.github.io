@@ -1022,15 +1022,37 @@ if ABOUT:
     a = ABOUT
     about_facts = "\n      ".join(fact(f["label"], f["value"], f.get("note", "")) for f in a["facts"])
     about_text = "\n      ".join(f"<p>{esc(t)}</p>" for t in a["about"])
+    def cv_art(x):
+        """목록 줄 앞의 작은 그림. art = {"images": [...], "size": [가로, 세로], "fit": "cover"|"phones"|"stack", "tone": 바탕색}.
+        cover 는 그림 한 장을 칸에 채우고, phones 는 폰 화면 여러 장을 아래에서 올라오게, stack 은 넓은 그림 두 장을 겹쳐 둔다."""
+        art = x.get("art")
+        if not art:
+            return ""
+        w, h = art.get("size", [900, 600])
+        imgs = "".join(f'<img src="{esc(src)}" width="{w}" height="{h}" alt="" loading="lazy">' for src in art["images"])
+        attrs = f'class="cv__art cv__art--{art.get("fit", "cover")}" style="--tone:{art.get("tone", "#efeee8")}" aria-hidden="true"'
+        if x.get("link"):
+            return f'<a {attrs} href="{esc(x["link"])}" tabindex="-1">{imgs}</a>'
+        return f"<span {attrs}>{imgs}</span>"
+
     def cv_list(entries):
         rows = []
         for x in entries:
             link = f' <a href="{esc(x["link"])}">{esc(x["linkLabel"])}</a>' if x.get("link") else ""
             notes = f'<p>{keep_dots(x["notes"])}{link}</p>' if x.get("notes") else ""
-            rows.append(
-                f'<li><div class="cv__head"><b>{esc(x["org"])}</b><span>{esc(x["unit"])}</span><time>{esc(x["period"])}</time></div>{notes}</li>'
-            )
+            head = f'<div class="cv__head"><b>{esc(x["org"])}</b><span>{esc(x["unit"])}</span><time>{esc(x["period"])}</time></div>'
+            art = cv_art(x)
+            rows.append(f'<li class="cv__row">{art}{head}{notes}</li>' if art else f"<li>{head}{notes}</li>")
         return "\n        ".join(rows)
+
+    # 회사 프로젝트·논문 줄의 그림은 진열대 카드와 같은 그림이다
+    shelf_by_href = {it["href"]: it for it in shelf_items() if isinstance(it, dict)}
+
+    def shelf_art(href):
+        it = shelf_by_href.get(href, {})
+        if not it.get("image"):
+            return None
+        return {"images": [it["image"]], "size": it.get("imageSize", [900, 600]), "fit": "cover", "tone": it.get("tone", "#efeee8")}
 
     def cv_section(key, title, entries):
         if not entries:
@@ -1051,10 +1073,13 @@ if ABOUT:
     more_cv = "\n    ".join(
         filter(None, [
             cv_section("certs", "자격증", a.get("certs")),
-            cv_section("work", "회사 프로젝트", [dict(w, link=f'/work/{w["slug"]}/', linkLabel="자세히 보기") for w in a.get("work", [])]),
-            cv_section("llm", "LLM·에이전트", a.get("llm")),
-            cv_section("research", "연구·논문", a.get("research")),
-            cv_section("startup", "대회·창업", a.get("startup")),
+            cv_section(
+                "work",
+                "회사 프로젝트",
+                [dict(w, link=f'/work/{w["slug"]}/', linkLabel="자세히 보기", art=shelf_art(f'/work/{w["slug"]}/')) for w in a.get("work", [])],
+            ),
+            cv_section("projects", "개인 프로젝트", a.get("projects")),
+            cv_section("research", "연구·논문", [dict(r, art=r.get("art") or shelf_art("/about/#h-research")) for r in a.get("research", [])]),
         ])
     )
     # main 이 참인 줄(주력)은 노란 칩으로 진하게 보인다
