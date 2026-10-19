@@ -922,6 +922,10 @@ a {
   .is-grabbing * {
     cursor: var(--cur-grabbing) !important;
   }
+  /* 끄는 중·관성으로 미끄러지는 중에는 줄 안의 봉지·그림이 누르기를 받지 않는다(던지고 손을 떼도 카드가 열리지 않게) */
+  .is-moving * {
+    pointer-events: none;
+  }
 }
 /* 큰 봉지의 한 줄 소개는 한 줄까지만 둔다. 전체 문구는 앱 페이지에 있다. */
 .aisle .pack:not(.pack--mini) .card__line {
