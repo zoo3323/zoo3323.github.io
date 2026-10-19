@@ -865,11 +865,15 @@ a {
   }
 }
 /* 마우스로 잡아 옆으로 끄는 줄(grab.js): 진열대 줄과 앱 화면 줄. 넘치는 줄에서만 편 손이고, 끄는 동안은 쥔 손이다.
-   줄 안의 봉지·화면 그림 위에서도 같은 손이다(끌지 않고 누르면 원래대로 열린다). */
+   줄 안의 봉지·화면 그림 위에서도 같은 손이다(끌지 않고 누르면 원래대로 열린다).
+   손은 직접 그린 커서다(assets/cursor, 원본 tool/cursor/*.svg): 흰 종이 손에 진한 테두리, 쥐면 누름 색(레몬).
+   그림을 못 쓰는 브라우저는 뒤에 적은 기본 손(grab·grabbing)을 쓴다. 누르는 자리는 두 손 모두 16,16. */
 @media (hover: hover) and (pointer: fine) {
   :is(.hooks, .shots).is-grabbable,
   :is(.hooks, .shots).is-grabbable * {
-    cursor: grab;
+    cursor: url("/assets/cursor/grab.png") 16 16, grab;
+    cursor: -webkit-image-set(url("/assets/cursor/grab.png") 1x, url("/assets/cursor/grab@2x.png") 2x) 16 16, grab;
+    cursor: image-set(url("/assets/cursor/grab.png") 1x, url("/assets/cursor/grab@2x.png") 2x) 16 16, grab;
   }
   :is(.hooks, .shots).is-grabbable {
     -webkit-user-select: none;
@@ -880,7 +884,9 @@ a {
   }
   .is-grabbing,
   .is-grabbing * {
-    cursor: grabbing !important;
+    cursor: url("/assets/cursor/grabbing.png") 16 16, grabbing !important;
+    cursor: -webkit-image-set(url("/assets/cursor/grabbing.png") 1x, url("/assets/cursor/grabbing@2x.png") 2x) 16 16, grabbing !important;
+    cursor: image-set(url("/assets/cursor/grabbing.png") 1x, url("/assets/cursor/grabbing@2x.png") 2x) 16 16, grabbing !important;
   }
 }
 /* 큰 봉지의 한 줄 소개는 한 줄까지만 둔다. 전체 문구는 앱 페이지에 있다. */

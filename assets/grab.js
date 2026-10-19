@@ -10,6 +10,11 @@
   const START = 5; // 이만큼(px) 움직여야 끌기로 본다. 그 전에 놓으면 그냥 누르기다
   const THROW = 200; // 놓을 때의 빠르기(px/ms)에 이 시간(ms)을 곱한 만큼 더 간다
   const root = document.documentElement;
+  // 손 커서 그림은 처음 잡는 순간에 받으면 한 번 기본 손이 보이므로 미리 받아 둔다
+  if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const r = devicePixelRatio > 1 ? "@2x" : "";
+    for (const name of ["grab", "grabbing"]) new Image().src = `/assets/cursor/${name}${r}.png`;
+  }
 
   // 다음 한 번의 누르기를 막는다(끈 뒤 손을 뗀 자리의 링크·단추). 누르기가 안 오면 곧 푼다.
   const swallow = () => {
