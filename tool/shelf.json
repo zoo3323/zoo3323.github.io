@@ -4,7 +4,7 @@
     "monogram": "NJ",
     "caption": "NamJuKim",
     "label": "만든 사람",
-    "role": "AI 연구원",
+    "role": "AI 엔지니어",
     "org": "신라이앤씨 개발팀",
     "line": "AI를 연구하고, 앱을 만듭니다.",
     "href": "/about/",
@@ -76,13 +76,13 @@
           "rest": -0.6,
           "size": 1.3,
           "art": "parking",
-          "wide": true,
           "href": "/work/parking-ai/",
           "image": "/assets/img/work/parking-ai/card.webp",
           "imageSize": [
-            720,
-            384
-          ]
+            900,
+            600
+          ],
+          "photo": true
         },
         {
           "name": "라벨링 도구",
@@ -96,9 +96,10 @@
           "art": "labeling",
           "image": "/assets/img/work/labeling-tool/card.webp",
           "imageSize": [
-            720,
-            384
-          ]
+            900,
+            600
+          ],
+          "photo": true
         },
         {
           "name": "안전 영상 분석",
@@ -112,9 +113,10 @@
           "art": "safety",
           "image": "/assets/img/work/safety-vision/card.webp",
           "imageSize": [
-            720,
-            384
-          ]
+            900,
+            600
+          ],
+          "photo": true
         },
         {
           "name": "위험성평가 AI",
@@ -128,9 +130,10 @@
           "art": "risk",
           "image": "/assets/img/work/risk-review/card.webp",
           "imageSize": [
-            720,
-            384
-          ]
+            900,
+            600
+          ],
+          "photo": true
         },
         {
           "name": "보호구역 입지 분석",
@@ -144,9 +147,10 @@
           "art": "zone",
           "image": "/assets/img/work/senior-zone/card.webp",
           "imageSize": [
-            720,
-            384
-          ]
+            900,
+            600
+          ],
+          "photo": true
         }
       ]
     },
@@ -234,9 +238,10 @@
               "href": "/about/#h-research",
               "image": "/assets/img/research/card.webp",
               "imageSize": [
-                720,
-                384
-              ]
+                900,
+                600
+              ],
+              "photo": true
             }
           ]
         },

@@ -437,7 +437,7 @@ def mini_pack(item, place="", level=3):
         go = f'{"GitHub" if "github.com" in href else "열기"} {ICON_OUT}'
     else:
         go = f"보기 {ICON_GO}"
-    wide = " pack--wide" if item.get("wide") else ""
+    wide = {"photo": " pack--photo", "wide": " pack--wide"}.get(kind_of(item), "")
     style = (
         f'--rest:{item.get("rest", 0)}deg;--tone:{item["tone"]};--tone-ink:{item["ink"]};'
         f'--accent:{item["ink"]};--mark-size:{item.get("size", 1.3)}'
@@ -475,21 +475,45 @@ SIZE = {
     "big": ((5, 0.5), (10, 1.0)),
     "mini": ((5, 0.65), (8, 1.2)),
     "wide": ((7, 0.65), (12, 1.2)),
+    "photo": ((9, 0.65), (16, 1.2)),
 }
 WALL = {"wide": 36, "tablet": 22}  # 벽의 칸 수(넓은 화면, 936px 미만 태블릿)
 HEIGHT = {"big": 17.5, "mini": 13.6, "wide": 15}  # 봉지 높이(봉지의 p 단위)
 SHADOW = 1  # 봉지 아래 그림자가 잘리지 않게 줄 아래에 두는 칸
+# 그림 카드(회사 프로젝트·논문): 그림이 주인공이라 카드를 넓히고, 그림을 카드 폭에 가깝게 3:2 로 둔다.
+# 넓은 카드라 이름이 한 줄이어서 이름 칸은 작은 봉지(5.6)보다 낮다. 그림 칸 = 위 여백 + 그림(카드 폭 - 좌우 여백, 3:2)
+# + 한 줄(두 줄까지)과 「보기」. 아래 글은 글씨에 px 하한이 있어 칸(P)이 가장 작을 때 가장 길므로, 줄 높이는 그때로 잡는다.
+# CSS(.pack--photo)가 같은 값으로 그린다.
+PHOTO = {"head": 4.6, "top": 0.15, "inset": 0.35, "ratio": 1.5}
+P_MIN = (24, (320 - 32) / 22)  # 가장 작은 칸(px): 넓은 화면·태블릿, 폰
 
 
 def kind_of(item):
     if isinstance(item, str):
         return "big"
+    if item.get("photo"):
+        return "photo"
     return "wide" if item.get("wide") else "mini"
 
 
-def reach(kind, s):
-    """고리 꼭대기부터 봉지 아래까지(칸). 봉지 구멍(위에서 0.5625)이 고리 끝(2칸)에 걸린다."""
-    return math.ceil(2 - 0.5625 * s + HEIGHT[kind] * s)
+def photo_img(w, s):
+    """그림 카드의 그림 높이(봉지의 p). 카드 폭(w 칸 = w/s p)을 따라 커진다."""
+    return (w / s - 2 * PHOTO["inset"]) / PHOTO["ratio"]
+
+
+def photo_tail(s, i):
+    """그림 아래 한 줄(두 줄까지)과 「보기」 칸(봉지의 p): 여백 1.2 + 두 줄 max(33.6px, 1.4p) + 「보기」 max(15.6px, 0.6p)"""
+    p = P_MIN[i] * s
+    return 1.2 + max(33.6 / p, 1.4) + max(15.6 / p, 0.6)
+
+
+def reach(kind, w, s, i):
+    """고리 꼭대기부터 봉지 아래까지(칸). 봉지 구멍(위에서 0.5625)이 고리 끝(2칸)에 걸린다. i: 0 넓은 화면, 1 폰"""
+    if kind == "photo":
+        height = PHOTO["head"] + PHOTO["top"] + photo_img(w, s) + photo_tail(s, i)
+    else:
+        height = HEIGHT[kind]
+    return math.ceil(2 - 0.5625 * s + height * s)
 
 
 def render_item(item, place, level=3):
@@ -501,14 +525,16 @@ def render_item(item, place, level=3):
 
 
 def item_style(item):
-    (w, s), (nw, ns) = SIZE[kind_of(item)]
-    return f' style="--w:{w};--s:{s};--nw:{nw};--ns:{ns}"'
+    kind = kind_of(item)
+    (w, s), (nw, ns) = SIZE[kind]
+    img = f";--pi:{photo_img(w, s):.3f};--npi:{photo_img(nw, ns):.3f}" if kind == "photo" else ""
+    return f' style="--w:{w};--s:{s};--nw:{nw};--ns:{ns}{img}"'
 
 
 def heights(items):
     """줄 높이(칸): 넓은 화면, 폰"""
     kinds = [kind_of(item) for item in items]
-    return tuple(max(reach(k, SIZE[k][i][1]) for k in kinds) + SHADOW for i in (0, 1))
+    return tuple(max(reach(k, *SIZE[k][i], i) for k in kinds) + SHADOW for i in (0, 1))
 
 
 def pop_html(pop):

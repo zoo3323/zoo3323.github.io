@@ -1251,6 +1251,23 @@ a {
   height: 100%;
   object-fit: cover;
 }
+/* 그림 카드(회사 프로젝트·논문): 그림이 주인공이라 카드를 넓히고 그림을 카드 폭에 가깝게 3:2 로 둔다.
+   넓은 카드라 이름이 한 줄이어서 이름 칸이 낮다. 그림 높이(--pi, 폰은 --npi)는 build.py 가 카드 폭에서 계산해 넣고,
+   그 아래는 한 줄(두 줄까지)과 「보기」 칸이다(글씨의 px 하한까지 셈해 build.py 의 PHOTO 와 같은 값). */
+.pack--photo .card {
+  height: calc(var(--p) * 4.6);
+}
+.pack--photo .bag {
+  height: calc(var(--p) * (1.35 + var(--pi)) + max(33.6px, var(--p) * 1.4) + max(15.6px, var(--p) * 0.6));
+}
+.pack--photo .mini__art {
+  margin: calc(var(--p) * 0.15) calc(var(--p) * 0.35) 0;
+  aspect-ratio: 3 / 2;
+  border-radius: calc(var(--p) * 0.26);
+}
+.pack--photo .mini__line {
+  margin-inline: calc(var(--p) * 0.5);
+}
 .mini__line {
   display: -webkit-box;
   overflow: hidden;
@@ -1516,8 +1533,9 @@ a {
   width: 150%;
   height: auto;
 }
-/* 대표 그림이 사진이면 칸을 꽉 채운다 */
+/* 대표 그림이 사진이면 칸을 꽉 채운다(진열대 그림 카드와 같은 3:2) */
 .work-art--photo {
+  aspect-ratio: 3 / 2;
   padding: 0;
 }
 .work-art--photo img,
@@ -2660,6 +2678,9 @@ svg.app-icon {
   .aisle .peg {
     --p: calc(var(--P) * var(--ns));
     width: calc(var(--P) * var(--nw));
+  }
+  .pack--photo .bag {
+    height: calc(var(--p) * (1.35 + var(--npi)) + max(33.6px, var(--p) * 1.4) + max(15.6px, var(--p) * 0.6));
   }
   /* 나눈 칸: 띠가 두 칸 높이라 고리 줄은 위 여백 한 칸, 띠 두 칸, 사이 한 칸 아래에서 시작한다 */
   .line--bays .hooks {
