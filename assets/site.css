@@ -864,6 +864,25 @@ a {
     display: none;
   }
 }
+/* 마우스로 잡아 옆으로 끄는 줄(grab.js): 진열대 줄과 앱 화면 줄. 넘치는 줄에서만 편 손이고, 끄는 동안은 쥔 손이다.
+   줄 안의 봉지·화면 그림 위에서도 같은 손이다(끌지 않고 누르면 원래대로 열린다). */
+@media (hover: hover) and (pointer: fine) {
+  :is(.hooks, .shots).is-grabbable,
+  :is(.hooks, .shots).is-grabbable * {
+    cursor: grab;
+  }
+  :is(.hooks, .shots).is-grabbable {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  :is(.hooks, .shots).is-grabbable :is(a, img) {
+    -webkit-user-drag: none;
+  }
+  .is-grabbing,
+  .is-grabbing * {
+    cursor: grabbing !important;
+  }
+}
 /* 큰 봉지의 한 줄 소개는 한 줄까지만 둔다. 전체 문구는 앱 페이지에 있다. */
 .aisle .pack:not(.pack--mini) .card__line {
   display: -webkit-box;

@@ -784,7 +784,7 @@ def write(path, text):
 names = ", ".join(app["name"] for app in APPS[:6]) + (" 등" if len(APPS) > 6 else "")
 write(
     "index.html",
-    head(f"{DEV} · {SITE['tagline']}", f"{DEV} · {SITE['tagline']}. {names}.", "/", ["wall.js", "light.js", "aisle.js"])
+    head(f"{DEV} · {SITE['tagline']}", f"{DEV} · {SITE['tagline']}. {names}.", "/", ["wall.js", "light.js", "aisle.js", "grab.js"])
     + f"""<body class="home">
 <a class="skip" href="#apps">목록으로 건너뛰기</a>
 <div class="wall">
@@ -895,7 +895,7 @@ for app in APPS:
     features = "\n        ".join(f"<li>{esc(text)}</li>" for text in app["features"])
     write(
         f"{app_id}/index.html",
-        head(f'{app["name"]} · {app["line"]} | {DEV}', app["lead"], f"/{app_id}/", [*app.get("scripts", []), "shots.js", "light.js"])
+        head(f'{app["name"]} · {app["line"]} | {DEV}', app["lead"], f"/{app_id}/", [*app.get("scripts", []), "shots.js", "light.js", "grab.js"])
         + f"""<body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
 <div class="wall">
@@ -1193,7 +1193,7 @@ if ABOUT and ABOUT.get("work"):
                 f'<li><a href="/work/{o["slug"]}/">{work_art(omini, "work-thumb").replace("<span class=", f"<span style={chr(34)}{ostyle}{chr(34)} class=", 1)}'
                 f'<span><b>{esc(o["org"])}</b><span>{esc(o["unit"])} · {esc(o["period"])}</span></span><span class="get get--small">보기</span></a></li>'
             )
-        scripts = ["shots.js", "light.js"] if w.get("media") else ["light.js"]
+        scripts = ["shots.js", "light.js", "grab.js"] if w.get("media") else ["light.js"]
         write(
             f'work/{w["slug"]}/index.html',
             head(f'{w["org"]} · {w["unit"]} | {DEV}', w["summary"], f'/work/{w["slug"]}/', scripts)
