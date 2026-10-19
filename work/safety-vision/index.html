@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=78e0c270">
+<link rel="stylesheet" href="/assets/site.css?v=d3423490">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -56,6 +56,18 @@
     </ul>
     <section class="sec desc" aria-label="설명">
       <p>GPU 한 대에서 화재·안전모·침입 감지와 다중 카메라 추적 모델을 함께 운영하는 FastAPI 추론 서버를 만들었습니다. RTSP 스트림을 받아 추론하고, 결과를 하나의 스키마로 정규화해 WebSocket으로 실시간 송출합니다.</p>
+    </section>
+    <section class="sec" aria-labelledby="h-flow">
+      <h2 id="h-flow">구성</h2>
+      <div class="flow"><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>RTSP 카메라</b><span>스트림마다 스레드&nbsp;· 끊기면 재연결</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">모델 라우터&nbsp;· 동적 로딩</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b><span class="nobr">화재·연기</span></b><span>YOLO</span></div><div class="flow__node flow__node--model"><b>안전모</b><span>YOLO&nbsp;· <span class="nobr">helmet·head</span></span></div><div class="flow__node flow__node--model"><b>침입</b><span>YOLO&nbsp;· ArUco 자동 ROI</span></div><div class="flow__node flow__node--model"><b>다중 카메라 추적</b><span>ByteTrack&nbsp;· ReID</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>결과 정규화</b><span>box&nbsp;· roi&nbsp;· count 스키마</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>실시간 송출</b><span>WebSocket</span></div></li></ol><p class="flow__note">GPU 한 대&nbsp;· Docker</p></div>
+    </section>
+    <section class="sec" aria-labelledby="h-solve">
+      <h2 id="h-solve">풀어야 했던 문제</h2>
+      <ol class="solve">
+        <li><p class="solve__q"><span class="solve__tag">문제</span><span class="nobr">화재·안전모·침입·다중</span> 카메라 추적 모델을 GPU 한 대에 함께 올리면 VRAM이 모자랍니다(OOM).</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>요청에 맞는 모델 하나만 GPU에 올리고 바꿔 끼우는 동적 모델 매니저를 만들고, 바꿀 때 메모리를 완전히 비웁니다.</p></li>
+        <li><p class="solve__q"><span class="solve__tag">문제</span>현장 카메라를 자주 다시 달아서, 침입 감지 구역(ROI)을 매번 손으로 다시 그려야 했습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>ArUco 마커로 ROI를 자동으로 만들어, 카메라를 옮겨도 다시 그릴 필요가 없게 했습니다.</p></li>
+        <li><p class="solve__q"><span class="solve__tag">문제</span>여러 카메라를 지나는 사람을 프레임마다 ReID 하면 GPU 부하가 큽니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>신뢰도 높은 트랙만 ReID 해 같은 사람에게 전역 ID를 붙이고, RTSP는 스트림별 스레드로 받아 끊기면 다시 잇습니다.</p></li>
+      </ol>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>

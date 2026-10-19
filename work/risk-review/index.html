@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=78e0c270">
+<link rel="stylesheet" href="/assets/site.css?v=d3423490">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -56,6 +56,18 @@
     </ul>
     <section class="sec desc" aria-label="설명">
       <p>업로드 → AI 분석 → 보완 → 현장 점검 → 보고서를 한 흐름으로 잇는 웹 플랫폼을 프런트엔드부터 AI 파이프라인까지 혼자 설계·구현했습니다. vLLM으로 서빙한 로컬 LLM·VLM에 내부 문서 RAG와 MCP 법령 조회를 붙여, 인용한 조문을 검증하고 근거와 함께 답합니다.</p>
+    </section>
+    <section class="sec" aria-labelledby="h-flow">
+      <h2 id="h-flow">구성</h2>
+      <div class="flow"><ol class="flow__steps" style="--n:5"><li class="flow__step"><div class="flow__node flow__node--in"><b>평가표 업로드</b><span>엑셀(.xlsx)&nbsp;· 한글(.hwpx)</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>파싱</b><span>병합 셀&nbsp;· 비정형 칼럼</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">AI 분석&nbsp;· ARQ 워커 2단계</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b>로컬 <span class="nobr">LLM·VLM</span></b><span>vLLM(OpenAI 호환)</span></div><div class="flow__node flow__node--model"><b>내부 문서 RAG</b><span>fastembed&nbsp;· pgvector</span></div><div class="flow__node flow__node--model"><b>법령 조회</b><span>korean-law-mcp</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b><span class="nobr">보완·현장</span> 점검</b><span>현장 사진&nbsp;· TBM 회의록(VLM)</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>보고서</b><span>PDF&nbsp;· DOCX&nbsp;· XLSX</span></div></li></ol><p class="flow__note">Next.js&nbsp;· FastAPI&nbsp;· <span class="nobr">Supabase(PostgreSQL·pgvector)</span></p></div>
+    </section>
+    <section class="sec" aria-labelledby="h-solve">
+      <h2 id="h-solve">풀어야 했던 문제</h2>
+      <ol class="solve">
+        <li><p class="solve__q"><span class="solve__tag">문제</span>AI가 답에 인용한 법령 조문이 실제로는 없는 경우가 있습니다(할루시네이션).</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>korean-law-mcp로 조문을 실시간 조회해 없는 조문은 걸러 내고, 내부 문서 RAG로 찾은 근거를 함께 붙입니다.</p></li>
+        <li><p class="solve__q"><span class="solve__tag">문제</span>평가표가 <span class="nobr">엑셀·한글로</span> 양식이 제각각이고, 병합 셀과 비정형 칼럼 때문에 읽다가 깨지기 쉽습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>다중 양식 파서로 병합 <span class="nobr">셀·비정형</span> 칼럼까지 읽어 항목 단위로 정리합니다.</p></li>
+        <li><p class="solve__q"><span class="solve__tag">문제</span>평가표가 크고 많으면 요청 한 번에 분석을 다 하기 어렵습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">ARQ·Redis</span> 워커로 항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가를 두 단계 백그라운드 작업으로 돌립니다.</p></li>
+      </ol>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>

@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=78e0c270">
+<link rel="stylesheet" href="/assets/site.css?v=d3423490">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -56,6 +56,20 @@
     </ul>
     <section class="sec desc" aria-label="설명">
       <p>카메라 캘리브레이션이나 어안 왜곡 보정 없이, 원본 영상 한 장에서 차량 하단면(footprint)의 네 꼭짓점을 가려진 부분까지 바로 출력하는 one-stage 2.5D 검출 모델을 연구·개발합니다. 카메라마다 보정값을 구할 필요가 없고, CARLA 합성 데이터와 실제 영상으로 학습해 지식 증류·INT8 양자화로 경량화한 뒤 라즈베리파이·Jetson·GPU 서버에 배포합니다.</p>
+    </section>
+    <section class="sec" aria-labelledby="h-flow">
+      <h2 id="h-flow">구성</h2>
+      <div class="flow"><p class="flow__title">학습</p><ol class="flow__steps" style="--n:4"><li class="flow__step flow__step--group"><p class="flow__label">데이터</p><div class="flow__nodes"><div class="flow__node flow__node--in"><b>합성 데이터</b><span>CARLA 주차장&nbsp;· 어안 렌즈 포함</span></div><div class="flow__node flow__node--in"><b>실제 영상</b><span>라벨링 도구로 만든 하단면 라벨</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>학습</b><span><span class="nobr">열화·가림·야간</span> 조명 증강, 합동 <span class="nobr">학습·미세조정</span></span></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>경량화</b><span>지식 증류&nbsp;· INT8 양자화</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>모델 릴리스</b><span><span class="nobr">ONNX·NCNN</span>&nbsp;· 입출력 계약 버전 관리</span></div></li></ol></div>
+<div class="flow"><p class="flow__title">현장</p><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>원본 영상</b><span>CCTV&nbsp;· 기둥 카메라, 보정 없이 그대로</span></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>2.5D 하단면 검출</b><span>중심점 one-stage&nbsp;· CFQ 볼록 사각형</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>트래킹</b><span>하단면 트래커&nbsp;· 앞뒤 카메라 결합</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>점유 판정</b><span>주차면 ROI를 덮는 넓이 → <span class="nobr">입차·출차</span></span></div></li></ol><p class="flow__note">라즈베리파이&nbsp;· Jetson&nbsp;· GPU <span class="nobr">서버(TensorRT·DeepStream)에서</span> 돈다</p></div>
+    </section>
+    <section class="sec" aria-labelledby="h-solve">
+      <h2 id="h-solve">풀어야 했던 문제</h2>
+      <ol class="solve">
+        <li><p class="solve__q"><span class="solve__tag">문제</span>2D 상자는 차의 <span class="nobr">지붕·옆면까지</span> 감싸서, 높이 단 카메라에서는 옆 주차면까지 덮어 한 대가 두 칸을 차지한 것처럼 판정됩니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>차가 바닥에 닿는 하단면을 직접 검출하고, 주차면과 겹친 넓이로 점유를 판정합니다.</p></li>
+        <li><p class="solve__q"><span class="solve__tag">문제</span>하단면은 차체와 옆 차에 가려 대부분 보이지 않고, 네 꼭짓점을 따로 회귀하면 꼬이거나 오목한 사각형이 나옵니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>가려진 꼭짓점까지 추정하는 amodal 검출에, 늘 볼록한 사각형만 나오는 CFQ 표현을 붙였습니다.</p></li>
+        <li><p class="solve__q"><span class="solve__tag">문제</span>카메라마다 <span class="nobr">초점·높이·어안</span> 왜곡 보정값을 구하면, 설치가 늘수록 현장 일이 늘어납니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">캘리브레이션·왜곡</span> 보정 없이 원본 영상에서 바로 하단면을 내는 모델로, 보정 단계를 없앴습니다.</p></li>
+        <li><p class="solve__q"><span class="solve__tag">문제</span>학습 장비에서 맞던 모델이 라즈베리파이에서는 다르게 동작할 수 있습니다(ARM에서 fp16으로 바꾸면 검출이 사라지는 등).</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>배포 <span class="nobr">경로(ONNX·NCNN</span> INT8) 그대로 실제 장비에서 추론해 채점하고, 지식 증류로 작은 모델의 정확도를 보완했습니다.</p></li>
+      </ol>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>

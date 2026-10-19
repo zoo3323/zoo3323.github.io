@@ -1703,6 +1703,17 @@ a.get:hover {
   color: var(--sub);
   background: var(--mute);
 }
+/* 소개 머리의 메일·이력서 단추: GitHub 옆에 테두리만 있는 단추로 */
+.get--line {
+  padding: 0 1.15rem;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+a.get--line:hover {
+  filter: none;
+  background: var(--lemon);
+}
 
 /* Google Play 배지. 구글이 주는 그림을 그대로 쓰고, 주소가 없으면 옆에 상태만 적는다. */
 .store-badge {
@@ -2328,6 +2339,170 @@ svg.app-icon {
   margin-top: 0.35rem;
   color: #33333a;
 }
+/* 개인 프로젝트 아래의 작은 목록(그 밖의 앱·도구) 제목 */
+.sec h3.sec__sub {
+  margin: 1.75rem 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--sub);
+}
+
+/* 회사 프로젝트 구성도: 넓은 화면은 왼쪽→오른쪽, 좁은 화면은 위→아래. 노드는 사이트 스티커처럼 진한 테두리,
+   모델·AI 단계는 레몬, 결과는 연보라, 함께 쓰는 것끼리는 점선 묶음. 화살표는 그림(--arrow). */
+.flow {
+  --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none' stroke='%2317171a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 7h9.5M7.5 3l4 4-4 4'/%3E%3C/svg%3E");
+}
+.flow + .flow {
+  margin-top: 1.6rem;
+}
+.flow__title {
+  margin: 0 0 0.6rem;
+  font: 400 1.125rem / 1.1 var(--shop);
+}
+.flow__steps {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: 0 1.75rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.flow__step {
+  position: relative;
+}
+.flow__step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -1.4rem;
+  width: 1rem;
+  height: 1rem;
+  background: var(--arrow) center / contain no-repeat;
+  transform: translateY(-50%);
+}
+.flow__node {
+  padding: 0.6rem 0.7rem 0.65rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 12px -10px rgb(52 48 70 / 0.6);
+}
+.flow__node b {
+  display: block;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+}
+.flow__node > span {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--sub);
+}
+.flow__node--model {
+  background: var(--lemon);
+}
+.flow__node--model > span {
+  color: #4a4528;
+}
+.flow__node--out {
+  background: var(--lilac-light);
+}
+.flow__step--group {
+  padding: 0.5rem;
+  border: 2px dashed var(--wire);
+  border-radius: 0.95rem;
+}
+.flow__label {
+  margin: 0 0 0.45rem 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--sub);
+}
+.flow__nodes {
+  display: grid;
+  gap: 0.45rem;
+}
+.flow__note {
+  margin: 0.7rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--sub);
+}
+@media (max-width: 860px) {
+  .flow__steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem 0;
+  }
+  .flow__step:not(:last-child)::after {
+    top: auto;
+    right: auto;
+    bottom: -1.25rem;
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
+  }
+  .flow__nodes {
+    grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  }
+}
+
+/* 풀어야 했던 문제 → 해결: 넓은 화면은 두 칸, 좁은 화면은 위아래 */
+.solve {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.solve li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.5rem 1.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.85rem;
+  background: var(--mute);
+}
+.sec .solve p {
+  margin: 0;
+  line-height: 1.6;
+}
+.solve__a {
+  position: relative;
+}
+.solve__a::before {
+  content: "";
+  position: absolute;
+  top: 0.3rem;
+  left: -1.35rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none' stroke='%2317171a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 7h9.5M7.5 3l4 4-4 4'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.solve__tag {
+  display: inline-block;
+  margin-right: 0.5rem;
+  padding: 0.15rem 0.5rem 0.1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--paper);
+  vertical-align: 0.1em;
+  background: var(--ink);
+  border-radius: 999px;
+}
+.solve__tag--a {
+  color: var(--ink);
+  background: var(--lemon);
+}
+@media (max-width: 640px) {
+  .solve li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .solve__a::before {
+    display: none;
+  }
+}
+
 /* 회사·개인 프로젝트와 논문 줄: 앞에 작은 그림(진열대 카드 그림·앱 화면)을 둔다 */
 .cv:has(.cv__row) {
   max-width: 44rem;

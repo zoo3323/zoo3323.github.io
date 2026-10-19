@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=78e0c270">
+<link rel="stylesheet" href="/assets/site.css?v=d3423490">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -52,10 +52,22 @@
     <ul class="app-facts" aria-label="한눈에 보기">
       <li><span class="fact__label">회사</span><span class="fact__value">제이솔루션</span></li>
       <li><span class="fact__label">기간</span><span class="fact__value">2024</span></li>
-      <li><span class="fact__label">맡은 일</span><span class="fact__value">프로젝트 담당 · 공간 데이터 분석</span></li>
+      <li><span class="fact__label">맡은 일</span><span class="fact__value">프로젝트 담당&nbsp;· 공간 데이터 분석</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
       <p>프로젝트 담당자로 공간 데이터 수집·전처리부터 모델링·시각화까지 이끌었습니다. 핫스폿(Hot Spot) 분석으로 사고 다발 구역을 찾고, Random Forest와 지리가중회귀(GWR)로 지역마다 다른 영향(공간적 이질성)을 반영해 최적입지를 도출했습니다.</p>
+    </section>
+    <section class="sec" aria-labelledby="h-flow">
+      <h2 id="h-flow">구성</h2>
+      <div class="flow"><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>데이터 수집</b><span>고령 보행자 사고&nbsp;· 노인 시설&nbsp;· 도로&nbsp;· 인구</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>전처리</b><span>Pandas&nbsp;· GeoPandas 자동화</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">공간 분석</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b><span class="nobr">핫스폿·군집</span></b><span>사고 다발 구역</span></div><div class="flow__node flow__node--model"><b>GWR&nbsp;· Random Forest</b><span>지역별 영향&nbsp;· 위험도</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>최적입지 제안</b><span>QGIS 위험도 지도&nbsp;· 보고서</span></div></li></ol><p class="flow__note">Python&nbsp;· QGIS</p></div>
+    </section>
+    <section class="sec" aria-labelledby="h-solve">
+      <h2 id="h-solve">풀어야 했던 문제</h2>
+      <ol class="solve">
+        <li><p class="solve__q"><span class="solve__tag">문제</span>기존 노인보호구역은 <span class="nobr">학교·경로당</span> 인접 여부로 정해, 실제 사고 다발지와 어긋났습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>고령 보행자 교통사고 데이터로 <span class="nobr">핫스폿·군집</span> 분석을 해 실제 위험 지역을 찾았습니다.</p></li>
+        <li><p class="solve__q"><span class="solve__tag">문제</span>같은 요인이라도 지역마다 사고에 미치는 영향이 다릅니다(공간적 이질성).</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>지리가중회귀(GWR)로 지역별 영향을 따로 추정하고, Random Forest로 위험도를 모델링했습니다.</p></li>
+        <li><p class="solve__q"><span class="solve__tag">문제</span>행정기관이 새로 지정하려면 객관적인 근거 자료가 필요했습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>QGIS 위험도 지도와 분석 보고서로 시군별 최적입지를 제안했습니다.</p></li>
+      </ol>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>

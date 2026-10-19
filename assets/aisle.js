@@ -58,4 +58,52 @@
     addEventListener("load", update);
     update();
   }
+
+  // 처음 온 사람에게 줄을 옆으로 밀 수 있다는 것을 한 번 보여 준다: 넘치는 줄이 처음 화면에 들어오면 살짝 밀렸다 돌아온다.
+  // 이 브라우저에서 한 번 보여 주면 다시 하지 않는다. 움직임 줄이기 설정이면 하지 않고, 그 사이 손을 대면 바로 멈춘다.
+  const KEY = "zoo3323:peek";
+  let seen = false;
+  try {
+    seen = localStorage.getItem(KEY) === "1";
+  } catch {}
+  if (seen || still.matches || !("IntersectionObserver" in window)) return;
+  const peek = (row) => {
+    const far = Math.min(64, row.scrollWidth - row.clientWidth);
+    if (row.scrollLeft > 1 || far < 24) return;
+    let stop = false;
+    const quit = () => {
+      stop = true;
+      row.style.removeProperty("scroll-snap-type");
+    };
+    for (const type of ["pointerdown", "wheel", "touchstart"]) row.addEventListener(type, quit, { once: true, passive: true });
+    row.style.scrollSnapType = "none";
+    const begin = performance.now();
+    const step = (now) => {
+      if (stop) return;
+      const u = Math.min(1, (now - begin) / 1100);
+      row.scrollLeft = far * Math.sin(Math.PI * u) ** 2;
+      if (u < 1) requestAnimationFrame(step);
+      else {
+        row.scrollLeft = 0;
+        row.style.removeProperty("scroll-snap-type");
+      }
+    };
+    requestAnimationFrame(step);
+  };
+  const watch = new IntersectionObserver(
+    (entries) => {
+      const hit = entries.find((e) => e.isIntersecting && e.target.scrollWidth - e.target.clientWidth > 24 && e.target.scrollLeft <= 1);
+      if (!hit) return;
+      watch.disconnect();
+      try {
+        localStorage.setItem(KEY, "1");
+      } catch {}
+      setTimeout(() => peek(hit.target), 450);
+    },
+    { threshold: 0.3 },
+  );
+  for (const line of lines) {
+    const row = line.querySelector(".hooks");
+    if (row) watch.observe(row);
+  }
 })();

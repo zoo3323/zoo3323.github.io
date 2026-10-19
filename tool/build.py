@@ -114,6 +114,7 @@ SHELF = json.loads((TOOL / "shelf.json").read_text())
 GITHUB_HOST = SITE["github"].split("://", 1)[-1].rstrip("/")
 ABOUT_STYLE_WALL = "--rest:-0.8deg;--tone:#ffffff;--tone-ink:#17171a;--accent:#17171a;--bag:#f5f4ef;--mark-size:2.8"
 ABOUT_STYLE_PAGE = "--tone:#ffe55c;--tone-ink:#17171a;--accent:#17171a"
+RESUME_NAME = "김남주_이력서.pdf"  # 이력서 PDF 를 받을 때의 파일 이름
 
 
 def code(app):
@@ -837,7 +838,9 @@ def get_buttons(app):
 
 def keep_dots(text):
     """「연구·개발」처럼 가운뎃점으로 이은 말은 줄바꿈하지 않게 묶는다(좁은 칸에서 점 뒤에서 끊기지 않게)."""
-    return re.sub(r"[^\s·]+(?:·[^\s·]+)+", lambda m: f'<span class="nobr">{m.group(0)}</span>', esc(text))
+    # 띄어 쓴 가운뎃점(「A · B」)은 앞 낱말에 붙여, 줄이 「·」로 시작하지 않게 한다
+    joined = re.sub(r"[^\s·]+(?:·[^\s·]+)+", lambda m: f'<span class="nobr">{m.group(0)}</span>', esc(text))
+    return joined.replace(" · ", "&nbsp;· ")
 
 
 def fact(label, value, note=""):
@@ -1031,14 +1034,17 @@ if ABOUT:
         w, h = art.get("size", [900, 600])
         imgs = "".join(f'<img src="{esc(src)}" width="{w}" height="{h}" alt="" loading="lazy">' for src in art["images"])
         attrs = f'class="cv__art cv__art--{art.get("fit", "cover")}" style="--tone:{art.get("tone", "#efeee8")}" aria-hidden="true"'
-        if x.get("link"):
-            return f'<a {attrs} href="{esc(x["link"])}" tabindex="-1">{imgs}</a>'
+        href = x.get("link") or (x.get("links") or [{}])[0].get("href")
+        if href:
+            return f'<a {attrs} href="{esc(href)}" tabindex="-1">{imgs}</a>'
         return f"<span {attrs}>{imgs}</span>"
 
     def cv_list(entries):
         rows = []
         for x in entries:
             link = f' <a href="{esc(x["link"])}">{esc(x["linkLabel"])}</a>' if x.get("link") else ""
+            if x.get("links"):
+                link = " " + " · ".join(f'<a href="{esc(l["href"])}">{esc(l["label"])}</a>' for l in x["links"])
             notes = f'<p>{keep_dots(x["notes"])}{link}</p>' if x.get("notes") else ""
             head = f'<div class="cv__head"><b>{esc(x["org"])}</b><span>{esc(x["unit"])}</span><time>{esc(x["period"])}</time></div>'
             art = cv_art(x)
@@ -1064,6 +1070,36 @@ if ABOUT:
       </ol>
     </section>"""
 
+    # 개인 프로젝트: 이야기 줄(projects) 아래에, 그 줄에 나오지 않은 앱과 공개 도구를 작은 목록으로 붙인다.
+    # 예전의 「만든 것」·「공개한 도구」 구역은 이 줄들과 겹쳐서 여기로 합쳤다.
+    shown = {l for x in a.get("projects", []) for l in [x.get("link")] + [y["href"] for y in x.get("links", [])] if l}
+    rest_apps = [w for w in APPS if f'/{w["id"]}/' not in shown]
+    rest_tools = [t for t in a.get("tools", []) if t["repo"] not in shown]
+    app_rows = "\n      ".join(
+        f'<li><a href="/{w["id"]}/"><img src="/assets/img/{w["id"]}/icon.webp" width="256" height="256" alt="" loading="lazy">'
+        f'<span><b>{esc(w["name"])}</b><span>{esc(w["line"])}</span></span><span class="get get--small">보기</span></a></li>'
+        for w in rest_apps
+    )
+    tool_rows = "\n      ".join(
+        f'<li><a href="{esc(t["repo"])}"><span class="tool"><span class="tool__head"><b>{esc(t["name"])}</b>'
+        f'<span class="tool__kind">{esc(t["kind"])}</span></span><span class="tool__line">{esc(t["line"])}</span></span>'
+        f'<span class="get get--small">GitHub</span></a></li>'
+        for t in rest_tools
+    )
+    projects_sec = f"""<section class="sec" aria-labelledby="h-projects">
+      <h2 id="h-projects">개인 프로젝트</h2>
+      <ol class="cv">
+        {cv_list(a.get("projects", []))}
+      </ol>
+      {f'<h3 class="sec__sub" id="h-apps">그 밖의 앱</h3>{chr(10)}      <ul class="others">{chr(10)}      {app_rows}{chr(10)}      </ul>' if rest_apps else ""}
+      {f'<h3 class="sec__sub" id="h-tools">그 밖의 도구</h3>{chr(10)}      <ul class="others tools">{chr(10)}      {tool_rows}{chr(10)}      </ul>' if rest_tools else ""}
+    </section>""" if a.get("projects") else ""
+
+    # 머리의 연락 단추: 메일 주소는 글자 참조로 적어 단순한 수집기를 피한다. 이력서 PDF 는 tool/resume.mjs 가 만든다.
+    mail = "".join(f"&#{ord(c)};" for c in SITE["email"])
+    mail_btn = f' <a class="get get--line" href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;{mail}">메일</a>'
+    resume_btn = f' <a class="get get--line" href="/assets/resume.pdf" download="{esc(RESUME_NAME)}">이력서 PDF</a>'
+
     # 소개 머리의 아이콘 자리: 첫 화면 폴라로이드와 같은 사진(없으면 명함 그림)
     photo = SHELF.get("profile", {}).get("photo")
     about_icon = (
@@ -1078,7 +1114,7 @@ if ABOUT:
                 "회사 프로젝트",
                 [dict(w, link=f'/work/{w["slug"]}/', linkLabel="자세히 보기", art=shelf_art(f'/work/{w["slug"]}/')) for w in a.get("work", [])],
             ),
-            cv_section("projects", "개인 프로젝트", a.get("projects")),
+            projects_sec,
             cv_section("research", "연구·논문", [dict(r, art=r.get("art") or shelf_art("/about/#h-research")) for r in a.get("research", [])]),
         ])
     )
@@ -1088,23 +1124,6 @@ if ABOUT:
         f'<dd><ul class="chips">{"".join(f"<li>{esc(i)}</li>" for i in g["items"])}</ul></dd></div>'
         for g in a["skills"]
     )
-    works = "\n      ".join(
-        f'<li><a href="/{w["id"]}/"><img src="/assets/img/{w["id"]}/icon.webp" width="256" height="256" alt="" loading="lazy">'
-        f'<span><b>{esc(w["name"])}</b><span>{esc(w["line"])}</span></span><span class="get get--small">보기</span></a></li>'
-        for w in APPS
-    )
-    tools = "\n      ".join(
-        f'<li><a href="{esc(t["repo"])}"><span class="tool"><span class="tool__head"><b>{esc(t["name"])}</b>'
-        f'<span class="tool__kind">{esc(t["kind"])}</span></span><span class="tool__line">{esc(t["line"])}</span></span>'
-        f'<span class="get get--small">GitHub</span></a></li>'
-        for t in a.get("tools", [])
-    )
-    tools_sec = f"""<section class="sec" aria-labelledby="h-tools">
-      <h2 id="h-tools">공개한 도구</h2>
-      <ul class="others tools">
-      {tools}
-      </ul>
-    </section>""" if a.get("tools") else ""
     write(
         "about/index.html",
         head(f"소개 | {DEV}", f'{DEV} · ' + " · ".join(f'{x["org"]} {x["unit"]}' for x in a["career"][:1] + a.get("education", [])[:1]) + ".", "/about/", ["light.js"])
@@ -1127,7 +1146,7 @@ if ABOUT:
         <h1 class="app-name">{esc(DEV)}</h1>
         <p class="app-sub">{esc(a["headline"])}</p>
         <p class="app-dev app-dev--plain">{esc(SITE["tagline"])}</p>
-        <p class="app-get"><a class="get" href="{SITE["github"]}" rel="me">GitHub</a></p>
+        <p class="app-get app-get--row"><a class="get" href="{SITE["github"]}" rel="me">GitHub</a>{mail_btn}{resume_btn}</p>
       </div>
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
@@ -1150,13 +1169,6 @@ if ABOUT:
         {skills}
       </dl>
     </section>
-    <section class="sec" aria-labelledby="h-works">
-      <h2 id="h-works">만든 것</h2>
-      <ul class="others">
-      {works}
-      </ul>
-    </section>
-    {tools_sec}
     <footer class="imprint">{barcode(GITHUB_HOST)}<span>{esc(GITHUB_HOST)}</span></footer>
   </div>
   </div>
@@ -1168,6 +1180,120 @@ if ABOUT:
 </html>
 """,
     )
+
+# ── 이력서: about.json 으로 A4 이력서 페이지(resume/index.html)를 만들고, tool/resume.mjs 가 그것을 assets/resume.pdf 로 굽는다 ──
+# 페이지는 검색에 내보내지 않는다(noindex). 그림·글꼴은 상대 주소라 파일로 열어도(PDF 굽기) 웹으로 열어도 같다.
+
+if ABOUT:
+    a = ABOUT
+
+    def r_item(x, body=""):
+        unit = f'<span class="unit">{esc(x["unit"])}</span>' if x.get("unit") else ""
+        return f'<div class="item"><div><b>{esc(x["org"])}</b>{unit}</div><time>{esc(x["period"])}</time>{body}</div>'
+
+    def r_notes(x):
+        return f"<p>{keep_dots(x['notes'])}</p>" if x.get("notes") else ""
+
+    r_work = "\n".join(
+        r_item(
+            dict(w, unit=f'{w["unit"]} · {w["role"]}'),
+            f"<p>{keep_dots(w['summary'])}</p><ul>" + "".join(f"<li>{keep_dots(d)}</li>" for d in w.get("did", [])[:2]) + "</ul>",
+        )
+        for w in a.get("work", [])
+    )
+    r_projects = "\n".join(r_item(x, r_notes(x)) for x in a.get("projects", []))
+    r_research = "\n".join(r_item(x, r_notes(x)) for x in a.get("research", []))
+    r_career = "\n".join(r_item(x, r_notes(x)) for x in a["career"])
+    r_school = "\n".join(r_item(x, r_notes(x)) for x in a.get("education", []) + a.get("certs", []))
+    r_skills = "".join(f'<dt>{esc(g["group"])}</dt><dd>{keep_dots(", ".join(g["items"]))}</dd>' for g in a["skills"])
+    photo = SHELF.get("profile", {}).get("photo")
+    r_photo = f'<img class="photo" src="..{esc(photo)}" alt="">' if photo else ""
+    site_host = SITE["site"].split("://", 1)[-1]
+    write(
+        "resume/index.html",
+        f"""<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>{esc(SITE["name"])} 이력서</title>
+<style>
+@font-face {{ font-family: "Do Hyeon"; src: url("../assets/fonts/DoHyeon.woff2") format("woff2"); font-display: block; }}
+@page {{ size: A4; margin: 13mm 14mm 13mm; }}
+:root {{ --ink: #17171a; --sub: #55554f; --rule: #d9d8d0; --lemon: #ffe55c; }}
+* {{ box-sizing: border-box; }}
+html {{ background: #fff; }}
+body {{ max-width: 182mm; margin: 0 auto; font: 9pt/1.5 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
+header {{ display: grid; grid-template-columns: 1fr 22mm; gap: 6mm; align-items: start; padding-bottom: 4mm; border-bottom: 2px solid var(--ink); }}
+h1 {{ margin: 0; font: 400 25pt/1 "Do Hyeon", sans-serif; letter-spacing: -0.01em; }}
+h1 small {{ margin-left: 2.5mm; font: 600 10.5pt/1 inherit; font-family: inherit; color: var(--sub); }}
+.role {{ margin: 2.4mm 0 0; font-size: 10.5pt; font-weight: 700; }}
+.card {{ margin: 0.6mm 0 0; color: #33333a; }}
+.contact {{ margin: 2mm 0 0; color: var(--sub); }}
+.contact a {{ color: inherit; text-decoration: none; }}
+.photo {{ width: 22mm; aspect-ratio: 35 / 45; object-fit: cover; border: 1px solid var(--rule); border-radius: 2mm; }}
+.lead {{ margin: 3.5mm 0 0; }}
+.lead b {{ font-size: 10pt; }}
+.lead p {{ margin: 1.2mm 0 0; }}
+section {{ margin-top: 4mm; }}
+h2 {{ display: flex; align-items: center; gap: 2mm; margin: 0 0 1.2mm; font: 400 12.5pt/1.1 "Do Hyeon", sans-serif; break-after: avoid; }}
+h2::before {{ content: ""; width: 2.8mm; height: 2.8mm; background: var(--lemon); border: 1.4px solid var(--ink); border-radius: 50%; }}
+.item {{ display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 4mm; padding: 1.4mm 0; border-top: 1px solid var(--rule); break-inside: avoid; }}
+h2 + .item {{ border-top: 0; padding-top: 0.6mm; }}
+.item b {{ font-size: 10pt; }}
+.item .unit {{ margin-left: 1.8mm; font-weight: 600; color: var(--sub); }}
+.item time {{ color: var(--sub); font-variant-numeric: tabular-nums; white-space: nowrap; }}
+.item p, .item ul {{ grid-column: 1 / -1; margin: 0.7mm 0 0; }}
+.item ul {{ padding-left: 4.2mm; }}
+.item li {{ margin: 0.25mm 0; }}
+.skills {{ display: grid; grid-template-columns: 19mm minmax(0, 1fr); gap: 1.1mm 3mm; margin: 0; }}
+.skills dt {{ font-weight: 700; }}
+.skills dd {{ margin: 0; color: #33333a; }}
+.nobr {{ white-space: nowrap; }}
+footer {{ margin-top: 5mm; padding-top: 2mm; border-top: 1px solid var(--rule); font-size: 8pt; color: var(--sub); }}
+@media screen {{ body {{ padding: 12mm 4mm; }} }}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>{esc(SITE["name"])}<small>{esc(SITE["nameEn"])}</small></h1>
+    <p class="role">{esc(a["headline"])}</p>
+    <p class="card">{esc(" · ".join(a.get("card", [])))}</p>
+    <p class="contact"><a href="mailto:{esc(SITE["email"])}">{esc(SITE["email"])}</a> · <a href="{SITE["github"]}">{esc(GITHUB_HOST)}</a> · <a href="{SITE["site"]}/about/">{esc(site_host)}</a></p>
+  </div>
+  {r_photo}
+</header>
+<div class="lead"><b>{esc(a["lead"])}</b>{"".join(f"<p>{esc(t)}</p>" for t in a["about"])}</div>
+<section><h2>경력</h2>
+{r_career}
+</section>
+<section><h2>회사 프로젝트</h2>
+{r_work}
+</section>
+<section><h2>개인 프로젝트</h2>
+{r_projects}
+</section>
+<section><h2>연구·논문</h2>
+{r_research}
+</section>
+<section><h2>학력·자격</h2>
+{r_school}
+</section>
+<section><h2>다루는 기술</h2>
+<dl class="skills">{r_skills}</dl>
+</section>
+<footer>자세한 내용과 자료: {esc(site_host)}/about/</footer>
+</body>
+</html>
+""",
+    )
+    # 이력서 PDF 가 없거나 원본보다 낡았으면 알린다
+    pdf = ROOT / "assets/resume.pdf"
+    sources = [TOOL / "about.json", TOOL / "site.json", TOOL / "build.py"]
+    if not pdf.exists() or pdf.stat().st_mtime < max(x.stat().st_mtime for x in sources):
+        print("※ 이력서 PDF 를 다시 구우세요: node tool/resume.mjs")
 
 # ── 회사 프로젝트: 진열대 작은 봉지의 뒷면. 앱 페이지와 같은 틀에 개요·맡은 일·쓴 기술·자료(이미지·영상) ──
 # 자료는 about.json 의 work[].media 에 {"type": "image"|"video", "src", "poster", "w", "h", "alt", "caption", "generated"} 로 적으면 나온다.
@@ -1188,6 +1314,51 @@ if ABOUT and ABOUT.get("work"):
             return f'<span class="{cls} {cls}--photo"><img src="{esc(mini["image"])}" width="{w}" height="{h}" alt=""></span>'
         art = ART.get(mini.get("art"))
         return f'<span class="{cls}"><svg viewBox="0 0 120 64" aria-hidden="true" focusable="false">{art}</svg></span>' if art else ""
+
+    def flow_html(w):
+        """구성도: work[].flows = [{"title", "note", "steps": [노드 | {"group", "nodes": [노드...]}]}], 노드 = {"name", "note", "kind": in|step|model|out}.
+        넓은 화면에서는 왼쪽에서 오른쪽으로, 좁은 화면에서는 위에서 아래로 흐른다. 묶음(group)은 점선 안에 나란히 둔다."""
+        flows = w.get("flows")
+        if not flows:
+            return ""
+
+        def node(n):
+            note = f"<span>{keep_dots(n['note'])}</span>" if n.get("note") else ""
+            return f'<div class="flow__node flow__node--{n.get("kind", "step")}"><b>{keep_dots(n["name"])}</b>{note}</div>'
+
+        blocks = []
+        for f in flows:
+            steps = []
+            for st in f["steps"]:
+                if "nodes" in st:
+                    label = f'<p class="flow__label">{keep_dots(st["group"])}</p>' if st.get("group") else ""
+                    steps.append(f'<li class="flow__step flow__step--group">{label}<div class="flow__nodes">{"".join(node(n) for n in st["nodes"])}</div></li>')
+                else:
+                    steps.append(f'<li class="flow__step">{node(st)}</li>')
+            title = f'<p class="flow__title">{esc(f["title"])}</p>' if f.get("title") else ""
+            note = f'<p class="flow__note">{keep_dots(f["note"])}</p>' if f.get("note") else ""
+            blocks.append(f'<div class="flow">{title}<ol class="flow__steps" style="--n:{len(steps)}">{"".join(steps)}</ol>{note}</div>')
+        return f"""<section class="sec" aria-labelledby="h-flow">
+      <h2 id="h-flow">구성</h2>
+      {chr(10).join(blocks)}
+    </section>"""
+
+    def problems_html(w):
+        """풀어야 했던 문제와 푼 방법: work[].problems = [{"problem", "solution"}]"""
+        rows = w.get("problems")
+        if not rows:
+            return ""
+        items = "\n        ".join(
+            f'<li><p class="solve__q"><span class="solve__tag">문제</span>{keep_dots(r["problem"])}</p>'
+            f'<p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>{keep_dots(r["solution"])}</p></li>'
+            for r in rows
+        )
+        return f"""<section class="sec" aria-labelledby="h-solve">
+      <h2 id="h-solve">풀어야 했던 문제</h2>
+      <ol class="solve">
+        {items}
+      </ol>
+    </section>"""
 
     def media_html(w):
         items = []
@@ -1257,6 +1428,8 @@ if ABOUT and ABOUT.get("work"):
     <section class="sec desc" aria-label="설명">
       <p>{esc(w["notes"])}</p>
     </section>
+    {flow_html(w)}
+    {problems_html(w)}
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>

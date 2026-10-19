@@ -19,7 +19,8 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `index.html`, `<앱>/index.html`, `work/<이름>/index.html`, `about/index.html`, `404.html` | 만들어진 결과. 직접 고치지 않는다 |
 | `assets/site.css` | 화면 전체의 모양 |
 | `assets/wall.js`, `light.js` | 봉지와 벽에 붙인 사진·포스트잇의 흔들림, 빛(PC는 마우스를 따르는 등빛과 봉지의 반사·무지개 결, 안드로이드 폰은 기울기를 따르는 봉지의 반사) |
-| `assets/aisle.js` | 첫 화면 진열대 줄을 미는 화살표 단추, 줄 아래 위치 막대(손가락으로 미는 폰에서 「옆에 더 있다」를 알려 줌) |
+| `assets/aisle.js` | 첫 화면 진열대 줄을 미는 화살표 단추, 줄 아래 위치 막대(손가락으로 미는 폰에서 「옆에 더 있다」를 알려 줌), 처음 온 사람에게 넘치는 줄이 한 번 살짝 밀렸다 돌아오는 힌트(브라우저마다 한 번, `localStorage` 의 `zoo3323:peek`, 움직임 줄이기면 안 함) |
+| `tool/resume.mjs` | `resume/index.html`(빌드가 만드는 A4 이력서)을 `assets/resume.pdf` 로 굽는다(Playwright 필요) |
 | `assets/shots.js` | 미리보기 화면을 눌러 크게 보기 |
 | `assets/grab.js` | 넘치는 진열대 줄·앱 화면 줄을 마우스로 잡아 옆으로 끌기(편 손·쥔 손 커서, 놓으면 가까운 멈춤 자리로) |
 | `assets/cursor/` | 사이트 커서 그림 다섯(레몬 화살표 `arrow`, 가리키는 손 `point`, 편 손 `open`, 쥔 분홍 손 `fist`, 돋보기 `zoom`; 32px·64px). 원본은 `tool/cursor/*.svg`, 고친 뒤 `node tool/cursor/render.mjs` 로 다시 굽는다(Playwright 필요). 쓰는 곳은 `site.css` 맨 위의 `--cur…` 변수. 같은 이름으로 다시 구우면 브라우저 캐시에 옛 그림이 남을 수 있으니 이름을 바꾼다 |
@@ -87,6 +88,9 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 ### 회사 프로젝트 자세히 보기(`/work/<이름>/`)
 
 - 내용은 `tool/about.json`의 `work`에 있습니다. 줄마다 `slug`(주소), `org`(이름), `unit`(회사), `period`, `role`, `summary`, `notes`, `did`(맡은 일), `stack`(쓴 기술)을 적습니다.
+  - `flows`(「구성」 구성도): `[{"title", "note", "steps": [노드 | {"group", "nodes": [노드...]}]}]`, 노드는 `{"name", "note", "kind": in|step|model|out}`. 넓은 화면은 왼쪽→오른쪽, 860px 이하는 위→아래로 흐르고, 모델·AI 단계는 레몬, 결과는 연보라, 함께 쓰는 것은 점선 묶음입니다.
+  - `problems`(「풀어야 했던 문제」): `[{"problem", "solution"}]`. 수치 없이, 무엇이 막혔고 어떻게 풀었는지만 적습니다.
+  - 페이지 순서: 설명 → 구성 → 풀어야 했던 문제 → 맡은 일 → 쓴 기술 → 자료.
 - 진열대의 회사 프로젝트 봉지와 소개 페이지의 「자세히 보기」가 이 페이지로 이어집니다. 색과 도식은 진열대 봉지(`tool/shelf.json`)의 `tone`·`ink`·`art`를 따릅니다.
   - 봉지에 `image`(그림 주소)와 `imageSize`(가로·세로)를 적으면 도식 대신 그 그림이 봉지와 이 페이지 머리, 「다른 작업」 작은 그림에 나옵니다.
   - `"photo": true`를 함께 적으면 그림 카드가 됩니다. 넓은 화면 9칸·폰 16칸으로 넓고, 그림을 카드 폭에 가깝게 그림의 비율대로 둡니다(`imageSize`의 가로/세로). 크기와 높이는 `build.py`의 `SIZE["photo"]`와 `PHOTO`이고, CSS(`.pack--photo`)가 같은 값으로 그립니다. 그림 아래 글은 글씨의 px 하한까지 셈해, 칸이 가장 작은 폭(넓은 화면 936px, 폰 320px)에서도 「보기」와 겹치지 않게 높이를 잡습니다.
@@ -104,10 +108,17 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 - 소개 페이지의 「연구·논문」 구역은 `tool/about.json`의 `research`, 진열대의 「연구·논문」 칸은 `tool/shelf.json`입니다.
 - 논문은 투고본의 제목과 초록에 나오는 범위에서 방법만 적고, 수치(AP 등)는 적지 않습니다.
 
+### 소개 머리의 단추와 이력서
+
+- 소개 머리에는 GitHub · 메일 · 이력서 PDF 단추가 있습니다. 메일 주소는 `site.json` 의 `email` 이고, 단순한 수집기를 피하려고 글자 참조로 적습니다.
+- 이력서는 빌드가 `about.json`·`site.json`(`name`, `nameEn`) 으로 `resume/index.html`(A4, 검색 제외)을 만들고, `node tool/resume.mjs` 가 그것을 `assets/resume.pdf` 로 굽습니다(받을 때 이름은 `build.py` 의 `RESUME_NAME`). 지금은 2쪽입니다.
+  - 내용을 고치면 `python3 tool/build.py && node tool/resume.mjs` 순서로 돌립니다. PDF 가 원본보다 낡았으면 빌드가 「※ 이력서 PDF 를 다시 구우세요」라고 알립니다.
+
 ### 개인 프로젝트
 
 - 소개 페이지의 「개인 프로젝트」 구역(`#h-projects`)은 `tool/about.json`의 `projects`입니다. 지금은 스코어랩(모두의 창업 2기), 가나디야(모두의 창업 1기), Claude Code 에이전트 플러그인 셋이고, 회사 프로젝트 바로 다음에 나옵니다. 예전의 「대회·창업」·「LLM·에이전트」 구역은 여기와 겹쳐 없앴습니다(진열대의 모두의 창업 스티커도 이리로 옵니다).
-- 줄마다 `org`(이름), `unit`(무엇 · 모두의 창업 같은 이력), `period`, `notes`(LLM·에이전트를 어떻게 붙였는지를 한두 문장, 수치 없이), `link`·`linkLabel`, 그리고 줄 앞 그림 `art`를 적습니다.
+- 줄마다 `org`(이름), `unit`(무엇 · 모두의 창업 같은 이력), `period`, `notes`(LLM·에이전트를 어떻게 붙였는지를 한두 문장, 수치 없이), `link`·`linkLabel`(또는 링크 여럿 `links: [{href, label}]`), 그리고 줄 앞 그림 `art`를 적습니다.
+- 줄 아래에는 그 줄들에 나오지 않은 앱(`site.json` 의 `apps`)과 공개 도구(`about.json` 의 `tools`)만 「그 밖의 앱」·「그 밖의 도구」 작은 목록으로 붙습니다. 예전의 「만든 것」·「공개한 도구」 구역은 겹쳐서 없앴습니다.
   - `art` = `{"images": [...], "size": [가로, 세로], "fit": "cover"|"phones"|"stack", "tone": 바탕색}`. `cover` 는 한 장을 칸(3:2)에 채우고, `phones` 는 폰 화면 여러 장을 아래에서 올라오게, `stack` 은 넓은 그림 두 장을 겹쳐 둡니다.
   - 회사 프로젝트·논문 줄의 그림은 따로 적지 않아도 진열대 카드 그림(`shelf.json` 의 `image`)을 씁니다.
   - 폰에서는 그림 옆에 이름·소속·기간만 두고 설명은 아래 온 폭으로 내립니다.
