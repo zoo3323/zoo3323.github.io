@@ -999,8 +999,10 @@ if ABOUT:
             cv_section("startup", "대회·창업", a.get("startup")),
         ])
     )
+    # main 이 참인 줄(주력)은 노란 칩으로 진하게 보인다
     skills = "\n        ".join(
-        f'<div><dt>{esc(g["group"])}</dt><dd><ul class="chips">{"".join(f"<li>{esc(i)}</li>" for i in g["items"])}</ul></dd></div>'
+        f'<div{" class=" + chr(34) + "skills__main" + chr(34) if g.get("main") else ""}><dt>{esc(g["group"])}</dt>'
+        f'<dd><ul class="chips">{"".join(f"<li>{esc(i)}</li>" for i in g["items"])}</ul></dd></div>'
         for g in a["skills"]
     )
     works = "\n      ".join(
@@ -1085,7 +1087,8 @@ if ABOUT:
     )
 
 # ── 회사 프로젝트: 진열대 작은 봉지의 뒷면. 앱 페이지와 같은 틀에 개요·맡은 일·쓴 기술·자료(이미지·영상) ──
-# 자료는 about.json 의 work[].media 에 {"type": "image"|"video", "src", "poster", "w", "h", "alt"} 로 적으면 나온다.
+# 자료는 about.json 의 work[].media 에 {"type": "image"|"video", "src", "poster", "w", "h", "alt", "caption", "generated"} 로 적으면 나온다.
+# caption 은 그림 아래 짧은 설명이고, generated 가 참이면 「생성 이미지」 딱지가 붙는다(실제 자료가 없어 만든 그림).
 
 if ABOUT and ABOUT.get("work"):
     minis = {it["href"]: it for it in shelf_items() if isinstance(it, dict)}
@@ -1102,19 +1105,21 @@ if ABOUT and ABOUT.get("work"):
     def media_html(w):
         items = []
         for m in w.get("media", []):
+            note = '<span class="shots__note">생성 이미지</span>' if m.get("generated") else ""
+            cap = f'<p class="shots__cap">{esc(m["caption"])}{note}</p>' if m.get("caption") else ""
             if m["type"] == "video":
                 poster = f' poster="{esc(m["poster"])}"' if m.get("poster") else ""
                 items.append(
                     f'<li class="shots__video"><video src="{esc(m["src"])}"{poster} width="{m["w"]}" height="{m["h"]}" '
-                    f'muted loop playsinline controls preload="metadata" aria-label="{esc(m.get("alt", ""))}"></video></li>'
+                    f'muted loop playsinline controls preload="metadata" aria-label="{esc(m.get("alt", ""))}"></video>{cap}</li>'
                 )
             else:
-                items.append(f'<li><img src="{esc(m["src"])}" width="{m["w"]}" height="{m["h"]}" alt="{esc(m.get("alt", ""))}" loading="lazy"></li>')
+                items.append(f'<li><img src="{esc(m["src"])}" width="{m["w"]}" height="{m["h"]}" alt="{esc(m.get("alt", ""))}" loading="lazy">{cap}</li>')
         if not items:
             return ""
         return f"""<section class="sec" aria-labelledby="h-media">
       <h2 id="h-media">자료</h2>
-      <ul class="shots shots--wide">
+      <ul class="shots shots--wide shots--work">
         {chr(10).join(items)}
       </ul>
     </section>"""

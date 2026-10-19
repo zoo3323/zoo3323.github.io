@@ -1920,6 +1920,41 @@ a.get:hover {
 .shots--wide img {
   border-radius: 0.7rem;
 }
+/* 회사 프로젝트 자료: 그림 비율이 제각각(화면 캡처·CCTV·지도)이라 높이를 맞추고, 폭은 그림 비율대로 둔다.
+   칸 폭은 그림 폭(min-content)이라 아래 설명은 그림 폭 안에서 줄바뀜한다. */
+.shots.shots--work li {
+  width: min-content;
+}
+.shots.shots--work img {
+  width: auto;
+  max-width: none;
+  height: 16.875rem;
+}
+@media (max-width: 640px) {
+  .shots.shots--work img {
+    height: calc((100vw - 2.5rem) * 0.5);
+  }
+}
+/* 그림 아래 짧은 설명. 실제 자료가 없어 만든 그림에는 「생성 이미지」 딱지를 붙인다. */
+.shots__cap {
+  margin: 0.55rem 0.15rem 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--sub);
+}
+.shots__note {
+  display: inline-block;
+  margin-left: 0.45em;
+  padding: 0.12em 0.55em 0.08em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  vertical-align: 0.08em;
+  color: var(--ink);
+  background: var(--mute);
+  border-radius: 999px;
+  white-space: nowrap;
+}
 
 /* 스크린펫: 꺼내 보기 */
 .demo--pet {
@@ -2189,6 +2224,16 @@ svg.app-icon {
   line-height: 1.4;
   background: var(--mute);
   border-radius: 999px;
+}
+/* 주로 쓰는 기술: 노란 칩으로 한 단계 크게 */
+.skills__main dt {
+  padding-top: 0.4rem;
+}
+.skills__main .chips li {
+  padding: 0.38rem 0.95rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--lemon);
 }
 
 /* 정보 */
