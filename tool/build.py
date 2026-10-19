@@ -419,9 +419,10 @@ ART = {
 
 
 def mini_art(item):
-    """작은 봉지의 그림: 실제 화면(image) 또는 하는 일을 보여 주는 도식(art)."""
+    """작은 봉지의 그림: 그림(image, 크기는 imageSize) 또는 하는 일을 보여 주는 도식(art)."""
     if item.get("image"):
-        return f'<div class="mini__art"><img src="{esc(item["image"])}" width="600" height="316" alt="" loading="lazy"></div>'
+        w, h = item.get("imageSize", [600, 316])
+        return f'<div class="mini__art"><img src="{esc(item["image"])}" width="{w}" height="{h}" alt="" loading="lazy"></div>'
     if item.get("art") in ART:
         return (
             '<div class="mini__art"><svg viewBox="0 0 120 64" aria-hidden="true" focusable="false">'
@@ -1099,6 +1100,10 @@ if ABOUT and ABOUT.get("work"):
         return mini, f'--tone:{mini.get("tone", "#ffffff")};--tone-ink:{mini.get("ink", "#17171a")};--accent:{mini.get("ink", "#17171a")}'
 
     def work_art(mini, cls):
+        """회사 프로젝트의 대표 그림: 진열대 카드와 같은 그림(image)이 있으면 그것, 없으면 도식(art)."""
+        if mini.get("image"):
+            w, h = mini.get("imageSize", [600, 316])
+            return f'<span class="{cls} {cls}--photo"><img src="{esc(mini["image"])}" width="{w}" height="{h}" alt=""></span>'
         art = ART.get(mini.get("art"))
         return f'<span class="{cls}"><svg viewBox="0 0 120 64" aria-hidden="true" focusable="false">{art}</svg></span>' if art else ""
 

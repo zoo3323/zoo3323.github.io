@@ -4,9 +4,9 @@
     "monogram": "NJ",
     "caption": "NamJuKim",
     "label": "만든 사람",
-    "role": "비전 AI 연구원",
+    "role": "AI 연구원",
     "org": "신라이앤씨 개발팀",
-    "line": "비전 AI를 연구하고, 앱을 만듭니다.",
+    "line": "AI를 연구하고, 앱을 만듭니다.",
     "href": "/about/",
     "stickers": [
       {
@@ -63,6 +63,93 @@
     ]
   },
   "rows": [
+    {
+      "id": "work",
+      "name": "회사 프로젝트",
+      "items": [
+        {
+          "name": "주차면 판단 AI",
+          "kind": "신라이앤씨 · 2026",
+          "line": "주차장 CCTV로 빈자리를 판단하고 현장 장비에 배포",
+          "tone": "#d6ecff",
+          "ink": "#0b2a3d",
+          "rest": -0.6,
+          "size": 1.3,
+          "art": "parking",
+          "wide": true,
+          "href": "/work/parking-ai/",
+          "image": "/assets/img/work/parking-ai/card.webp",
+          "imageSize": [
+            720,
+            384
+          ]
+        },
+        {
+          "name": "라벨링 도구",
+          "kind": "신라이앤씨 · 2026",
+          "line": "현장 영상 수집부터 보정·라벨링까지 한곳에서",
+          "tone": "#d6ecff",
+          "ink": "#0b2a3d",
+          "rest": 0.5,
+          "size": 1.35,
+          "href": "/work/labeling-tool/",
+          "art": "labeling",
+          "image": "/assets/img/work/labeling-tool/card.webp",
+          "imageSize": [
+            720,
+            384
+          ]
+        },
+        {
+          "name": "안전 영상 분석",
+          "kind": "패턴앤 · 2025",
+          "line": "안전모 미착용·화재·침입 감지와 여러 카메라에 걸친 추적",
+          "tone": "#d4f2e1",
+          "ink": "#0b3d24",
+          "rest": -0.4,
+          "size": 1.25,
+          "href": "/work/safety-vision/",
+          "art": "safety",
+          "image": "/assets/img/work/safety-vision/card.webp",
+          "imageSize": [
+            720,
+            384
+          ]
+        },
+        {
+          "name": "위험성평가 AI",
+          "kind": "패턴앤 · 2026",
+          "line": "위험성평가표를 올리면 법령을 근거로 검토를 돕는 웹",
+          "tone": "#d4f2e1",
+          "ink": "#0b3d24",
+          "rest": 0.7,
+          "size": 1.25,
+          "href": "/work/risk-review/",
+          "art": "risk",
+          "image": "/assets/img/work/risk-review/card.webp",
+          "imageSize": [
+            720,
+            384
+          ]
+        },
+        {
+          "name": "보호구역 입지 분석",
+          "kind": "제이솔루션 · 2024",
+          "line": "교통사고·인구·시설 데이터로 노인보호구역 자리 고르기",
+          "tone": "#ece7df",
+          "ink": "#2d2a24",
+          "rest": -0.6,
+          "size": 1.15,
+          "href": "/work/senior-zone/",
+          "art": "zone",
+          "image": "/assets/img/work/senior-zone/card.webp",
+          "imageSize": [
+            720,
+            384
+          ]
+        }
+      ]
+    },
     {
       "id": "personal",
       "name": "개인 프로젝트",
@@ -129,68 +216,6 @@
       ]
     },
     {
-      "id": "work",
-      "name": "회사 프로젝트",
-      "items": [
-        {
-          "name": "주차면 판단 AI",
-          "kind": "신라이앤씨 · 2026",
-          "line": "주차장 CCTV로 빈자리를 판단하고 현장 장비에 배포",
-          "tone": "#d6ecff",
-          "ink": "#0b2a3d",
-          "rest": -0.6,
-          "size": 1.3,
-          "art": "parking",
-          "wide": true,
-          "href": "/work/parking-ai/"
-        },
-        {
-          "name": "라벨링 도구",
-          "kind": "신라이앤씨 · 2026",
-          "line": "현장 영상 수집부터 보정·라벨링까지 한곳에서",
-          "tone": "#d6ecff",
-          "ink": "#0b2a3d",
-          "rest": 0.5,
-          "size": 1.35,
-          "href": "/work/labeling-tool/",
-          "art": "labeling"
-        },
-        {
-          "name": "안전 영상 분석",
-          "kind": "패턴앤 · 2025",
-          "line": "안전모 미착용·화재·침입 감지와 여러 카메라에 걸친 추적",
-          "tone": "#d4f2e1",
-          "ink": "#0b3d24",
-          "rest": -0.4,
-          "size": 1.25,
-          "href": "/work/safety-vision/",
-          "art": "safety"
-        },
-        {
-          "name": "위험성평가 AI",
-          "kind": "패턴앤 · 2026",
-          "line": "위험성평가표를 올리면 법령을 근거로 검토를 돕는 웹",
-          "tone": "#d4f2e1",
-          "ink": "#0b3d24",
-          "rest": 0.7,
-          "size": 1.25,
-          "href": "/work/risk-review/",
-          "art": "risk"
-        },
-        {
-          "name": "보호구역 입지 분석",
-          "kind": "제이솔루션 · 2024",
-          "line": "교통사고·인구·시설 데이터로 노인보호구역 자리 고르기",
-          "tone": "#ece7df",
-          "ink": "#2d2a24",
-          "rest": -0.6,
-          "size": 1.15,
-          "href": "/work/senior-zone/",
-          "art": "zone"
-        }
-      ]
-    },
-    {
       "id": "research-startup",
       "bays": [
         {
@@ -198,15 +223,20 @@
           "name": "연구·논문",
           "items": [
             {
-              "name": "석사 학위논문",
-              "kind": "경북대학교 대학원",
-              "line": "인공지능학과 석사 학위논문 · 작성 중",
+              "name": "MDPI MAKE 논문",
+              "kind": "제1저자 · 2026",
+              "line": "MDPI MAKE 투고 · 차량 하단면 검출",
               "tone": "#ffffff",
               "ink": "#7a1018",
               "rest": -0.5,
-              "size": 1.15,
+              "size": 1.0,
               "art": "paper",
-              "href": "/about/#h-research"
+              "href": "/about/#h-research",
+              "image": "/assets/img/research/card.webp",
+              "imageSize": [
+                720,
+                384
+              ]
             }
           ]
         },
