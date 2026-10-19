@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- 기본 화살표: 레몬 스티커. 칠 위에 진한 테두리(1.4px), 그 밖에 흰 스티커 여백(1.75px)과 옅은 그림자.
+       누르는 자리(hotspot)는 끝 5,4. 왼쪽 안쪽의 흰 줄은 스티커 광택. -->
+  <defs>
+    <filter id="s" filterUnits="userSpaceOnUse" x="0" y="0" width="32" height="32"><feDropShadow dx="0" dy="1" stdDeviation="0.9" flood-color="#17171a" flood-opacity=".32"/></filter>
+    <path id="a" d="M6.2 4.6V21.4L10.3 17.6 13.1 23.6 15.9 22.4 13.2 16.6H18.6Z"/>
+  </defs>
+  <g filter="url(#s)" stroke-linejoin="round">
+    <use href="#a" fill="#fff" stroke="#fff" stroke-width="6.3"/>
+    <use href="#a" fill="#17171a" stroke="#17171a" stroke-width="2.8"/>
+    <use href="#a" fill="#ffe55c"/>
+  </g>
+  <path d="M7.7 9.2v6.6" stroke="#fff" stroke-width="1.1" stroke-linecap="round" opacity=".85"/>
+</svg>

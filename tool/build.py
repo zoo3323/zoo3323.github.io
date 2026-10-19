@@ -21,6 +21,7 @@ site.json 의 keep 에 적은 파일은 앱 안과 플레이 콘솔에 주소가
 이 파일을 다시 돌린다. 만들어진 HTML 은 직접 고치지 않는다.
 """
 
+import hashlib
 import html
 import itertools
 import json
@@ -159,10 +160,15 @@ def tone_style(app):
     return ";".join(parts)
 
 
+def ver(rel):
+    """정적 파일 내용으로 만든 짧은 판 번호. 파일이 바뀌면 주소가 바뀌어, 브라우저가 캐시에 남은 옛 CSS·스크립트를 쓰지 않는다."""
+    return hashlib.sha1((ROOT / rel).read_bytes()).hexdigest()[:8]
+
+
 def head(title, desc, path, scripts=(), index=True, preview=True):
     """preview=False 면 링크 미리보기에 첫 화면 그림(og.png)을 쓰지 않는다(개인정보처리방침)."""
     site = SITE["site"]
-    tags = "".join(f'\n<script src="/assets/{name}" defer></script>' for name in scripts)
+    tags = "".join(f'\n<script src="/assets/{name}?v={ver("assets/" + name)}" defer></script>' for name in scripts)
     canonical = f'<link rel="canonical" href="{site}{path}">' if index else '<meta name="robots" content="noindex">'
     if preview:
         image = (
@@ -191,7 +197,7 @@ def head(title, desc, path, scripts=(), index=True, preview=True):
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css">{tags}
+<link rel="stylesheet" href="/assets/site.css?v={ver("assets/site.css")}">{tags}
 </head>
 """
 

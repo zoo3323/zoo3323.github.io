@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- 끄는 동안의 쥔 손: 분홍 스티커(누르고 있다는 색). 접은 손가락 사이에 짧은 선. 누르는 자리는 편 손과 같은 16,18. -->
+  <defs>
+    <filter id="s" filterUnits="userSpaceOnUse" x="0" y="0" width="32" height="32"><feDropShadow dx="0" dy="1" stdDeviation="0.9" flood-color="#17171a" flood-opacity=".32"/></filter>
+    <g id="f" fill="none" stroke-linecap="round">
+      <path d="M11.1 14.6v1.2"/>
+      <path d="M14.7 14.1v1.5"/>
+      <path d="M18.3 14.1v1.5"/>
+      <path d="M21.6 14.6v1.2"/>
+      <path d="M10.4 23.5 6.6 20.2"/>
+    </g>
+    <rect id="p" x="8.8" y="14.5" width="14.6" height="12.5" rx="5"/>
+  </defs>
+  <g filter="url(#s)" stroke-linejoin="round">
+    <use href="#f" stroke="#fff" stroke-width="9.9"/>
+    <use href="#p" fill="#fff" stroke="#fff" stroke-width="6.3"/>
+    <use href="#f" stroke="#17171a" stroke-width="6.4"/>
+    <use href="#p" fill="#17171a" stroke="#17171a" stroke-width="2.8"/>
+    <use href="#f" stroke="#ff86ae" stroke-width="3.6"/>
+    <use href="#p" fill="#ff86ae"/>
+    <path d="M12.9 12.8v4.2M16.5 12.4v4.4M19.95 12.8v4.2" stroke="#17171a" stroke-width=".9" stroke-linecap="round"/>
+  </g>
+  <path d="M10.6 17.4v4.2" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".8"/>
+</svg>

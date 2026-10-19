@@ -12,7 +12,7 @@ mkdirSync(out, { recursive: true });
 const browser = await chromium.launch();
 for (const scale of [1, 2]) {
   const page = await browser.newPage({ viewport: { width: 64, height: 64 }, deviceScaleFactor: scale });
-  for (const name of ['grab', 'grabbing']) {
+  for (const name of ['arrow', 'point', 'open', 'fist', 'zoom']) {
     const svg = readFileSync(join(here, `${name}.svg`)).toString('base64');
     await page.setContent(`<style>html,body{margin:0;background:transparent}</style><img id="c" src="data:image/svg+xml;base64,${svg}" width="32" height="32">`);
     await page.locator('#c').screenshot({ path: join(out, `${name}${scale === 2 ? '@2x' : ''}.png`), omitBackground: true });

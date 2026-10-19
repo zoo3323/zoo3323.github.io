@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- 링크·단추 위의 가리키는 손: 레몬 스티커. 검지를 펴고 나머지는 접었다. 누르는 자리는 검지 끝 12,4.5. -->
+  <defs>
+    <filter id="s" filterUnits="userSpaceOnUse" x="0" y="0" width="32" height="32"><feDropShadow dx="0" dy="1" stdDeviation="0.9" flood-color="#17171a" flood-opacity=".32"/></filter>
+    <g id="f" fill="none" stroke-linecap="round">
+      <path d="M12.5 7.5V16"/>
+      <path d="M11.6 21.9 8.1 18.3"/>
+    </g>
+    <g id="k" fill="none" stroke-linecap="round">
+      <path d="M16.2 14.1v.8"/>
+      <path d="M19.3 14.4v1"/>
+      <path d="M22.1 15.3v1"/>
+    </g>
+    <rect id="p" x="10.3" y="13.7" width="12.6" height="12" rx="4.6"/>
+  </defs>
+  <g filter="url(#s)" stroke-linejoin="round">
+    <use href="#f" stroke="#fff" stroke-width="10.7"/>
+    <use href="#k" stroke="#fff" stroke-width="9.5"/>
+    <use href="#p" fill="#fff" stroke="#fff" stroke-width="6.3"/>
+    <use href="#f" stroke="#17171a" stroke-width="7.2"/>
+    <use href="#k" stroke="#17171a" stroke-width="6"/>
+    <use href="#p" fill="#17171a" stroke="#17171a" stroke-width="2.8"/>
+    <use href="#f" stroke="#ffe55c" stroke-width="4.4"/>
+    <use href="#k" stroke="#ffe55c" stroke-width="3.2"/>
+    <use href="#p" fill="#ffe55c"/>
+    <path d="M14.75 13.6v3.6M17.75 13.3v3.6M20.7 13.9v3.4" stroke="#17171a" stroke-width=".9" stroke-linecap="round"/>
+  </g>
+  <path d="M11.4 8.6v4.6" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".85"/>
+</svg>

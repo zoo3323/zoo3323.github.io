@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- 잡을 수 있는 줄 위의 편 손: 레몬 스티커. 손가락 사이 틈이 진한 선이 된다. 누르는 자리는 손바닥 16,18. -->
+  <defs>
+    <filter id="s" filterUnits="userSpaceOnUse" x="0" y="0" width="32" height="32"><feDropShadow dx="0" dy="1" stdDeviation="0.9" flood-color="#17171a" flood-opacity=".32"/></filter>
+    <g id="f" fill="none" stroke-linecap="round">
+      <path d="M11 17 10.3 7.8"/>
+      <path d="M15.1 16.5V6.2"/>
+      <path d="M19.2 17 19.9 7.2"/>
+      <path d="M22.6 18.5 24 10.8"/>
+      <path d="M10.5 24 5.8 18.6"/>
+    </g>
+    <rect id="p" x="9" y="14.5" width="14" height="12.5" rx="5"/>
+  </defs>
+  <g filter="url(#s)" stroke-linejoin="round">
+    <use href="#f" stroke="#fff" stroke-width="9.5"/>
+    <use href="#p" fill="#fff" stroke="#fff" stroke-width="6.3"/>
+    <use href="#f" stroke="#17171a" stroke-width="6"/>
+    <use href="#p" fill="#17171a" stroke="#17171a" stroke-width="2.8"/>
+    <use href="#f" stroke="#ffe55c" stroke-width="3.2"/>
+    <use href="#p" fill="#ffe55c"/>
+  </g>
+  <path d="M14.2 8v4.4" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".85"/>
+</svg>
