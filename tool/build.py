@@ -1363,12 +1363,16 @@ if ABOUT and ABOUT.get("work"):
         """처음 보는 사람이 모를 낱말 풀이: work[].terms = [{"term", "full", "desc", "fig", "link", "linkLabel"}]"""
         out = []
         for t in w.get("terms", []):
-            link = f' <a href="{esc(t["link"])}">{esc(t.get("linkLabel", "더 보기"))}</a>' if t.get("link") else ""
+            link = (
+                f'<p class="term__more"><a class="get get--line term__go" href="{esc(t["link"])}">{esc(t.get("linkLabel", "더 보기"))}</a></p>'
+                if t.get("link")
+                else ""
+            )
             out.append(
                 f'<aside class="term" aria-label="용어 풀이: {esc(t["term"])}">{TERM_FIG.get(t.get("fig"), "")}'
                 f'<div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>{esc(t["term"])}</b>'
                 f'<span class="term__full">{esc(t.get("full", ""))}</span></p>'
-                f'<p class="term__desc">{keep_dots(t["desc"])}{link}</p></div></aside>'
+                f'<p class="term__desc">{keep_dots(t["desc"])}</p>{link}</div></aside>'
             )
         return "\n      ".join(out)
 

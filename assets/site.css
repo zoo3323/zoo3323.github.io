@@ -2536,6 +2536,14 @@ svg.app-icon {
   margin-top: 0.4rem;
   line-height: 1.6;
 }
+.sec .term .term__more {
+  margin-top: 0.75rem;
+}
+.term__go {
+  min-height: 2.25rem;
+  padding: 0 1rem;
+  font-size: 0.9375rem;
+}
 @media (max-width: 640px) {
   .term {
     grid-template-columns: minmax(0, 1fr);
