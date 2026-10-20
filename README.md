@@ -20,6 +20,7 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `assets/site.css` | 화면 전체의 모양 |
 | `assets/wall.js`, `light.js` | 봉지와 벽에 붙인 사진·포스트잇의 흔들림, 빛(PC는 마우스를 따르는 등빛과 봉지의 반사·무지개 결, 안드로이드 폰은 기울기를 따르는 봉지의 반사) |
 | `assets/aisle.js` | 첫 화면 진열대 줄을 미는 화살표 단추, 줄 아래 위치 막대(손가락으로 미는 폰에서 「옆에 더 있다」를 알려 줌), 처음 온 사람에게 넘치는 줄이 한 번 살짝 밀렸다 돌아오는 힌트(브라우저마다 한 번, `localStorage` 의 `zoo3323:peek`, 움직임 줄이기면 안 함) |
+| `tool/og.mjs` | 링크 미리보기 그림(1200×630): 첫 화면 캡처와 쪽마다 카드. 빌드가 쪽마다 `og:image` 로 쓴다 |
 | `tool/resume.mjs` | `resume/index.html`(빌드가 만드는 A4 이력서)을 `assets/resume.pdf` 로 굽는다(Playwright 필요) |
 | `tool/video/` | 회사 프로젝트의 설명 영상. `scenes/<slug>.js`(장면)를 `render.mjs` 가 프레임마다 찍어 `assets/video/<slug>.mp4`·표지 `.webp` 로 굽고, 장마다 시작 시각을 `clips.json` 에 적는다 |
 | `assets/clip.js` | 설명 영상: 보일 때만 소리 없이 되풀이, 지금 장의 줄 밝히기, 줄을 누르면 그 장으로, 멈춤 단추 |
@@ -146,7 +147,7 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 
 ## 그 밖에 고칠 때
 
-- **개발자 이름, 소개 한 줄**: `tool/site.json`의 `developer`, `tagline`을 고치고 다시 만듭니다. 링크 미리보기 그림 `assets/img/og.png`는 첫 화면을 1200×630으로 다시 찍어 바꿉니다.
+- **개발자 이름, 소개 한 줄**: `tool/site.json`의 `developer`, `tagline`을 고치고 다시 만듭니다. 링크 미리보기 그림은 `node tool/og.mjs` 로 다시 만듭니다(첫 화면은 그대로 찍어 `assets/img/og.png`, 소개·회사 프로젝트·앱 쪽은 쪽마다 카드를 그려 `assets/og/*.jpg`). 글이나 그림을 바꾸면 이것도 다시 돌린 뒤 빌드합니다.
 - **버전 기록**: 그 앱의 `app.json`에서 `version`을 올리고 `history` 맨 위에 `{"version", "date", "notes"}`를 하나 더합니다. 앱 페이지의 「새로운 기능」에는 지금 버전의 기록이, 그 아래 접힌 「버전 기록」에는 나머지가 나옵니다. 버전이 없는 웹 서비스는 `version`을 `null`로 두면 「업데이트 기록」이 됩니다.
 - **소개**: `tool/about.json`의 경력·학력·기술·공개한 도구를 고칩니다. 소개 페이지에서 `career`는 「경력」, `education`은 「학력」 구역으로 따로 나옵니다. 앱 페이지의 개발자 이름은 소개 페이지로 이어집니다. 「다루는 기술」은 줄 세 개(비전 AI·LLM·개발) 안팎으로 짧게 둡니다. `"main": true`인 줄은 노란 칩으로 진하게 보입니다.
 - **이름 글씨를 따로 쓰는 앱**: 이름 글자만 담은 글꼴 조각을 `tool/wordmarks.py`로 만들고 `assets/site.css` 맨 위에 `@font-face`를 한 줄 더한 뒤 `app.json`의 `mark.font`에 그 이름을 적습니다.

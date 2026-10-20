@@ -169,14 +169,16 @@ def ver(rel):
     return hashlib.sha1((ROOT / rel).read_bytes()).hexdigest()[:8]
 
 
-def head(title, desc, path, scripts=(), index=True, preview=True):
-    """preview=False 면 링크 미리보기에 첫 화면 그림(og.png)을 쓰지 않는다(개인정보처리방침)."""
+def head(title, desc, path, scripts=(), index=True, preview=True, og=None):
+    """preview=False 면 링크 미리보기에 첫 화면 그림(og.png)을 쓰지 않는다(개인정보처리방침).
+    og 는 그 쪽만의 미리보기 그림(node tool/og.mjs 가 만든 assets/og/*.jpg). 없으면 첫 화면 그림을 쓴다."""
     site = SITE["site"]
     tags = "".join(f'\n<script src="/assets/{name}?v={ver("assets/" + name)}" defer></script>' for name in scripts)
     canonical = f'<link rel="canonical" href="{site}{path}">' if index else '<meta name="robots" content="noindex">'
     if preview:
+        img = og if og and (ROOT / og.lstrip("/")).exists() else "/assets/img/og.png"
         image = (
-            f'<meta property="og:image" content="{site}/assets/img/og.png">\n'
+            f'<meta property="og:image" content="{site}{img}?v={ver(img.lstrip("/"))}">\n'
             '<meta property="og:image:width" content="1200">\n'
             '<meta property="og:image:height" content="630">\n'
             '<meta name="twitter:card" content="summary_large_image">'
@@ -914,7 +916,7 @@ for app in APPS:
     features = "\n        ".join(f"<li>{esc(text)}</li>" for text in app["features"])
     write(
         f"{app_id}/index.html",
-        head(f'{app["name"]} · {app["line"]} | {DEV}', app["lead"], f"/{app_id}/", [*app.get("scripts", []), "shots.js", "light.js", "grab.js"])
+        head(f'{app["name"]} · {app["line"]} | {DEV}', app["lead"], f"/{app_id}/", [*app.get("scripts", []), "shots.js", "light.js", "grab.js"], og=f"/assets/og/{app_id}.jpg")
         + f"""<body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
 <div class="wall">
@@ -1137,7 +1139,7 @@ if ABOUT:
     )
     write(
         "about/index.html",
-        head(f"소개 | {DEV}", f'{DEV} · ' + " · ".join(f'{x["org"]} {x["unit"]}' for x in a["career"][:1] + a.get("education", [])[:1]) + ".", "/about/", ["light.js"])
+        head(f"소개 | {DEV}", f'{DEV} · ' + " · ".join(f'{x["org"]} {x["unit"]}' for x in a["career"][:1] + a.get("education", [])[:1]) + ".", "/about/", ["light.js"], og="/assets/og/about.jpg")
         + f"""<body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
 <div class="wall">
@@ -1467,7 +1469,7 @@ if ABOUT and ABOUT.get("work"):
             scripts.append("clip.js")
         write(
             f'work/{w["slug"]}/index.html',
-            head(f'{w["org"]} · {w["unit"]} | {DEV}', w["summary"], f'/work/{w["slug"]}/', scripts)
+            head(f'{w["org"]} · {w["unit"]} | {DEV}', w["summary"], f'/work/{w["slug"]}/', scripts, og=f'/assets/og/work-{w["slug"]}.jpg')
             + f"""<body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
 <div class="wall">
