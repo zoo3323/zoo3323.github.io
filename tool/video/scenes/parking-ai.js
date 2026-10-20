@@ -101,6 +101,11 @@ window.SCENE = (() => {
           s += tag("path", { d: dpath([cam.P(v3.lerp(c, a, u)), cam.P(v3.lerp(c, b, u))], false), stroke: C.ink, "stroke-width": 4.5, "stroke-linecap": "round", opacity: out * (u > 0 ? 1 : 0) });
         }
         s += footprint(cam, car, seg(lt, 3.9, 0.5) * out, { dots: seg(lt, 4.1, 0.3) });
+        // 무엇으로 짓는지: 차량 축과 앞뒤 변
+        const axEnd = cam.P(ext(backC, frontC, -0.2));
+        s += chip(axEnd[0], axEnd[1] + 16, "차량 축", { size: 12.5, fill: C.paper, anchor: "middle", opacity: seg(lt, 3.35, 0.3) * out });
+        const be = cam.P(ring[1]);
+        s += chip(be[0] + 14, be[1] + 4, "앞뒤 변 폭·기울기", { size: 12.5, fill: C.paper, opacity: seg(lt, 3.75, 0.3) * out });
         const fc = cam.P(ring[2]);
         s += chip(fc[0] + 14, fc[1] + 4, "CFQ · 볼록 보장", { size: 13, fill: C.lemon, opacity: seg(lt, 4.35, 0.35) * out });
         return s;

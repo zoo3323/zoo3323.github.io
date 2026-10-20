@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=78d00ff4">
+<link rel="stylesheet" href="/assets/site.css?v=4c098607">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -56,7 +56,8 @@
       <li><span class="fact__label">맡은 일</span><span class="fact__value">모델 <span class="nobr">연구·개발,</span> 엣지 배포</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>카메라 캘리브레이션·어안 왜곡 보정 없이 원본 영상 한 장에서 차량 하단면(footprint) 네 꼭짓점을 가려진 부분까지 바로 출력하는 one-stage 2.5D 검출 모델 연구·개발. 카메라별 보정값 산출 단계 제거. CARLA 합성 데이터·실제 영상으로 학습하고 지식 증류·INT8 양자화로 경량화해 라즈베리파이·Jetson·GPU 서버에 배포.</p>
+      <p>카메라 <span class="nobr">캘리브레이션·어안</span> 왜곡 보정 없이 원본 영상 한 장에서 차량 하단면(footprint) 네 꼭짓점을 가려진 부분까지 바로 출력하는 one-stage 2.5D 검출 모델 <span class="nobr">연구·개발.</span> 카메라별 보정값 산출 단계 제거. CARLA 합성 <span class="nobr">데이터·실제</span> 영상으로 학습하고 지식 <span class="nobr">증류·INT8</span> 양자화로 경량화해 <span class="nobr">라즈베리파이·Jetson·GPU</span> 서버에 배포.</p>
+      <aside class="term" aria-label="용어 풀이: CFQ"><svg class="term__fig" viewBox="0 0 176 112" aria-hidden="true" focusable="false"><path d="M30 20 136 28 142 76 38 88Z" fill="#ffe55c" fill-opacity=".75" stroke="#17171a" stroke-width="2" stroke-linejoin="round"/><path d="M14 54.5 158 51.5" stroke="#17171a" stroke-width="1.6" stroke-dasharray="5 4"/><path d="M30 20 38 88M136 28 142 76" stroke="#17171a" stroke-width="4" stroke-linecap="round"/><g fill="#fff" stroke="#17171a" stroke-width="1.6"><circle cx="30" cy="20" r="3.4"/><circle cx="136" cy="28" r="3.4"/><circle cx="142" cy="76" r="3.4"/><circle cx="38" cy="88" r="3.4"/></g><g font-size="11" font-weight="700" fill="#17171a" text-anchor="middle"><text x="34" y="105">뒤 변</text><text x="140" y="95">앞 변</text><text x="88" y="45">차량 축</text></g></svg><div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>CFQ</b><span class="term__full">Convex Footprint Quadrilateral</span></p><p class="term__desc">차량 하단면을 네 꼭짓점 대신 차량 축(가운데 선)과 앞뒤 변의 <span class="nobr">폭·기울기로</span> 나타내는 표현. 어떤 값이 나와도 꼭짓점 순서가 고정된 볼록 사각형이 되어, 네 꼭짓점을 따로 맞힐 때 생기는 <span class="nobr">꼬인·오목한</span> 사각형이 나오지 않음. 투고 논문에서 제안. <a href="/about/#h-research">논문 정보</a></p></div></aside>
     </section>
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
@@ -67,7 +68,7 @@
       <h2 id="h-solve">풀어야 했던 문제</h2>
       <div class="clip">
         <div class="clip__frame">
-          <video class="clip__video" src="/assets/video/parking-ai.mp4?v=74912c81" poster="/assets/video/parking-ai.webp?v=3e64d47f" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="2.5D 차량 하단면 검출: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+          <video class="clip__video" src="/assets/video/parking-ai.mp4?v=231eeaa8" poster="/assets/video/parking-ai.webp?v=3e64d47f" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="2.5D 차량 하단면 검출: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
         </div>
         <ol class="solve solve--clip">
           <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>2D 상자가 옆 칸까지 덮음</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>하단면 직접 검출, 겹친 넓이로 점유 판정</span></button></li>
@@ -81,7 +82,7 @@
       <h2 id="h-did">맡은 일</h2>
       <ul>
         <li>캘리브레이션 없는 2.5D 검출 구현: 카메라 <span class="nobr">내부·외부</span> 파라미터, 어안 왜곡 보정, 지면 호모그래피 없이 원본 이미지에서 하단면 네 꼭짓점 직접 출력</li>
-        <li>CFQ 표현 설계: 차량 축 기준 앞뒤 변의 <span class="nobr">폭·기울기로</span> 꼭짓점 순서가 고정된 볼록 사각형 출력 보장</li>
+        <li>CFQ(Convex Footprint Quadrilateral) 표현 설계: 차량 축 기준 앞뒤 변의 <span class="nobr">폭·기울기로</span> 꼭짓점 순서가 고정된 볼록 사각형 출력 보장</li>
         <li>중심점 기반 one-stage 검출기로 가려진 꼭짓점까지 추정하는 amodal 하단면 검출 개발, 대각선 길이 정규화 꼭짓점 손실 설계</li>
         <li>CARLA 합성 데이터(어안 포함) <span class="nobr">학습·실제</span> CCTV 미세조정, <span class="nobr">열화·가림·야간</span> 조명 증강으로 sim-to-real 격차 축소</li>
         <li>지식 증류(knowledge <span class="nobr">distillation)·INT8</span> 양자화로 경량화, <span class="nobr">ONNX·NCNN·TensorRT</span> 변환 후 엣지 장비 배포</li>

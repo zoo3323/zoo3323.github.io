@@ -149,7 +149,7 @@
       "summary": "주차장 CCTV·기둥 카메라 영상에서 카메라 캘리브레이션·왜곡 보정 없이 차량 하단면을 검출해 주차면 점유를 판단하는 2.5D 검출 모델",
       "did": [
         "캘리브레이션 없는 2.5D 검출 구현: 카메라 내부·외부 파라미터, 어안 왜곡 보정, 지면 호모그래피 없이 원본 이미지에서 하단면 네 꼭짓점 직접 출력",
-        "CFQ 표현 설계: 차량 축 기준 앞뒤 변의 폭·기울기로 꼭짓점 순서가 고정된 볼록 사각형 출력 보장",
+        "CFQ(Convex Footprint Quadrilateral) 표현 설계: 차량 축 기준 앞뒤 변의 폭·기울기로 꼭짓점 순서가 고정된 볼록 사각형 출력 보장",
         "중심점 기반 one-stage 검출기로 가려진 꼭짓점까지 추정하는 amodal 하단면 검출 개발, 대각선 길이 정규화 꼭짓점 손실 설계",
         "CARLA 합성 데이터(어안 포함) 학습·실제 CCTV 미세조정, 열화·가림·야간 조명 증강으로 sim-to-real 격차 축소",
         "지식 증류(knowledge distillation)·INT8 양자화로 경량화, ONNX·NCNN·TensorRT 변환 후 엣지 장비 배포",
@@ -253,6 +253,16 @@
               "kind": "out"
             }
           ]
+        }
+      ],
+      "terms": [
+        {
+          "term": "CFQ",
+          "full": "Convex Footprint Quadrilateral",
+          "fig": "cfq",
+          "desc": "차량 하단면을 네 꼭짓점 대신 차량 축(가운데 선)과 앞뒤 변의 폭·기울기로 나타내는 표현. 어떤 값이 나와도 꼭짓점 순서가 고정된 볼록 사각형이 되어, 네 꼭짓점을 따로 맞힐 때 생기는 꼬인·오목한 사각형이 나오지 않음. 투고 논문에서 제안.",
+          "link": "/about/#h-research",
+          "linkLabel": "논문 정보"
         }
       ]
     },
@@ -704,7 +714,7 @@
       "org": "MDPI MAKE 투고 논문",
       "unit": "제1저자",
       "period": "2026. 10. 투고",
-      "notes": "「Convex Footprint Quadrilateral: Axis-Based Amodal Vehicle Footprint Detection in Parking Surveillance」. 차량 축 기준 앞뒤 변의 폭·기울기로 항상 볼록한 사각형을 만드는 CFQ 표현 제안, 중심점 기반 one-stage 검출기와 결합해 카메라 캘리브레이션 없이 가려진 하단면까지 검출(amodal). 학술지 Machine Learning and Knowledge Extraction(MDPI) 투고."
+      "notes": "「Convex Footprint Quadrilateral: Axis-Based Amodal Vehicle Footprint Detection in Parking Surveillance」. 차량 축 기준 앞뒤 변의 폭·기울기로 항상 볼록한 사각형을 만드는 CFQ(Convex Footprint Quadrilateral) 표현 제안, 중심점 기반 one-stage 검출기와 결합해 카메라 캘리브레이션 없이 가려진 하단면까지 검출(amodal). 학술지 Machine Learning and Knowledge Extraction(MDPI) 투고."
     }
   ]
 }

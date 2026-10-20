@@ -1346,6 +1346,32 @@ if ABOUT and ABOUT.get("work"):
         c = CLIPS.get(w["slug"])
         return c if c and (ROOT / c["src"].lstrip("/")).exists() else None
 
+    # 용어 풀이에 곁들이는 작은 도식. CFQ: 차량 축(점선)과 앞뒤 변(굵은 선)으로 짓는 볼록 사각형
+    TERM_FIG = {
+        "cfq": (
+            '<svg class="term__fig" viewBox="0 0 176 112" aria-hidden="true" focusable="false">'
+            '<path d="M30 20 136 28 142 76 38 88Z" fill="#ffe55c" fill-opacity=".75" stroke="#17171a" stroke-width="2" stroke-linejoin="round"/>'
+            '<path d="M14 54.5 158 51.5" stroke="#17171a" stroke-width="1.6" stroke-dasharray="5 4"/>'
+            '<path d="M30 20 38 88M136 28 142 76" stroke="#17171a" stroke-width="4" stroke-linecap="round"/>'
+            '<g fill="#fff" stroke="#17171a" stroke-width="1.6"><circle cx="30" cy="20" r="3.4"/><circle cx="136" cy="28" r="3.4"/><circle cx="142" cy="76" r="3.4"/><circle cx="38" cy="88" r="3.4"/></g>'
+            '<g font-size="11" font-weight="700" fill="#17171a" text-anchor="middle">'
+            '<text x="34" y="105">뒤 변</text><text x="140" y="95">앞 변</text><text x="88" y="45">차량 축</text></g></svg>'
+        ),
+    }
+
+    def terms_html(w):
+        """처음 보는 사람이 모를 낱말 풀이: work[].terms = [{"term", "full", "desc", "fig", "link", "linkLabel"}]"""
+        out = []
+        for t in w.get("terms", []):
+            link = f' <a href="{esc(t["link"])}">{esc(t.get("linkLabel", "더 보기"))}</a>' if t.get("link") else ""
+            out.append(
+                f'<aside class="term" aria-label="용어 풀이: {esc(t["term"])}">{TERM_FIG.get(t.get("fig"), "")}'
+                f'<div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>{esc(t["term"])}</b>'
+                f'<span class="term__full">{esc(t.get("full", ""))}</span></p>'
+                f'<p class="term__desc">{keep_dots(t["desc"])}{link}</p></div></aside>'
+            )
+        return "\n      ".join(out)
+
     def problems_html(w):
         """풀어야 했던 문제와 푼 방법: work[].problems = [{"problem", "solution"}]. 한 줄씩 짧게 쓴다.
         설명 영상이 있으면 영상 옆에 장마다 한 줄씩 두고, 줄을 누르면 그 장으로 건너뛴다(clip.js)."""
@@ -1455,7 +1481,8 @@ if ABOUT and ABOUT.get("work"):
       {fact("맡은 일", w["role"])}
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>{esc(w["notes"])}</p>
+      <p>{keep_dots(w["notes"])}</p>
+      {terms_html(w)}
     </section>
     {flow_html(w)}
     {problems_html(w)}
