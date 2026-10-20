@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>설명 영상 무대</title>
+<!-- 설명 영상의 무대. tool/video/render.mjs 가 ?scene=<slug> 로 열어 frame(t) 를 부르며 프레임을 찍는다. 브라우저로 열면 그대로 재생해 볼 수 있다. -->
+<style>
+@font-face { font-family: "Do Hyeon"; src: url("../../assets/fonts/DoHyeon.woff2") format("woff2"); font-display: block; }
+html, body { margin: 0; background: #fff; }
+svg { display: block; width: 800px; height: 450px; }
+</style>
+</head>
+<body>
+<svg id="stage" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg"></svg>
+<script src="lib.js"></script>
+<script src="lot.js"></script>
+<script>
+  const slug = new URLSearchParams(location.search).get("scene");
+  const s = document.createElement("script");
+  s.src = `scenes/${slug}.js`;
+  s.onload = async () => {
+    await document.fonts.load('27px "Do Hyeon"');
+    window.READY = true;
+    // 렌더 도구가 아니면(직접 열면) 실제 시간으로 되풀이해 보여 준다
+    if (!navigator.webdriver) {
+      const t0 = performance.now();
+      const tick = (now) => {
+        frame(((now - t0) / 1000) % SCENE.duration);
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  };
+  document.body.append(s);
+</script>
+</body>
+</html>

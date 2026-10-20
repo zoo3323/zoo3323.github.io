@@ -19,10 +19,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=d3423490">
+<link rel="stylesheet" href="/assets/site.css?v=78d00ff4">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
+<script src="/assets/clip.js?v=3f25d75d" defer></script>
 </head>
 <body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
@@ -64,12 +65,17 @@
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
-      <ol class="solve">
-        <li><p class="solve__q"><span class="solve__tag">문제</span>2D 상자는 차의 <span class="nobr">지붕·옆면까지</span> 감싸서, 높이 단 카메라에서는 옆 주차면까지 덮어 한 대가 두 칸을 차지한 것처럼 판정됩니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>차가 바닥에 닿는 하단면을 직접 검출하고, 주차면과 겹친 넓이로 점유를 판정합니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>하단면은 차체와 옆 차에 가려 대부분 보이지 않고, 네 꼭짓점을 따로 회귀하면 꼬이거나 오목한 사각형이 나옵니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>가려진 꼭짓점까지 추정하는 amodal 검출에, 늘 볼록한 사각형만 나오는 CFQ 표현을 붙였습니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>카메라마다 <span class="nobr">초점·높이·어안</span> 왜곡 보정값을 구하면, 설치가 늘수록 현장 일이 늘어납니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">캘리브레이션·왜곡</span> 보정 없이 원본 영상에서 바로 하단면을 내는 모델로, 보정 단계를 없앴습니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>학습 장비에서 맞던 모델이 라즈베리파이에서는 다르게 동작할 수 있습니다(ARM에서 fp16으로 바꾸면 검출이 사라지는 등).</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>배포 <span class="nobr">경로(ONNX·NCNN</span> INT8) 그대로 실제 장비에서 추론해 채점하고, 지식 증류로 작은 모델의 정확도를 보완했습니다.</p></li>
-      </ol>
+      <div class="clip">
+        <div class="clip__frame">
+          <video class="clip__video" src="/assets/video/parking-ai.mp4?v=505040d6" poster="/assets/video/parking-ai.webp?v=a35b1c55" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="2.5D 차량 하단면 검출: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+        </div>
+        <ol class="solve solve--clip">
+          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>2D 상자는 옆 칸까지 덮는다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>바닥에 닿는 하단면만 검출</span></button></li>
+          <li data-at="5.3"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>하단면은 대부분 가려진다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>가려진 꼭짓점까지, 늘 볼록한 CFQ</span></button></li>
+          <li data-at="11.1"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>카메라마다 보정값이 필요하다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>보정 없이 원본 영상에서 바로</span></button></li>
+          <li data-at="16.4"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>라즈베리파이에서 결과가 달라진다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>실제 장비에서 채점, 지식 증류로 보완</span></button></li>
+        </ol>
+      </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>

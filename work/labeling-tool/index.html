@@ -19,10 +19,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=d3423490">
+<link rel="stylesheet" href="/assets/site.css?v=78d00ff4">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
+<script src="/assets/clip.js?v=3f25d75d" defer></script>
 </head>
 <body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
@@ -63,11 +64,16 @@
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
-      <ol class="solve">
-        <li><p class="solve__q"><span class="solve__tag">문제</span>하단면은 바닥에 가려 있어, 꼭짓점을 이미지에서 손으로 찍으면 차 크기와 방향이 들쭉날쭉해집니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>카메라를 보정해 지면 좌표에서 차급 프리셋(경차~대형) 하단면을 놓고 원근 그대로 재투영하며, 실제 차 크기를 벗어나면 경고합니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>현장 카메라 영상을 처음부터 사람이 다 그리기에는 너무 느립니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>배포 모델의 예측을 사전 라벨로 띄워, 사람은 수락하거나 고치기만 합니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>카메라 각도가 바뀌거나 비슷한 장면이 반복되면 같은 프레임이 쌓이고, 보정이 바뀌면 기존 라벨이 어긋납니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>각도 변경 감지와 화소 변화 기반 중복 제거로 프레임을 고르고, 보정이 확정되면 그 카메라의 라벨을 자동으로 다시 맞춥니다.</p></li>
-      </ol>
+      <div class="clip">
+        <div class="clip__frame">
+          <video class="clip__video" src="/assets/video/labeling-tool.mp4?v=1b7cdd1c" poster="/assets/video/labeling-tool.webp?v=fc3bd647" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="라벨링 도구: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+        </div>
+        <ol class="solve solve--clip">
+          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>하단면을 손으로 찍으면 들쭉날쭉</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>보정한 바닥에 차급 프리셋을 놓는다</span></button></li>
+          <li data-at="5.8"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>처음부터 다 그리면 느리다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>모델 예측을 띄우고 사람은 고치기만</span></button></li>
+          <li data-at="11.4"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>같은 장면이 쌓이고 라벨이 어긋난다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>중복은 거르고 라벨은 자동 재정렬</span></button></li>
+        </ol>
+      </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>

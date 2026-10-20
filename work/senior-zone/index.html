@@ -19,10 +19,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=d3423490">
+<link rel="stylesheet" href="/assets/site.css?v=78d00ff4">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
+<script src="/assets/clip.js?v=3f25d75d" defer></script>
 </head>
 <body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
@@ -63,11 +64,16 @@
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
-      <ol class="solve">
-        <li><p class="solve__q"><span class="solve__tag">문제</span>기존 노인보호구역은 <span class="nobr">학교·경로당</span> 인접 여부로 정해, 실제 사고 다발지와 어긋났습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>고령 보행자 교통사고 데이터로 <span class="nobr">핫스폿·군집</span> 분석을 해 실제 위험 지역을 찾았습니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>같은 요인이라도 지역마다 사고에 미치는 영향이 다릅니다(공간적 이질성).</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>지리가중회귀(GWR)로 지역별 영향을 따로 추정하고, Random Forest로 위험도를 모델링했습니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>행정기관이 새로 지정하려면 객관적인 근거 자료가 필요했습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>QGIS 위험도 지도와 분석 보고서로 시군별 최적입지를 제안했습니다.</p></li>
-      </ol>
+      <div class="clip">
+        <div class="clip__frame">
+          <video class="clip__video" src="/assets/video/senior-zone.mp4?v=a4db8073" poster="/assets/video/senior-zone.webp?v=47cc12bd" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="노인보호구역 입지 분석: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+        </div>
+        <ol class="solve solve--clip">
+          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>시설 옆 지정은 사고 지점과 어긋난다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>고령 보행자 사고로 핫스폿 분석</span></button></li>
+          <li data-at="5.9"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>같은 요인도 지역마다 영향이 다르다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>GWR로 지역별 영향을 따로 추정</span></button></li>
+          <li data-at="11.8"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>새로 지정하려면 객관적 근거가 필요하다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>위험도 지도와 보고서로 최적입지 제안</span></button></li>
+        </ol>
+      </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>

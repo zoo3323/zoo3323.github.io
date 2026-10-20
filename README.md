@@ -21,6 +21,8 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `assets/wall.js`, `light.js` | 봉지와 벽에 붙인 사진·포스트잇의 흔들림, 빛(PC는 마우스를 따르는 등빛과 봉지의 반사·무지개 결, 안드로이드 폰은 기울기를 따르는 봉지의 반사) |
 | `assets/aisle.js` | 첫 화면 진열대 줄을 미는 화살표 단추, 줄 아래 위치 막대(손가락으로 미는 폰에서 「옆에 더 있다」를 알려 줌), 처음 온 사람에게 넘치는 줄이 한 번 살짝 밀렸다 돌아오는 힌트(브라우저마다 한 번, `localStorage` 의 `zoo3323:peek`, 움직임 줄이기면 안 함) |
 | `tool/resume.mjs` | `resume/index.html`(빌드가 만드는 A4 이력서)을 `assets/resume.pdf` 로 굽는다(Playwright 필요) |
+| `tool/video/` | 회사 프로젝트의 설명 영상. `scenes/<slug>.js`(장면)를 `render.mjs` 가 프레임마다 찍어 `assets/video/<slug>.mp4`·표지 `.webp` 로 굽고, 장마다 시작 시각을 `clips.json` 에 적는다 |
+| `assets/clip.js` | 설명 영상: 보일 때만 소리 없이 되풀이, 지금 장의 줄 밝히기, 줄을 누르면 그 장으로, 멈춤 단추 |
 | `assets/shots.js` | 미리보기 화면을 눌러 크게 보기 |
 | `assets/grab.js` | 넘치는 진열대 줄·앱 화면 줄을 마우스로 잡아 옆으로 끌기(편 손·쥔 손 커서, 놓으면 가까운 멈춤 자리로) |
 | `assets/cursor/` | 사이트 커서 그림 다섯(레몬 화살표 `arrow`, 가리키는 손 `point`, 편 손 `open`, 쥔 분홍 손 `fist`, 돋보기 `zoom`; 32px·64px). 원본은 `tool/cursor/*.svg`, 고친 뒤 `node tool/cursor/render.mjs` 로 다시 굽는다(Playwright 필요). 쓰는 곳은 `site.css` 맨 위의 `--cur…` 변수. 같은 이름으로 다시 구우면 브라우저 캐시에 옛 그림이 남을 수 있으니 이름을 바꾼다 |
@@ -89,7 +91,12 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 
 - 내용은 `tool/about.json`의 `work`에 있습니다. 줄마다 `slug`(주소), `org`(이름), `unit`(회사), `period`, `role`, `summary`, `notes`, `did`(맡은 일), `stack`(쓴 기술)을 적습니다.
   - `flows`(「구성」 구성도): `[{"title", "note", "steps": [노드 | {"group", "nodes": [노드...]}]}]`, 노드는 `{"name", "note", "kind": in|step|model|out}`. 넓은 화면은 왼쪽→오른쪽, 860px 이하는 위→아래로 흐르고, 모델·AI 단계는 레몬, 결과는 연보라, 함께 쓰는 것은 점선 묶음입니다.
-  - `problems`(「풀어야 했던 문제」): `[{"problem", "solution"}]`. 수치 없이, 무엇이 막혔고 어떻게 풀었는지만 적습니다.
+  - `problems`(「풀어야 했던 문제」): `[{"problem", "solution"}]`. 수치 없이, 무엇이 막혔고 어떻게 풀었는지만 한 줄씩 짧게(스무 자 안팎) 적습니다. 줄글로 길게 쓰지 않습니다.
+  - 설명 영상: `tool/video/scenes/<slug>.js` 가 있으면 「풀어야 했던 문제」에 영상이 붙고, `problems` 줄 하나가 영상의 장 하나입니다(자막도 그 글을 씁니다). 장면은 사이트 그림체의 도식(SVG)이고 실제 화면·현장 영상이 아닙니다.
+    - 굽기: `node tool/video/render.mjs [slug ...]`(Playwright·ffmpeg(libx264)·cwebp 필요). 1280×720·30fps H.264, 끝은 바탕색으로 잠깐 비웠다가 처음으로 돌아가 되풀이가 이어집니다. 정지 화면만 보려면 `--stills 0,2.5 --out 폴더`.
+    - `problems` 글이나 장면을 고치면 다시 굽고 `python3 tool/build.py` 를 돌립니다. 장 시작 시각은 `tool/video/clips.json` 에서 빌드가 읽습니다.
+    - 장면 파일은 `tool/video/stage.html`(브라우저로 `?scene=<slug>` 를 붙여 열면 그대로 재생), 공용 그리기는 `lib.js`, 주차장(2.5D·라벨링)은 `lot.js` 입니다.
+    - 쪽에서는 화면에 보일 때만 재생하고, 움직임 줄이기 설정이면 저절로 틀지 않습니다. 영상 주소에도 내용 해시(?v=)를 붙입니다.
   - 페이지 순서: 설명 → 구성 → 풀어야 했던 문제 → 맡은 일 → 쓴 기술 → 자료.
 - 진열대의 회사 프로젝트 봉지와 소개 페이지의 「자세히 보기」가 이 페이지로 이어집니다. 색과 도식은 진열대 봉지(`tool/shelf.json`)의 `tone`·`ink`·`art`를 따릅니다.
   - 봉지에 `image`(그림 주소)와 `imageSize`(가로·세로)를 적으면 도식 대신 그 그림이 봉지와 이 페이지 머리, 「다른 작업」 작은 그림에 나옵니다.

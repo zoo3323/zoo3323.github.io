@@ -19,10 +19,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=d3423490">
+<link rel="stylesheet" href="/assets/site.css?v=78d00ff4">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
+<script src="/assets/clip.js?v=3f25d75d" defer></script>
 </head>
 <body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
@@ -63,11 +64,16 @@
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
-      <ol class="solve">
-        <li><p class="solve__q"><span class="solve__tag">문제</span>AI가 답에 인용한 법령 조문이 실제로는 없는 경우가 있습니다(할루시네이션).</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>korean-law-mcp로 조문을 실시간 조회해 없는 조문은 걸러 내고, 내부 문서 RAG로 찾은 근거를 함께 붙입니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>평가표가 <span class="nobr">엑셀·한글로</span> 양식이 제각각이고, 병합 셀과 비정형 칼럼 때문에 읽다가 깨지기 쉽습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>다중 양식 파서로 병합 <span class="nobr">셀·비정형</span> 칼럼까지 읽어 항목 단위로 정리합니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>평가표가 크고 많으면 요청 한 번에 분석을 다 하기 어렵습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">ARQ·Redis</span> 워커로 항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가를 두 단계 백그라운드 작업으로 돌립니다.</p></li>
-      </ol>
+      <div class="clip">
+        <div class="clip__frame">
+          <video class="clip__video" src="/assets/video/risk-review.mp4?v=eb9bcfc6" poster="/assets/video/risk-review.webp?v=b02a3354" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="위험성평가 AI: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+        </div>
+        <ol class="solve solve--clip">
+          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>AI가 없는 조문을 인용한다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>MCP로 조문 조회, RAG 근거를 붙인다</span></button></li>
+          <li data-at="6"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>평가표 양식이 제각각이고 병합 셀투성이</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>다중 양식 파서로 항목 단위 정리</span></button></li>
+          <li data-at="11.6"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>큰 평가표는 한 번에 분석하기 어렵다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">ARQ·Redis</span> 워커로 두 단계 나눠 분석</span></button></li>
+        </ol>
+      </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>

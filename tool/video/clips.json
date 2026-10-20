@@ -1,0 +1,63 @@
+{
+  "parking-ai": {
+    "src": "/assets/video/parking-ai.mp4",
+    "poster": "/assets/video/parking-ai.webp",
+    "w": 1280,
+    "h": 720,
+    "duration": 22,
+    "at": [
+      0,
+      5.3,
+      11.1,
+      16.4
+    ]
+  },
+  "labeling-tool": {
+    "src": "/assets/video/labeling-tool.mp4",
+    "poster": "/assets/video/labeling-tool.webp",
+    "w": 1280,
+    "h": 720,
+    "duration": 17,
+    "at": [
+      0,
+      5.8,
+      11.4
+    ]
+  },
+  "safety-vision": {
+    "src": "/assets/video/safety-vision.mp4",
+    "poster": "/assets/video/safety-vision.webp",
+    "w": 1280,
+    "h": 720,
+    "duration": 17.6,
+    "at": [
+      0,
+      5.7,
+      11.2
+    ]
+  },
+  "risk-review": {
+    "src": "/assets/video/risk-review.mp4",
+    "poster": "/assets/video/risk-review.webp",
+    "w": 1280,
+    "h": 720,
+    "duration": 17.6,
+    "at": [
+      0,
+      6,
+      11.6
+    ]
+  },
+  "senior-zone": {
+    "src": "/assets/video/senior-zone.mp4",
+    "poster": "/assets/video/senior-zone.webp",
+    "w": 1280,
+    "h": 720,
+    "duration": 17.8,
+    "at": [
+      0,
+      5.9,
+      11.8
+    ]
+  }
+}

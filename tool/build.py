@@ -1338,21 +1338,53 @@ if ABOUT and ABOUT.get("work"):
       {chr(10).join(blocks)}
     </section>"""
 
+    # 설명 영상: tool/video/render.mjs 가 구운 영상과 장(章)마다 시작 시각(tool/video/clips.json)
+    clips_path = TOOL / "video/clips.json"
+    CLIPS = json.loads(clips_path.read_text()) if clips_path.exists() else {}
+
+    def clip_of(w):
+        c = CLIPS.get(w["slug"])
+        return c if c and (ROOT / c["src"].lstrip("/")).exists() else None
+
     def problems_html(w):
-        """풀어야 했던 문제와 푼 방법: work[].problems = [{"problem", "solution"}]"""
+        """풀어야 했던 문제와 푼 방법: work[].problems = [{"problem", "solution"}]. 한 줄씩 짧게 쓴다.
+        설명 영상이 있으면 영상 옆에 장마다 한 줄씩 두고, 줄을 누르면 그 장으로 건너뛴다(clip.js)."""
         rows = w.get("problems")
         if not rows:
             return ""
-        items = "\n        ".join(
-            f'<li><p class="solve__q"><span class="solve__tag">문제</span>{keep_dots(r["problem"])}</p>'
-            f'<p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>{keep_dots(r["solution"])}</p></li>'
-            for r in rows
-        )
-        return f"""<section class="sec" aria-labelledby="h-solve">
+
+        def pair(r):
+            return (
+                f'<span class="solve__q"><span class="solve__tag">문제</span>{keep_dots(r["problem"])}</span>'
+                f'<span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>{keep_dots(r["solution"])}</span>'
+            )
+
+        clip = clip_of(w)
+        if not clip:
+            items = "\n        ".join(f"<li>{pair(r)}</li>" for r in rows)
+            return f"""<section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
       <ol class="solve">
         {items}
       </ol>
+    </section>"""
+        at = clip["at"]
+        items = "\n          ".join(
+            f'<li data-at="{at[i] if i < len(at) else 0}"><button type="button" class="solve__go">{pair(r)}</button></li>'
+            for i, r in enumerate(rows)
+        )
+        src = f'{clip["src"]}?v={ver(clip["src"].lstrip("/"))}'
+        poster = f'{clip["poster"]}?v={ver(clip["poster"].lstrip("/"))}'
+        return f"""<section class="sec" aria-labelledby="h-solve">
+      <h2 id="h-solve">풀어야 했던 문제</h2>
+      <div class="clip">
+        <div class="clip__frame">
+          <video class="clip__video" src="{src}" poster="{poster}" width="{clip["w"]}" height="{clip["h"]}" muted loop playsinline controls preload="none" aria-label="{esc(w["org"])}: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+        </div>
+        <ol class="solve solve--clip">
+          {items}
+        </ol>
+      </div>
     </section>"""
 
     def media_html(w):
@@ -1391,6 +1423,8 @@ if ABOUT and ABOUT.get("work"):
                 f'<span><b>{esc(o["org"])}</b><span>{esc(o["unit"])} · {esc(o["period"])}</span></span><span class="get get--small">보기</span></a></li>'
             )
         scripts = ["shots.js", "light.js", "grab.js"] if w.get("media") else ["light.js"]
+        if clip_of(w):
+            scripts.append("clip.js")
         write(
             f'work/{w["slug"]}/index.html',
             head(f'{w["org"]} · {w["unit"]} | {DEV}', w["summary"], f'/work/{w["slug"]}/', scripts)

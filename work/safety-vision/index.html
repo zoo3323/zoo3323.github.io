@@ -19,10 +19,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=d3423490">
+<link rel="stylesheet" href="/assets/site.css?v=78d00ff4">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
+<script src="/assets/clip.js?v=3f25d75d" defer></script>
 </head>
 <body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
@@ -63,11 +64,16 @@
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
-      <ol class="solve">
-        <li><p class="solve__q"><span class="solve__tag">문제</span><span class="nobr">화재·안전모·침입·다중</span> 카메라 추적 모델을 GPU 한 대에 함께 올리면 VRAM이 모자랍니다(OOM).</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>요청에 맞는 모델 하나만 GPU에 올리고 바꿔 끼우는 동적 모델 매니저를 만들고, 바꿀 때 메모리를 완전히 비웁니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>현장 카메라를 자주 다시 달아서, 침입 감지 구역(ROI)을 매번 손으로 다시 그려야 했습니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>ArUco 마커로 ROI를 자동으로 만들어, 카메라를 옮겨도 다시 그릴 필요가 없게 했습니다.</p></li>
-        <li><p class="solve__q"><span class="solve__tag">문제</span>여러 카메라를 지나는 사람을 프레임마다 ReID 하면 GPU 부하가 큽니다.</p><p class="solve__a"><span class="solve__tag solve__tag--a">해결</span>신뢰도 높은 트랙만 ReID 해 같은 사람에게 전역 ID를 붙이고, RTSP는 스트림별 스레드로 받아 끊기면 다시 잇습니다.</p></li>
-      </ol>
+      <div class="clip">
+        <div class="clip__frame">
+          <video class="clip__video" src="/assets/video/safety-vision.mp4?v=22f791c8" poster="/assets/video/safety-vision.webp?v=6d419021" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="안전 영상 분석: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+        </div>
+        <ol class="solve solve--clip">
+          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>모델 넷을 GPU 한 대에 올리면 OOM</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>필요한 모델만 올려 바꿔 끼운다</span></button></li>
+          <li data-at="5.7"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>카메라를 옮기면 ROI를 다시 그려야 한다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>ArUco 마커로 ROI 자동 생성</span></button></li>
+          <li data-at="11.2"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>모든 트랙을 ReID 하면 GPU가 버겁다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>믿을 만한 트랙만 ReID, 전역 ID 부여</span></button></li>
+        </ol>
+      </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
