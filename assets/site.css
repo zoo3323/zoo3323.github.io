@@ -1541,6 +1541,15 @@ a {
   align-items: center;
   min-height: 44px;
 }
+.foot {
+  flex-wrap: wrap;
+}
+.foot .foot__note {
+  flex-basis: 100%;
+  margin-top: calc(var(--p) * -0.5);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
 
 /* ── 앱 페이지: 고리에서 뗀 봉지의 뒷면 ─────────
    흰 판 한 장이 고리 둘에 걸려 있고, 그 위는 앱 장터의 앱 화면처럼 짠다. */
@@ -2890,6 +2899,31 @@ svg.app-icon {
   .try__busy::before {
     animation: none;
   }
+}
+
+/* 소개 바로가기: 구역 이름 딱지. 누르면 그 구역 제목으로 간다(제목 위에 숨 쉴 틈) */
+.jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1.25rem;
+}
+.jump a {
+  padding: 0.4rem 0.85rem 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--mute);
+  border-radius: 999px;
+  transition: background-color 0.15s var(--out);
+}
+.jump a:hover {
+  background: var(--lemon);
+}
+.sec h2[id],
+.sec h3[id] {
+  scroll-margin-top: 1rem;
 }
 
 /* 처음 보는 낱말 풀이(회사 프로젝트 설명 아래): 왼쪽에 작은 도식, 오른쪽에 풀이 */

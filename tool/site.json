@@ -1,6 +1,6 @@
 {
   "developer": "NamJuKim",
-  "tagline": "1인 개발자 개발 기록",
+  "tagline": "AI 엔지니어 포트폴리오",
   "github": "https://github.com/zoo3323",
   "site": "https://zoo3323.github.io",
   "email": "joo24587@gmail.com",
@@ -17,5 +17,6 @@
     "mylittlecloset/privacy.html"
   ],
   "name": "김남주",
-  "nameEn": "NamJu Kim"
+  "nameEn": "NamJu Kim",
+  "goatcounter": ""
 }

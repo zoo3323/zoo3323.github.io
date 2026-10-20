@@ -1,6 +1,6 @@
 # zoo3323.github.io
 
-NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
+NamJuKim의 AI 엔지니어 포트폴리오입니다. <https://zoo3323.github.io>
 
 `main`에 올린 파일을 GitHub Pages가 그대로 내보냅니다. HTML은 `tool/build.py`가 앱 정보 파일에서 만들어 내고, 만든 결과를 함께 올립니다.
 

@@ -164,6 +164,14 @@ def tone_style(app):
     return ";".join(parts)
 
 
+def small_img(src):
+    """화면용 작은 판(같은 이름 끝에 -s)이 있으면 그것을 쓴다. 큰 원본은 링크 미리보기 카드(tool/og.mjs)를 그릴 때 쓴다."""
+    if not src or not src.endswith(".webp"):
+        return src
+    small = src[:-5] + "-s.webp"
+    return small if (ROOT / small.lstrip("/")).exists() else src
+
+
 def ver(rel):
     """정적 파일 내용으로 만든 짧은 판 번호. 파일이 바뀌면 주소가 바뀌어, 브라우저가 캐시에 남은 옛 CSS·스크립트를 쓰지 않는다."""
     return hashlib.sha1((ROOT / rel).read_bytes()).hexdigest()[:8]
@@ -174,6 +182,9 @@ def head(title, desc, path, scripts=(), index=True, preview=True, og=None):
     og 는 그 쪽만의 미리보기 그림(node tool/og.mjs 가 만든 assets/og/*.jpg). 없으면 첫 화면 그림을 쓴다."""
     site = SITE["site"]
     tags = "".join(f'\n<script src="/assets/{name}?v={ver("assets/" + name)}" defer></script>' for name in scripts)
+    # 방문 통계: 쿠키 없이 쪽 방문 수만 센다(GoatCounter). site.json 에 코드가 있을 때만, 방침 쪽(preview=False)은 빼고
+    if SITE.get("goatcounter") and preview:
+        tags += f'\n<script data-goatcounter="https://{SITE["goatcounter"]}.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>'
     canonical = f'<link rel="canonical" href="{site}{path}">' if index else '<meta name="robots" content="noindex">'
     if preview:
         img = og if og and (ROOT / og.lstrip("/")).exists() else "/assets/img/og.png"
@@ -222,9 +233,10 @@ def sign(home, back=("/", "진열대")):
 </header>"""
 
 
+STATS_NOTE = '\n  <p class="foot__note">방문 통계: 쿠키 없이 쪽마다 방문 수만 셉니다(GoatCounter).</p>' if SITE.get("goatcounter") else ""
 FOOT = f"""<footer class="foot">
   <p>© {SITE["year"]} {esc(DEV)}</p>
-  <a href="{SITE["github"]}" rel="me">GitHub</a>
+  <a href="{SITE["github"]}" rel="me">GitHub</a>{STATS_NOTE}
 </footer>"""
 # 개인정보처리방침의 발치: 링크 없이 이름만
 FOOT_PLAIN = f"""<footer class="foot">
@@ -435,7 +447,7 @@ def mini_art(item):
     """작은 봉지의 그림: 그림(image, 크기는 imageSize) 또는 하는 일을 보여 주는 도식(art)."""
     if item.get("image"):
         w, h = item.get("imageSize", [600, 316])
-        return f'<div class="mini__art"><img src="{esc(item["image"])}" width="{w}" height="{h}" alt="" loading="lazy"></div>'
+        return f'<div class="mini__art"><img src="{esc(small_img(item["image"]))}" width="{w}" height="{h}" alt="" loading="lazy"></div>'
     if item.get("art") in ART:
         return (
             '<div class="mini__art"><svg viewBox="0 0 120 64" aria-hidden="true" focusable="false">'
@@ -1036,7 +1048,7 @@ for app in APPS:
 if ABOUT:
     a = ABOUT
     about_facts = "\n      ".join(fact(f["label"], f["value"], f.get("note", "")) for f in a["facts"])
-    about_text = "\n      ".join(f"<p>{esc(t)}</p>" for t in a["about"])
+    about_text = "\n      ".join(f"<p>{keep_dots(t)}</p>" for t in a["about"])
     def cv_art(x):
         """목록 줄 앞의 작은 그림. art = {"images": [...], "size": [가로, 세로], "fit": "cover"|"phones"|"stack", "tone": 바탕색}.
         cover 는 그림 한 장을 칸에 채우고, phones 는 폰 화면 여러 장을 아래에서 올라오게, stack 은 넓은 그림 두 장을 겹쳐 둔다."""
@@ -1070,7 +1082,7 @@ if ABOUT:
         it = shelf_by_href.get(href, {})
         if not it.get("image"):
             return None
-        return {"images": [it["image"]], "size": it.get("imageSize", [900, 600]), "fit": "cover", "tone": it.get("tone", "#efeee8")}
+        return {"images": [small_img(it["image"])], "size": it.get("imageSize", [900, 600]), "fit": "cover", "tone": it.get("tone", "#efeee8")}
 
     def cv_section(key, title, entries):
         if not entries:
@@ -1131,6 +1143,15 @@ if ABOUT:
             cv_section("research", "연구·논문", [dict(r, art=r.get("art") or shelf_art("/about/#h-research")) for r in a.get("research", [])]),
         ])
     )
+    # 소개 바로가기: 쪽에 있는 구역만 차례대로(긴 소개를 채용 담당자가 바로 찾아가게)
+    jump_items = [("career", "경력", a.get("career")), ("edu", "학력", a.get("education")), ("certs", "자격증", a.get("certs")),
+                  ("work", "회사 프로젝트", a.get("work")), ("projects", "개인 프로젝트", a.get("projects")),
+                  ("research", "연구·논문", a.get("research")), ("skills", "다루는 기술", a.get("skills"))]
+    jump = (
+        '<nav class="jump" aria-label="소개 바로가기">'
+        + "".join(f'<a href="#h-{k}">{esc(label)}</a>' for k, label, has in jump_items if has)
+        + "</nav>"
+    )
     # main 이 참인 줄(주력)은 노란 칩으로 진하게 보인다
     skills = "\n        ".join(
         f'<div{" class=" + chr(34) + "skills__main" + chr(34) if g.get("main") else ""}><dt>{esc(g["group"])}</dt>'
@@ -1158,13 +1179,13 @@ if ABOUT:
       <div>
         <h1 class="app-name">{esc(DEV)}</h1>
         <p class="app-sub">{esc(a["headline"])}</p>
-        <p class="app-dev app-dev--plain">{esc(SITE["tagline"])}</p>
         <p class="app-get app-get--row"><a class="get" href="{SITE["github"]}" rel="me">GitHub</a>{mail_btn}{resume_btn}</p>
       </div>
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
       {about_facts}
     </ul>
+    {jump}
     <section class="sec desc" aria-label="소개">
       <p class="desc__lead">{esc(a["lead"])}</p>
       {about_text}
@@ -1272,6 +1293,7 @@ footer {{ margin-top: 5mm; padding-top: 2mm; border-top: 1px solid var(--rule); 
   </div>
   {r_photo}
 </header>
+<main>
 <div class="lead"><b>{esc(a["lead"])}</b>{"".join(f"<p>{esc(t)}</p>" for t in a["about"])}</div>
 <section><h2>경력</h2>
 {r_career}
@@ -1291,6 +1313,7 @@ footer {{ margin-top: 5mm; padding-top: 2mm; border-top: 1px solid var(--rule); 
 <section><h2>다루는 기술</h2>
 <dl class="skills">{r_skills}</dl>
 </section>
+</main>
 <footer>자세한 내용과 자료: {esc(site_host)}/about/</footer>
 </body>
 </html>
@@ -1318,7 +1341,7 @@ if ABOUT and ABOUT.get("work"):
         """회사 프로젝트의 대표 그림: 진열대 카드와 같은 그림(image)이 있으면 그것, 없으면 도식(art)."""
         if mini.get("image"):
             w, h = mini.get("imageSize", [600, 316])
-            return f'<span class="{cls} {cls}--photo"><img src="{esc(mini["image"])}" width="{w}" height="{h}" alt=""></span>'
+            return f'<span class="{cls} {cls}--photo"><img src="{esc(small_img(mini["image"]))}" width="{w}" height="{h}" alt=""></span>'
         art = ART.get(mini.get("art"))
         return f'<span class="{cls}"><svg viewBox="0 0 120 64" aria-hidden="true" focusable="false">{art}</svg></span>' if art else ""
 
@@ -1381,10 +1404,10 @@ if ABOUT and ABOUT.get("work"):
                 else ""
             )
             out.append(
-                f'<aside class="term" aria-label="용어 풀이: {esc(t["term"])}">{TERM_FIG.get(t.get("fig"), "")}'
+                f'<div class="term" role="note" aria-label="용어 풀이: {esc(t["term"])}">{TERM_FIG.get(t.get("fig"), "")}'
                 f'<div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>{esc(t["term"])}</b>'
                 f'<span class="term__full">{esc(t.get("full", ""))}</span></p>'
-                f'<p class="term__desc">{keep_dots(t["desc"])}</p>{link}</div></aside>'
+                f'<p class="term__desc">{keep_dots(t["desc"])}</p>{link}</div></div>'
             )
         return "\n      ".join(out)
 
@@ -1559,6 +1582,17 @@ write(
 </body>
 </html>
 """,
+)
+
+# ── 검색: robots.txt 와 sitemap.xml(검색에 내보내는 쪽만) ──
+
+pages = ["/", "/about/"] + [f"/{app['id']}/" for app in APPS] + ([f'/work/{w["slug"]}/' for w in ABOUT.get("work", [])] if ABOUT else [])
+write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE['site']}/sitemap.xml\n")
+write(
+    "sitemap.xml",
+    '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + "".join(f"  <url><loc>{SITE['site']}{p}</loc></url>\n" for p in pages)
+    + "</urlset>\n",
 )
 
 # ── 한 번 공개한 주소는 지키기 ──
