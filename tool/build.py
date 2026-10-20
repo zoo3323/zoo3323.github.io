@@ -102,6 +102,9 @@ def load(app_id):
     app["preview_html"] = (folder / "preview.html").read_text().strip()
     demo = folder / "demo.html"
     app["demo_html"] = demo.read_text().strip() if demo.exists() else ""
+    # 체험 칸을 더 두려면 app.json 의 "demos": [{"file", "title", "id"}] (기본 demo.html 앞에 둔다)
+    for d in app.get("demos", []):
+        d["html"] = (folder / d["file"]).read_text().strip()
     if app.get("privacy"):
         app["privacy_html"] = (folder / "privacy.html").read_text().strip()
     return app
@@ -871,12 +874,19 @@ def info(app):
 
 
 def demo(app):
-    if not app["demo_html"]:
-        return ""
-    return f"""<section class="sec" aria-labelledby="h-demo">
+    out = [
+        f"""<section class="sec" aria-labelledby="{d["id"]}">
+      <h2 id="{d["id"]}">{esc(d["title"])}</h2>
+      {d["html"]}
+    </section>"""
+        for d in app.get("demos", [])
+    ]
+    if app["demo_html"]:
+        out.append(f"""<section class="sec" aria-labelledby="h-demo">
       <h2 id="h-demo">{esc(app.get("demoTitle", "직접 해 보기"))}</h2>
       {app["demo_html"]}
-    </section>"""
+    </section>""")
+    return "\n    ".join(out)
 
 
 def others(app):

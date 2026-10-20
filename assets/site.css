@@ -2496,6 +2496,347 @@ svg.app-icon {
   background: var(--lemon);
 }
 
+/* 마이리틀클로젯 체험 칸: 옷 고르기 → 배경 지우기 → 내 사진 고르기 → AI로 입혀 보기(시연, 미리 만든 견본) */
+.try {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 1.25rem 1.5rem;
+  align-items: start;
+}
+.try__stage {
+  margin: 0;
+}
+.try__frame {
+  --split: 50%;
+  position: relative;
+  aspect-ratio: 2 / 3;
+  max-height: 36rem;
+  margin-inline: auto;
+  overflow: hidden;
+  background: #e9e6e0;
+  border-radius: 1rem;
+  box-shadow: 0 0 0 2px var(--ink), 0 12px 20px -16px rgb(52 48 70 / 0.7);
+}
+.try__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.try__img[hidden],
+.try__sheet[hidden] {
+  display: none;
+}
+/* 배경을 지운 옷은 스티커 시트(연보라) 위에 흰 테두리 스티커로 */
+.try__sheet {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 1px 1px, rgb(31 27 77 / 0.12) 1px, transparent 1.5px) 0 0 / 14px 14px, var(--tone, #d9d2ff);
+}
+.try__img--cut {
+  position: static;
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  filter: drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff)
+    drop-shadow(0 8px 10px rgb(31 27 77 / 0.22));
+}
+/* 배경 지우기: 레몬 선이 위에서 아래로 쓸고 지나간 자리부터 스티커가 드러난다 */
+.try__sweep {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--lemon);
+  box-shadow: 0 0 0 1px var(--ink), 0 0 18px 6px rgb(255 229 92 / 0.65);
+  opacity: 0;
+  pointer-events: none;
+}
+.try__frame.is-cutting .try__sheet {
+  animation: try-reveal 1.2s cubic-bezier(0.45, 0, 0.25, 1) both;
+}
+.try__frame.is-cutting .try__sweep {
+  animation: try-sweep 1.2s cubic-bezier(0.45, 0, 0.25, 1) both;
+}
+@keyframes try-reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes try-sweep {
+  from {
+    top: 0;
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  to {
+    top: 100%;
+    opacity: 0;
+  }
+}
+/* 입혀 보기 기다림: 밝은 띠가 사람 위를 훑는다 */
+.try__busy {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: end center;
+  padding-bottom: 1.1rem;
+  background: rgb(31 27 77 / 0.12);
+}
+.try__busy[hidden] {
+  display: none;
+}
+.try__busy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent, rgb(255 255 255 / 0.6), transparent) 0 -40% / 100% 40% no-repeat;
+  animation: try-scan 1.1s linear infinite;
+}
+@keyframes try-scan {
+  to {
+    background-position: 0 140%;
+  }
+}
+.try__busy span {
+  position: relative;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 999px;
+}
+/* 인물 위 모서리의 작은 스티커: 이 옷을 입혀 본다 */
+.try__mini {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: grid;
+  place-items: center;
+  width: 30%;
+  aspect-ratio: 3 / 4;
+  padding: 0.35rem;
+  background: var(--tone, #d9d2ff);
+  border-radius: 0.8rem;
+  box-shadow: 0 0 0 2px var(--ink), 0 8px 14px -10px rgb(52 48 70 / 0.6);
+}
+.try__mini[hidden] {
+  display: none;
+}
+.try__mini img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+}
+/* 결과 비교: 막대 오른쪽이 입힌 결과 */
+.try__img--result {
+  clip-path: inset(0 0 0 var(--split));
+}
+.try__compare {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+.try__compare[hidden] {
+  display: none;
+}
+.try__frame:has(.try__compare:not([hidden]))::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--split);
+  width: 3px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--ink);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.try__frame:has(.try__compare:not([hidden]))::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: var(--split);
+  width: 2.6rem;
+  height: 2.6rem;
+  background: var(--lemon)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2317171a' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6 3 12l6 6M15 6l6 6-6 6'/%3E%3C/svg%3E")
+    center / 1.25rem no-repeat;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--ink), 0 6px 12px -6px rgb(23 23 26 / 0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.try__frame:has(.try__compare:focus-visible) {
+  outline: 3px solid var(--ink);
+  outline-offset: 4px;
+}
+.try__labels {
+  position: absolute;
+  inset: auto 0.75rem 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.try__labels[hidden] {
+  display: none;
+}
+.try__labels span {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: rgb(255 255 255 / 0.88);
+  border-radius: 999px;
+}
+.try__labels span:last-child {
+  background: var(--lemon);
+}
+.try__cap {
+  min-height: 2.9em;
+  margin-top: 0.7rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--sub);
+  text-align: center;
+}
+/* 단계 칸: 지금 할 단계는 흰 바탕에 먹 테두리, 끝난 단계는 레몬 번호 */
+.try__steps {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.try__step {
+  padding: 0.8rem 1rem 0.9rem;
+  background: var(--mute);
+  border: 2px solid transparent;
+  border-radius: 0.9rem;
+  transition: background-color 0.2s var(--out), border-color 0.2s var(--out);
+}
+.try__step.is-now {
+  background: var(--paper);
+  border-color: var(--ink);
+}
+.sec .try__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.6rem;
+  font-weight: 700;
+}
+.try__num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.8125rem;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 50%;
+}
+.try__step.is-done .try__num {
+  color: var(--ink);
+  background: var(--lemon);
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+.try__picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.try__pick {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  width: 5.4rem;
+  padding: 0.3rem 0.3rem 0.4rem;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--rule);
+  border-radius: 0.8rem;
+  transition: border-color 0.15s var(--out), background-color 0.15s var(--out);
+}
+.try__pick img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+.try__picks--people .try__pick img {
+  aspect-ratio: 2 / 3;
+}
+.try__pick:hover:not(:disabled) {
+  border-color: var(--ink);
+}
+.try__pick[aria-pressed="true"] {
+  background: #fff6c4;
+  border-color: var(--ink);
+}
+.try__pick:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn.try__go {
+  background: var(--lemon);
+}
+.btn.try__go:hover:not(:disabled) {
+  background: #ffd92e;
+}
+.btn.try__go:disabled {
+  color: var(--sub);
+  background: var(--paper);
+  border-color: var(--rule);
+  cursor: not-allowed;
+}
+.try__reset {
+  margin-left: 0.6rem;
+  padding: 0.3rem 0.2rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--sub);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+}
+@media (max-width: 760px) {
+  .try {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .try__frame {
+    max-height: none;
+    max-width: 24rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .try__frame.is-cutting .try__sheet,
+  .try__frame.is-cutting .try__sweep,
+  .try__busy::before {
+    animation: none;
+  }
+}
+
 /* 처음 보는 낱말 풀이(회사 프로젝트 설명 아래): 왼쪽에 작은 도식, 오른쪽에 풀이 */
 .term {
   display: grid;
