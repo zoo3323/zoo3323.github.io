@@ -26,7 +26,8 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `assets/shots.js` | 미리보기 화면을 눌러 크게 보기 |
 | `assets/grab.js` | 넘치는 진열대 줄·앱 화면 줄을 마우스로 잡아 옆으로 끌기(편 손·쥔 손 커서, 놓으면 가까운 멈춤 자리로) |
 | `assets/cursor/` | 사이트 커서 그림 다섯(레몬 화살표 `arrow`, 가리키는 손 `point`, 편 손 `open`, 쥔 분홍 손 `fist`, 돋보기 `zoom`; 32px·64px). 원본은 `tool/cursor/*.svg`, 고친 뒤 `node tool/cursor/render.mjs` 로 다시 굽는다(Playwright 필요). 쓰는 곳은 `site.css` 맨 위의 `--cur…` 변수. 같은 이름으로 다시 구우면 브라우저 캐시에 옛 그림이 남을 수 있으니 이름을 바꾼다 |
-| `assets/pet.js` | 스크린펫 꺼내 보기 |
+| `assets/pet.js` | 스크린펫 꺼내 보기(고르기 단추는 나중에 더해져도 받는다) |
+| `assets/petmake.js` | 스크린펫 「사진으로 새 펫 만들기」 시연: 사진 3장(`assets/img/pocketpet/make/`, 생성 이미지) 중 하나를 고르면 도트로 바뀌는 장면 뒤에 닮은 펫(앱에 있는 그림: 치즈 태비·골든 리트리버·골든 시리안)을 「사진으로 만든 펫」 줄에 더한다 |
 | `assets/tryon.js` | 옷장 「배경 지우고 AI로 입혀 보기」 시연(옷 고르기 → 배경 지우기 → 내 사진 고르기 → 입혀 보기, 결과 비교 막대). 웹에서 AI 를 돌리지 않고 미리 만든 그림만 보여 준다 |
 | `assets/img/`, `assets/fonts/` | 그림과 글꼴 |
 
@@ -150,7 +151,7 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 - **소개**: `tool/about.json`의 경력·학력·기술·공개한 도구를 고칩니다. 소개 페이지에서 `career`는 「경력」, `education`은 「학력」 구역으로 따로 나옵니다. 앱 페이지의 개발자 이름은 소개 페이지로 이어집니다. 「다루는 기술」은 줄 세 개(비전 AI·LLM·개발) 안팎으로 짧게 둡니다. `"main": true`인 줄은 노란 칩으로 진하게 보입니다.
 - **이름 글씨를 따로 쓰는 앱**: 이름 글자만 담은 글꼴 조각을 `tool/wordmarks.py`로 만들고 `assets/site.css` 맨 위에 `@font-face`를 한 줄 더한 뒤 `app.json`의 `mark.font`에 그 이름을 적습니다.
 - **옷장 체험 칸 그림**(`assets/img/mylittlecloset/try/`): 인물 2·옷 3은 Codex 이미지 생성(가상 인물·생성 이미지), 옷 배경은 맥 Apple Vision(`VNGenerateForegroundInstanceMaskRequest`)으로 지움, 입힌 결과 `result-<인물>-<옷>.webp` 6장은 FASHN tryon-v1.6(앱과 같은 설정: 흰 바탕 옷 JPEG, flat-lay, balanced). 인물·옷을 늘리면 결과도 조합마다 새로 만들어야 합니다(유료). 그림마다 만든 방법은 `*.webp.json`(저장소 밖)에 적어 둡니다.
-- **스크린펫 동물 추가**: `assets/img/pocketpet/`의 `thumb/`, `atlas/`(스프라이트 위 다섯 줄, 1536×1040), 큐티 그림체면 `stage/`에 그림을 넣고 `tool/apps/pocketpet/demo.html`의 선반에 버튼 한 줄을 더합니다.
+- **스크린펫 동물 추가**: `assets/img/pocketpet/`의 `thumb/`, `atlas/`(스프라이트 위 다섯 줄, 1536×1040), 큐티 그림체면 `stage/`에 그림을 넣고 `tool/apps/pocketpet/demo.html`의 선반에 버튼 한 줄을 더합니다. 선반은 6마리만 둡니다(사용자 「너무 많아」). 그림 파일은 26마리 몫이 남아 있고, 「사진으로 만든 펫」이 그중 세 마리를 씁니다.
 
 ## 그림과 글꼴
 

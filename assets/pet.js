@@ -8,7 +8,8 @@
   const nameEl = demo.querySelector("[data-pet-name]");
   const kindEl = demo.querySelector("[data-pet-kind]");
   const toggle = demo.querySelector("[data-pet-toggle]");
-  const picks = [...demo.querySelectorAll("[data-pet]")];
+  // 고르기 단추는 나중에 더해질 수 있다(사진으로 만든 펫, petmake.js). 그때그때 다시 찾는다
+  const picks = () => [...demo.querySelectorAll("[data-pet]")];
   const base = demo.dataset.petDemo;
 
   const W = 96;
@@ -22,7 +23,7 @@
   const still = matchMedia("(prefers-reduced-motion: reduce)");
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-  let current = picks.find((pick) => pick.getAttribute("aria-pressed") === "true") || picks[0];
+  let current = picks().find((pick) => pick.getAttribute("aria-pressed") === "true") || picks()[0];
   let roamer = null;
   let pet = null;
   let frame = 0;
@@ -33,7 +34,7 @@
 
   const show = (pick) => {
     current = pick;
-    for (const other of picks) other.setAttribute("aria-pressed", String(other === pick));
+    for (const other of picks()) other.setAttribute("aria-pressed", String(other === pick));
     const { pet: id, breed, kind, style, stage: hasStage } = pick.dataset;
     stage.dataset.style = style;
     stage.src = hasStage === "true" ? `${base}stage/${id}.webp` : `${base}thumb/${id}.webp`;
@@ -246,7 +247,10 @@
     toggle.querySelector("[data-label]").textContent = "꺼내 보기";
   };
 
-  for (const pick of picks) pick.addEventListener("click", () => show(pick));
+  demo.addEventListener("click", (event) => {
+    const pick = event.target.closest("[data-pet]");
+    if (pick && demo.contains(pick)) show(pick);
+  });
   toggle.addEventListener("click", () => (roamer ? stop() : start()));
   // 앱에서처럼 화면이 가려지면 쉰다
   document.addEventListener("visibilitychange", () => (document.hidden ? halt() : run()));

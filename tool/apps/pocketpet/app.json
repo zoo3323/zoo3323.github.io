@@ -64,7 +64,8 @@
     ]
   ],
   "scripts": [
-    "pet.js"
+    "pet.js",
+    "petmake.js"
   ],
   "demoTitle": "화면 위에 꺼내 보기",
   "history": [

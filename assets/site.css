@@ -2184,12 +2184,13 @@ a.get--line:hover {
 }
 .roster__row {
   display: flex;
-  flex-wrap: wrap;
   gap: 2px;
 }
+/* 줄이 좁으면 단추가 같이 줄어 한 줄을 지킨다 */
 .pick {
-  width: 52px;
-  height: 56px;
+  flex: 0 1 52px;
+  min-width: 0;
+  aspect-ratio: 52 / 56;
   padding: 2px;
   background: transparent;
   border: 2px solid transparent;
@@ -2207,6 +2208,129 @@ a.get--line:hover {
 .pick[aria-pressed="true"] {
   background: var(--paper);
   border-color: var(--pink-ink);
+}
+/* 스크린펫: 사진으로 새 펫 만들기(시연). 사진이 도트로 바뀐 뒤 「사진으로 만든 펫」 줄에 더해진다 */
+.petmake {
+  margin-top: 1.25rem;
+  padding: 1rem 1.1rem 1.1rem;
+  background: rgb(255 255 255 / 0.2);
+  border: 2px dashed rgb(61 10 30 / 0.45);
+  border-radius: 1rem;
+}
+.demo--pet .petmake__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+  margin: 0 0 0.75rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+.petmake__title svg {
+  width: 1rem;
+  height: 1rem;
+}
+.petmake__tag {
+  padding: 0.15rem 0.55rem 0.1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--pink-ink);
+  background: var(--lemon);
+  border-radius: 999px;
+}
+.petmake__photos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 6.25rem));
+  gap: 0.6rem;
+}
+.petmake__photo {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.3rem 0.3rem 0.4rem;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--pink-ink);
+  background: var(--paper);
+  border: 2px solid transparent;
+  border-radius: 0.8rem;
+  cursor: var(--cur-point);
+  transition: border-color 0.15s var(--out), background-color 0.15s var(--out);
+}
+.petmake__photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+.petmake__photo:hover:not(:disabled) {
+  border-color: rgb(61 10 30 / 0.5);
+}
+.petmake__photo[aria-pressed="true"] {
+  background: #fff6c4;
+  border-color: var(--pink-ink);
+}
+.petmake__photo:disabled {
+  opacity: 0.65;
+  cursor: progress;
+}
+.petmake__go {
+  margin-top: 0.85rem;
+}
+.btn.petmake__go:disabled {
+  color: rgb(61 10 30 / 0.55);
+  background: rgb(255 255 255 / 0.5);
+  border-color: rgb(61 10 30 / 0.35);
+  cursor: not-allowed;
+}
+.demo--pet .petmake__note {
+  margin: 0.65rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+/* 만드는 장면: 무대 위에 사진을 덮고 칸 수를 줄여 가며 도트로, 끝나면 걷어 낸다 */
+.petbox__make {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.45s var(--out);
+}
+.petbox__make.is-done {
+  opacity: 0;
+}
+.petbox__busy {
+  position: absolute;
+  left: 50%;
+  bottom: 0.7rem;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--paper);
+  white-space: nowrap;
+  background: var(--pink-ink);
+  border-radius: 999px;
+  transform: translateX(-50%);
+}
+/* 사진으로 만든 펫 단추: 모서리에 레몬 점 */
+.pick--new {
+  position: relative;
+}
+.pick--new::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  background: var(--lemon);
+  border: 2px solid var(--pink-ink);
+  border-radius: 50%;
 }
 .roamer {
   position: fixed;
@@ -3658,8 +3782,7 @@ a.cv__art:hover {
   .shots--wide li {
     width: 88%;
   }
-  .demo--pet,
-  .sheet {
+  .demo--pet {
     padding: 1.1rem;
   }
   .petbox {
@@ -3677,11 +3800,8 @@ a.cv__art:hover {
   .petbox__stage img {
     max-height: 11rem;
   }
-  .sheet__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .sheet__grid img {
-    max-height: 6rem;
+  .petmake__photo {
+    width: auto;
   }
   .info {
     grid-template-columns: minmax(0, 1fr);
