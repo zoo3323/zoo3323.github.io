@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=778de91e">
+<link rel="stylesheet" href="/assets/site.css?v=7113bac5">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -59,6 +59,7 @@
       <p>GPU 한 대로 <span class="nobr">화재·안전모·침입</span> 감지와 다중 카메라 추적 모델을 함께 운영하는 FastAPI 추론 서버 구축. RTSP 스트림 실시간 추론, 결과를 단일 스키마로 정규화해 WebSocket 실시간 송출.</p>
       
     </section>
+    
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
       <div class="flow"><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>RTSP 카메라</b><span>스트림별 스레드&nbsp;· 끊김 시 재연결</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">모델 라우터&nbsp;· 동적 로딩</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b><span class="nobr">화재·연기</span></b><span>YOLO</span></div><div class="flow__node flow__node--model"><b>안전모</b><span>YOLO&nbsp;· <span class="nobr">helmet·head</span></span></div><div class="flow__node flow__node--model"><b>침입</b><span>YOLO&nbsp;· ArUco 자동 ROI</span></div><div class="flow__node flow__node--model"><b>다중 카메라 추적</b><span>ByteTrack&nbsp;· ReID</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>결과 정규화</b><span>box&nbsp;· roi&nbsp;· count 스키마</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>실시간 송출</b><span>WebSocket</span></div></li></ol><p class="flow__note">GPU 한 대&nbsp;· Docker</p></div>
@@ -86,6 +87,7 @@
         <li>ByteTrack <span class="nobr">추적·ResNet50</span> ReID로 다중 카메라 동일인 전역 ID 부여, 고신뢰 트랙만 ReID해 GPU 부하 절감</li>
       </ul>
     </section>
+    
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
       <ul class="chips"><li>Python</li><li>FastAPI · WebSocket</li><li>PyTorch · YOLO</li><li>ByteTrack · ReID</li><li>OpenCV · ArUco</li><li>Docker · CUDA</li></ul>

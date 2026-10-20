@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=778de91e">
+<link rel="stylesheet" href="/assets/site.css?v=7113bac5">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -59,6 +59,7 @@
       <p>프로젝트 담당자로 공간 데이터 <span class="nobr">수집·전처리부터</span> <span class="nobr">모델링·시각화까지</span> 주도. 핫스폿(Hot Spot) 분석으로 사고 다발 구역 도출, Random <span class="nobr">Forest·지리가중회귀(GWR)로</span> 지역별 영향 차이(공간적 이질성)를 반영해 최적입지 도출.</p>
       
     </section>
+    
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
       <div class="flow"><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>데이터 수집</b><span>고령 보행자 사고&nbsp;· 노인 시설&nbsp;· 도로&nbsp;· 인구</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>전처리</b><span>Pandas&nbsp;· GeoPandas 자동화</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">공간 분석</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b><span class="nobr">핫스폿·군집</span></b><span>사고 다발 구역</span></div><div class="flow__node flow__node--model"><b>GWR&nbsp;· Random Forest</b><span>지역별 영향&nbsp;· 위험도</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>최적입지 제안</b><span>QGIS 위험도 지도&nbsp;· 보고서</span></div></li></ol><p class="flow__note">Python&nbsp;· QGIS</p></div>
@@ -85,6 +86,7 @@
         <li>위험도 <span class="nobr">지도·분석</span> 보고서로 시군별 노인보호구역 최적입지 제안</li>
       </ul>
     </section>
+    
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
       <ul class="chips"><li>Python · Pandas · GeoPandas</li><li>scikit-learn(Random Forest)</li><li>GWR(지리가중회귀)</li><li>QGIS</li><li>핫스폿 분석</li></ul>

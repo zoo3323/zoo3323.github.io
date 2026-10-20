@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=778de91e">
+<link rel="stylesheet" href="/assets/site.css?v=7113bac5">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -59,6 +59,7 @@
       <p>주차면 <span class="nobr">사각형·바닥</span> 선 기반 카메라 보정, 지면 좌표계 하단면 라벨 <span class="nobr">편집·이미지</span> 재투영을 지원하는 라벨링 도구 구축. 배포 모델 예측을 사전 라벨로 띄우는 모델 보조 라벨링과 학습 세트 버전 관리까지 한곳에 통합.</p>
       
     </section>
+    
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
       <div class="flow"><ol class="flow__steps" style="--n:5"><li class="flow__step"><div class="flow__node flow__node--in"><b>프레임 수집</b><span>현장 스냅샷&nbsp;· 기둥 카메라 녹화</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>골라내기</b><span>각도 변경 감지&nbsp;· 중복 제거</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>카메라 보정</b><span>어안 왜곡&nbsp;· 지면 호모그래피&nbsp;· 소실점</span></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>하단면 라벨링</b><span>지면 좌표&nbsp;· 차급 프리셋&nbsp;· 모델 사전 라벨</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>학습 세트</b><span>입력 규격 맞춤 내보내기&nbsp;· 버전 기록</span></div></li></ol><p class="flow__note">FastAPI 서버 + 웹 <span class="nobr">화면(JavaScript·Canvas)</span></p></div>
@@ -86,6 +87,7 @@
         <li>모델 입력 규격(레터박스 등) 맞춤 학습 세트 <span class="nobr">내보내기·세트</span> 버전 기록 기능 구축</li>
       </ul>
     </section>
+    
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
       <ul class="chips"><li>Python</li><li>FastAPI</li><li>OpenCV</li><li>ONNX Runtime</li><li>JavaScript · Canvas</li></ul>

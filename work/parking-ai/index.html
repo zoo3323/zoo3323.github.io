@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=778de91e">
+<link rel="stylesheet" href="/assets/site.css?v=7113bac5">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -56,9 +56,10 @@
       <li><span class="fact__label">맡은 일</span><span class="fact__value">모델 <span class="nobr">연구·개발,</span> 엣지 배포</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>카메라 <span class="nobr">캘리브레이션·어안</span> 왜곡 보정 없이 원본 영상 한 장에서 차량 하단면(footprint) 네 꼭짓점을 가려진 부분까지 바로 출력하는 one-stage 2.5D 검출 모델 <span class="nobr">연구·개발.</span> 카메라별 보정값 산출 단계 제거. CARLA 합성 <span class="nobr">데이터·실제</span> 영상으로 학습하고 지식 <span class="nobr">증류·INT8</span> 양자화로 경량화해 <span class="nobr">라즈베리파이·Jetson·GPU</span> 서버에 배포.</p>
+      <p>카메라 <span class="nobr">캘리브레이션·어안</span> 왜곡 보정 없이 원본 영상 한 장에서 차량 하단면(footprint) 네 꼭짓점을 가려진 부분까지 출력하는 one-stage 2.5D 검출 모델로 카메라별 보정 단계 제거. 표현(CFQ) 설계부터 <span class="nobr">데이터셋·지표</span> 설계, 반복 <span class="nobr">실험·정량</span> 평가, <span class="nobr">경량화·현장</span> 배포까지 전 과정 주도. 처음 보는 현장 시험셋 AP50 80.32%(비교 표현 중 최고), 현장 평가 찬 칸 놓침 80 → 0/511, 라즈베리파이 5 프레임당 69.5 ms.</p>
       <div class="term" role="note" aria-label="용어 풀이: CFQ"><svg class="term__fig" viewBox="0 0 176 112" aria-hidden="true" focusable="false"><path d="M30 20 136 28 142 76 38 88Z" fill="#ffe55c" fill-opacity=".75" stroke="#17171a" stroke-width="2" stroke-linejoin="round"/><path d="M14 54.5 158 51.5" stroke="#17171a" stroke-width="1.6" stroke-dasharray="5 4"/><path d="M30 20 38 88M136 28 142 76" stroke="#17171a" stroke-width="4" stroke-linecap="round"/><g fill="#fff" stroke="#17171a" stroke-width="1.6"><circle cx="30" cy="20" r="3.4"/><circle cx="136" cy="28" r="3.4"/><circle cx="142" cy="76" r="3.4"/><circle cx="38" cy="88" r="3.4"/></g><g font-size="11" font-weight="700" fill="#17171a" text-anchor="middle"><text x="34" y="105">뒤 변</text><text x="140" y="95">앞 변</text><text x="88" y="45">차량 축</text></g></svg><div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>CFQ</b><span class="term__full">Convex Footprint Quadrilateral</span></p><p class="term__desc">차량 하단면을 네 꼭짓점 대신 차량 축(가운데 선)과 앞뒤 변의 <span class="nobr">폭·기울기로</span> 나타내는 표현. 어떤 값이 나와도 꼭짓점 순서가 고정된 볼록 사각형이 되어, 네 꼭짓점을 따로 맞힐 때 생기는 <span class="nobr">꼬인·오목한</span> 사각형이 나오지 않음. 투고 논문에서 제안.</p><p class="term__more"><a class="get get--line term__go" href="/about/#h-research">논문 바로가기</a></p></div></div>
     </section>
+    
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
       <div class="flow"><p class="flow__title">학습</p><ol class="flow__steps" style="--n:4"><li class="flow__step flow__step--group"><p class="flow__label">데이터</p><div class="flow__nodes"><div class="flow__node flow__node--in"><b>합성 데이터</b><span>CARLA 주차장&nbsp;· 어안 렌즈 포함</span></div><div class="flow__node flow__node--in"><b>실제 영상</b><span>라벨링 도구로 만든 하단면 라벨</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>학습</b><span><span class="nobr">열화·가림·야간</span> 조명 증강, 합동 <span class="nobr">학습·미세조정</span></span></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>경량화</b><span>지식 증류&nbsp;· INT8 양자화</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>모델 릴리스</b><span><span class="nobr">ONNX·NCNN</span>&nbsp;· 입출력 계약 버전 관리</span></div></li></ol></div>
@@ -81,14 +82,63 @@
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>캘리브레이션 없는 2.5D 검출 구현: 카메라 <span class="nobr">내부·외부</span> 파라미터, 어안 왜곡 보정, 지면 호모그래피 없이 원본 이미지에서 하단면 네 꼭짓점 직접 출력</li>
-        <li>CFQ(Convex Footprint Quadrilateral) 표현 설계: 차량 축 기준 앞뒤 변의 <span class="nobr">폭·기울기로</span> 꼭짓점 순서가 고정된 볼록 사각형 출력 보장</li>
+        <li>모델 설계부터 <span class="nobr">데이터셋·지표</span> 설계, 실험, 정량 평가, <span class="nobr">경량화·현장</span> 배포까지 전 과정 주도, 투고 논문 제1저자</li>
+        <li>CFQ(Convex Footprint Quadrilateral) 표현 설계: 차량 축 기준 앞뒤 변의 <span class="nobr">폭·기울기로</span> 꼭짓점 순서가 고정된 볼록 사각형 출력 보장, 합성 검증 AP50:95 61.10 ± 0.52%(평행사변형 57.32%, 시드 3회)</li>
         <li>중심점 기반 one-stage 검출기로 가려진 꼭짓점까지 추정하는 amodal 하단면 검출 개발, 대각선 길이 정규화 꼭짓점 손실 설계</li>
-        <li>CARLA 합성 데이터(어안 포함) <span class="nobr">학습·실제</span> CCTV 미세조정, <span class="nobr">열화·가림·야간</span> 조명 증강으로 sim-to-real 격차 축소</li>
-        <li>지식 증류(knowledge <span class="nobr">distillation)·INT8</span> 양자화로 경량화, <span class="nobr">ONNX·NCNN·TensorRT</span> 변환 후 엣지 장비 배포</li>
+        <li>데이터셋 구축: CARLA 합성 230,865장(어안 포함, 하단면 약 282만 <span class="nobr">개)·실제</span> CCTV 4개 현장 14개 시점 6,779장, 실제 데이터는 현장 단위로 <span class="nobr">학습·검증·시험</span> 분할</li>
+        <li>평가 지표 설계: <span class="nobr">AP50·AP50:95에</span> 꼭짓점 <span class="nobr">오차(NCE)·비정상</span> 사각형 비율 추가, 현장은 장당 오검출 1개 이하 <span class="nobr">recall·찬</span> 칸 <span class="nobr">놓침·청구</span> 시간 오차로 판정</li>
+        <li><span class="nobr">합성·실제</span> 합동 학습과 <span class="nobr">열화·가림·야간</span> 조명 증강으로 sim-to-real 격차 축소, 지식 <span class="nobr">증류·INT8</span> 양자화 후 <span class="nobr">ONNX·NCNN·TensorRT로</span> 엣지 배포</li>
         <li>앞뒤 카메라 하단면 트랙 결합, 주차면 ROI 점유 비율 기반 <span class="nobr">입차·출차</span> 판정 구현</li>
-        <li>현장 영상 재생 벤치마크로 <span class="nobr">오검출·미검출</span> 검증 체계 구축, 모델별 <span class="nobr">릴리스·입출력</span> 계약 버전 관리</li>
+        <li>릴리스 검증 체계 구축: 현장 영상 재생 <span class="nobr">벤치마크·라즈베리파이</span> 실기 <span class="nobr">채점·시험셋</span> 1회 개봉, 모델별 <span class="nobr">릴리스·입출력</span> 계약 버전 관리</li>
       </ul>
+    </section>
+    <section class="sec" aria-labelledby="h-eval">
+      <h2 id="h-eval">정량 평가</h2>
+      <dl class="frame"><div class="frame__row"><dt>데이터셋</dt><dd>CARLA 합성 230,865장(검증 24,973장)&nbsp;· 실제 CCTV 6,779장(4개 현장 14개 시점), 실제 데이터는 현장 단위로 학습 2&nbsp;· 검증 1&nbsp;· 시험 1곳 분할</dd></div><div class="frame__row"><dt>지표</dt><dd>AP50&nbsp;· AP50:95&nbsp;· 꼭짓점 오차(NCE)&nbsp;· 비정상 사각형 비율, 현장은 장당 오검출 1개 이하 recall&nbsp;· 찬 칸 놓침&nbsp;· 청구 시간 오차</dd></div><div class="frame__row"><dt>가드레일</dt><dd>통과 기준 학습 전 고정, 검증 지표 하나로 릴리스 선택, 시험셋 1회만 개봉, PyTorch ↔ ONNX 출력 대조(차이 0.00012 px)</dd></div><div class="frame__row"><dt>불확실성</dt><dd>시드 3회 평균 ± 표본 표준편차, 차이 3.78%p가 두 <span class="nobr">표준편차(0.52·0.18%p)보다</span> 크고 시드 3개 모두 같은 순위임을 확인, <span class="nobr">체크포인트·재학습</span> 간 점수 편차 측정</dd></div></dl>
+      <table class="dt dt--num" role="table" style="--cols:4"><caption>표현 비교 · 투고 논문, 같은 데이터·평가 규약</caption>
+        <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">평가</th><th scope="col" role="columnheader" class="is-ours">CFQ(제안)</th><th scope="col" role="columnheader">평행사변형</th><th scope="col" role="columnheader">자유 4점</th><th scope="col" role="columnheader">C2 재구현</th></tr></thead>
+        <tbody role="rowgroup">
+          <tr role="row"><th scope="row" role="rowheader"><b>합성 검증 AP50:95(%)</b><span class="dt__sub">24,973장&nbsp;· 시드 3회 평균 ± 표준편차</span></th><td role="cell" data-label="CFQ(제안)" class="is-ours">61.10 ±&nbsp;0.52</td><td role="cell" data-label="평행사변형">57.32 ±&nbsp;0.18</td><td role="cell" data-label="자유 4점">59.31 ±&nbsp;0.35</td><td role="cell" data-label="C2 재구현">48.58 ±&nbsp;0.90</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>비정상 사각형(%)</b><span class="dt__sub">볼록 사각형이 아닌 출력 비율</span></th><td role="cell" data-label="CFQ(제안)" class="is-ours">0</td><td role="cell" data-label="평행사변형">0</td><td role="cell" data-label="자유 4점">0.595 ±&nbsp;0.115</td><td role="cell" data-label="C2 재구현">0.526 ±&nbsp;0.014</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>처음 보는 현장 AP50 / AP50:95(%)</b><span class="dt__sub">실제 CCTV 시험 731장&nbsp;· CCTV 단독 미세조정</span></th><td role="cell" data-label="CFQ(제안)" class="is-ours">80.32 / 33.16</td><td role="cell" data-label="평행사변형">78.05 / 31.93</td><td role="cell" data-label="자유 4점">71.41 / 22.55</td><td role="cell" data-label="C2 재구현">71.82 / 28.01</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>가림 심한 차량 recall(%)</b><span class="dt__sub">합성 검증&nbsp;· 가시율 0.4 미만 2,060대</span></th><td role="cell" data-label="CFQ(제안)" class="is-ours">49.47</td><td role="cell" data-label="평행사변형">43.93</td><td role="cell" data-label="자유 4점">20.97</td><td role="cell" data-label="C2 재구현">40.83</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>어안 주변부 recall(%)</b><span class="dt__sub">합성 검증&nbsp;· 반경 0.8 이상 30,895대</span></th><td role="cell" data-label="CFQ(제안)" class="is-ours">85.27</td><td role="cell" data-label="평행사변형">84.32</td><td role="cell" data-label="자유 4점">73.05</td><td role="cell" data-label="C2 재구현">74.23</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>지연(ms)</b><span class="dt__sub">RTX 3060&nbsp;· FP32&nbsp;· 1280×720&nbsp;· 배치 1</span></th><td role="cell" data-label="CFQ(제안)" class="is-ours">33.61</td><td role="cell" data-label="평행사변형">29.78</td><td role="cell" data-label="자유 4점">29.81 +&nbsp;2.96</td><td role="cell" data-label="C2 재구현">74.48</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>파라미터(M)</b></th><td role="cell" data-label="CFQ(제안)" class="is-ours">6.99</td><td role="cell" data-label="평행사변형">6.70</td><td role="cell" data-label="자유 4점">6.70</td><td role="cell" data-label="C2 재구현">63.98</td></tr>
+        </tbody>
+      </table>
+      <p class="sec__note">자유 4점은 CPU 꼭짓점 재정렬 2.96 ms 별도. 맞힌 차량의 꼭짓점 위치 오차(NCE)는 자유 4점이 더 낮음(한 시드의 네 모델 공통 TP 164,910대 기준 0.0385 vs CFQ 0.0410), IoU는 CFQ가 높음(0.8430 vs 0.8408).</p>
+      <table class="dt dt--list" role="table"><caption>현장 릴리스 개선 · 회사 벤치마크</caption>
+        <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">개선</th><th scope="col" role="columnheader">평가</th><th scope="col" role="columnheader">전 → 후</th></tr></thead>
+        <tbody role="rowgroup">
+          <tr role="row"><th scope="row" role="rowheader"><b>지식 증류</b><span class="dt__sub">896 입력 교사 → 640 입력 학생</span></th><td role="cell" data-label="평가">장당 오검출 1개 이하 recall&nbsp;· 검증 / 시험</td><td role="cell" data-label="전 → 후" class="is-em">59.1&nbsp;→&nbsp;62.0% / 46.4&nbsp;→&nbsp;53.3%</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>차량당 양성 3개 할당</b><span class="dt__sub">one-to-many&nbsp;· 붙어 있는 어두운 차량 놓침 대응</span></th><td role="cell" data-label="평가">현장 평가 찬 칸 놓침&nbsp;· 카메라 5대 178장</td><td role="cell" data-label="전 → 후" class="is-em">80&nbsp;→&nbsp;0 / 511칸, 빈 칸 오판 0 / 93</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b><span class="nobr">합성·실사진</span> 합동 학습</b><span class="dt__sub">기둥 카메라&nbsp;· 합성 0.7 + 실사진 0.3</span></th><td role="cell" data-label="평가">시험 289장 놓침&nbsp;· 오경보</td><td role="cell" data-label="전 → 후" class="is-em">3&nbsp;· 3&nbsp;→&nbsp;0&nbsp;· 2</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>타깃 정규화 제거</b><span class="dt__sub">꼭짓점 회귀</span></th><td role="cell" data-label="평가">네 꼭짓점 위치 오차</td><td role="cell" data-label="전 → 후" class="is-em">0.3512&nbsp;→&nbsp;0.2146&nbsp;m(−38.9%)</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>하단면 판정 도입</b><span class="dt__sub">기존 2D 상자 검출 대비&nbsp;· 같은 판정 규칙</span></th><td role="cell" data-label="평가">확실히 주차한 105대 놓침</td><td role="cell" data-label="전 → 후" class="is-em">19&nbsp;→&nbsp;0</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>점유 판정 1 → 5 fps</b><span class="dt__sub">앞뒤 카메라 트랙 결합</span></th><td role="cell" data-label="평가">점유 벤치마크 주차 61건 일치</td><td role="cell" data-label="전 → 후" class="is-em">59&nbsp;→&nbsp;61 / 61건, 10분 넘는 주차 29건 1:1, 청구 시간 오차 2분</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="sec" aria-labelledby="h-check">
+      <h2 id="h-check">검증 방식</h2>
+      <dl class="frame"><div class="frame__row"><dt>현장 단위 분할</dt><dd>학습에 쓰지 않은 현장을 시험셋으로 두어 처음 보는 현장 성능 측정</dd></div><div class="frame__row"><dt>공통 TP 비교</dt><dd>네 모델이 모두 맞힌 164,910대만으로 위치 정확도 비교, 검출률 차이와 분리</dd></div><div class="frame__row"><dt>어려운 조건 채점</dt><dd>가림 심한 차량 2,060대&nbsp;· 하단 완전 가림 3,868대&nbsp;· 어안 주변부 30,895대 따로 채점</dd></div><div class="frame__row"><dt>실기기 채점</dt><dd>라즈베리파이 실기에서 배포 런타임 그대로 채점, ARM FP16 추론 오류(검출 36 → 0) 발견</dd></div><div class="frame__row"><dt>스트레스 시험</dt><dd>렌즈 가림, 지나가는 차 292건, 학습에 쓰지 않은 120분 영상(끊김&nbsp;· 오경보 0)</dd></div><div class="frame__row"><dt>합성·실제 괴리 추적</dt><dd>검증 AP50이 더 높던 합성 30% 혼합 미세조정(92.88 vs 92.69%)이 처음 보는 현장 AP50:95는 5.96%p 낮음, 두 방식 결과 모두 보고</dd></div><div class="frame__row"><dt>고객 지표 판정</dt><dd>검출 지표와 별도로 주차 세션 단위 입출차 매칭&nbsp;· 10분 유예 청구 시간 오차로 최종 판정</dd></div></dl>
+    </section>
+    <section class="sec" aria-labelledby="h-trade">
+      <h2 id="h-trade">품질·지연·비용 선택</h2>
+      <table class="dt" role="table">
+        <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">선택</th><th scope="col" role="columnheader">얻은 것</th><th scope="col" role="columnheader">내준 것</th><th scope="col" role="columnheader">결정</th></tr></thead>
+        <tbody role="rowgroup">
+          <tr role="row"><th scope="row" role="rowheader"><b>입력 640</b><span class="dt__sub">GPU 서버&nbsp;· 896 대신</span></th><td role="cell" data-label="얻은 것">처리량 774&nbsp;vs&nbsp;520&nbsp;img/s</td><td role="cell" data-label="내준 것">검증 recall 60.3&nbsp;→&nbsp;59.1%</td><td role="cell" data-label="결정"><span class="verdict verdict--yes">채택</span> 지식 증류로 62.0% 회복</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>차량당 양성 3개 할당</b><span class="dt__sub">GPU 서버</span></th><td role="cell" data-label="얻은 것">현장 찬 칸 놓침 80&nbsp;→&nbsp;0</td><td role="cell" data-label="내준 것">검증 recall 62.0&nbsp;→&nbsp;61.7%</td><td role="cell" data-label="결정"><span class="verdict verdict--yes">채택</span> 현장 지표 우선</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>새 데이터로 다시 학습</b><span class="dt__sub">기둥 카메라</span></th><td role="cell" data-label="얻은 것">검증 지표 개선</td><td role="cell" data-label="내준 것">청구 시간 오차 2&nbsp;→&nbsp;220분</td><td role="cell" data-label="결정"><span class="verdict verdict--no">기각</span> 기존 모델 유지</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>INT8 정적 양자화</b><span class="dt__sub">라즈베리파이 5</span></th><td role="cell" data-label="얻은 것">지연 126&nbsp;→&nbsp;68&nbsp;ms</td><td role="cell" data-label="내준 것">검출률 99.0&nbsp;→&nbsp;97.9%</td><td role="cell" data-label="결정"><span class="verdict verdict--yes">채택</span></td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>입력 512</b><span class="dt__sub">라즈베리파이 5</span></th><td role="cell" data-label="얻은 것">지연 126&nbsp;→&nbsp;80&nbsp;ms</td><td role="cell" data-label="내준 것">가까운 차 놓침 1.8배</td><td role="cell" data-label="결정"><span class="verdict verdict--no">기각</span></td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>좌우 반전 TTA</b><span class="dt__sub">라즈베리파이 5</span></th><td role="cell" data-label="얻은 것">검증 놓침 7&nbsp;→&nbsp;5</td><td role="cell" data-label="내준 것">지연 2배(154&nbsp;ms)</td><td role="cell" data-label="결정"><span class="verdict verdict--no">기각</span> 배포하지 않음</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>CFQ 표현</b><span class="dt__sub">평행사변형 대비</span></th><td role="cell" data-label="얻은 것">AP50:95 +3.78%p, 비정상 사각형 0</td><td role="cell" data-label="내준 것">지연 +3.83&nbsp;ms(12.9%)</td><td role="cell" data-label="결정"><span class="verdict verdict--yes">채택</span></td></tr>
+        </tbody>
+      </table>
+      <p class="sec__note">GPU 서버는 TensorRT FP16 배치 8에서 2.30 ms(3,479 img/s), 현장 서버 1대로 카메라 207대&nbsp;· 주차면 866칸 처리. 모델 크기 L/M/S/N은 지연 33.61/26.32/13.01/11.53 ms, 처음 보는 현장 AP50 80.32/77.14/72.87/64.40%(RTX 3060 FP32).</p>
     </section>
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>

@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>위험성평가 AI · 패턴앤 | NamJuKim</title>
-<meta name="description" content="위험성평가표를 올리면 로컬 LLM이 위험 등급·보완 사항을 평가하고, 법령과 내부 문서를 근거로 답하는 웹 플랫폼">
+<meta name="description" content="공공기관이 하청업체에서 받는 위험성평가표를 올리면 LLM·VLM이 위험 등급·보완 사항을 평가하고 법령·내부 문서 근거를 붙이는 검토 플랫폼">
 <link rel="canonical" href="https://zoo3323.github.io/work/risk-review/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NamJuKim">
 <meta property="og:title" content="위험성평가 AI · 패턴앤 | NamJuKim">
-<meta property="og:description" content="위험성평가표를 올리면 로컬 LLM이 위험 등급·보완 사항을 평가하고, 법령과 내부 문서를 근거로 답하는 웹 플랫폼">
+<meta property="og:description" content="공공기관이 하청업체에서 받는 위험성평가표를 올리면 LLM·VLM이 위험 등급·보완 사항을 평가하고 법령·내부 문서 근거를 붙이는 검토 플랫폼">
 <meta property="og:url" content="https://zoo3323.github.io/work/risk-review/">
 <meta property="og:image" content="https://zoo3323.github.io/assets/og/work-risk-review.jpg?v=ae342452">
 <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=778de91e">
+<link rel="stylesheet" href="/assets/site.css?v=7113bac5">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -46,7 +46,7 @@
       <span class="work-art work-art--photo"><img src="/assets/img/work/risk-review/card-s.webp" width="900" height="600" alt=""></span>
       <div>
         <h1 class="app-name">위험성평가 AI</h1>
-        <p class="app-sub">위험성평가표를 올리면 로컬 LLM이 위험 등급·보완 사항을 평가하고, 법령과 내부 문서를 근거로 답하는 웹 플랫폼</p>
+        <p class="app-sub">공공기관이 하청업체에서 받는 위험성평가표를 올리면 LLM·VLM이 위험 등급·보완 사항을 평가하고 법령·내부 문서 근거를 붙이는 검토 플랫폼</p>
         <p class="app-dev"><a href="/about/#h-work">NamJuKim</a></p>
       </div>
     </header>
@@ -56,8 +56,20 @@
       <li><span class="fact__label">맡은 일</span><span class="fact__value">1인 <span class="nobr">풀스택·LLM</span> 개발</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>업로드 → AI 분석 → 보완 → 현장 점검 → 보고서를 한 흐름으로 잇는 웹 플랫폼을 프런트엔드부터 AI 파이프라인까지 1인 <span class="nobr">설계·구현.</span> vLLM 서빙 로컬 <span class="nobr">LLM·VLM에</span> 내부 문서 <span class="nobr">RAG·MCP</span> 법령 조회를 결합해 인용 조문 <span class="nobr">검증·근거</span> 기반 답변 구현.</p>
+      <p>하청업체 위험성평가표를 담당자가 법령과 직접 대조하고 엑셀로 관리해 검토 시간이 길고 근거 <span class="nobr">누락·오류가</span> 잦던 공공기관 업무를 업로드 → AI 분석 → 보완 → 현장 점검 → 보고서 한 흐름으로 재구성, 기획부터 <span class="nobr">프런트엔드·AI</span> 파이프라인까지 1인 <span class="nobr">설계·구현.</span> <span class="nobr">평가표·내부</span> 문서는 <span class="nobr">LLM·RAG,</span> 현장 <span class="nobr">사진·TBM</span> 회의록은 VLM, 인용 법령은 MCP 조회로 검증하는 역할별 AI 구성.</p>
       
+    </section>
+    <section class="sec" aria-labelledby="h-value">
+      <h2 id="h-value">고객 가치와 AI 설계</h2>
+      <table class="dt" role="table">
+        <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">고객 가치</th><th scope="col" role="columnheader">AI 설계</th></tr></thead>
+        <tbody role="rowgroup">
+          <tr role="row"><th scope="row" role="rowheader"><b>검토 시간 단축</b><span class="dt__sub">수작업 검토 의존</span></th><td role="cell" data-label="AI 설계">업로드 한 번으로 2단계 AI 분석(항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가), 대량 평가표 비동기 처리</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>믿을 수 있는 근거</b><span class="dt__sub">법령 근거 <span class="nobr">누락·오류</span> 빈번</span></th><td role="cell" data-label="AI 설계">AI가 인용한 조문을 MCP 법령 조회로 확인해 없는 조문 차단, 내부 문서 RAG로 근거 문서 첨부</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>현장 위험 발굴</b><span class="dt__sub">평가표 밖 위험 요인</span></th><td role="cell" data-label="AI 설계">VLM으로 현장 <span class="nobr">사진·TBM</span> 회의록 분석, 신규 위험 요인 추출</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>수작업 관리 제거</b><span class="dt__sub">엑셀 수동 <span class="nobr">대조·정리</span></span></th><td role="cell" data-label="AI 설계"><span class="nobr">엑셀·한글</span> 다중 양식 자동 파싱, 현장 단위 관리, 편집형 <span class="nobr">그리드·PDF·DOCX·XLSX</span> 보고서</td></tr>
+        </tbody>
+      </table>
     </section>
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
@@ -79,14 +91,15 @@
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>vLLM(OpenAI 호환 API) 기반 로컬 <span class="nobr">LLM·VLM</span> 서빙, FastAPI 백엔드 연동</li>
-        <li>내부 문서 RAG 파이프라인 구축: 표준 <span class="nobr">절차서·작업</span> <span class="nobr">지침·사고</span> 사례 텍스트 추출 → 문장 단위 청킹 → fastembed 임베딩 → pgvector 인덱싱</li>
-        <li>근거 문서를 붙여 답하는 RAG 챗봇 구현, korean-law-mcp(MCP 서버)로 산업안전보건법 조문을 실시간 조회해 없는 조문 인용(할루시네이션) 차단</li>
-        <li><span class="nobr">ARQ·Redis</span> 워커 기반 항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가 2단계 비동기 분석 파이프라인 구축</li>
-        <li>VLM 기반 현장 <span class="nobr">사진·TBM</span> 회의록 분석으로 신규 위험 요인 추출</li>
-        <li>병합 <span class="nobr">셀·비정형</span> 칼럼이 섞인 <span class="nobr">엑셀(.xlsx)·한글(.hwpx)</span> 평가표 파서 개발, 편집형 <span class="nobr">그리드·대시보드·PDF·DOCX·XLSX</span> 보고서 내보내기 구현</li>
+        <li>고객 업무 재설계: 수작업 법령 <span class="nobr">대조·엑셀</span> 관리 → 업로드부터 AI <span class="nobr">분석·보완·현장</span> <span class="nobr">점검·보고서까지</span> 현장 단위 한 흐름으로 통합</li>
+        <li><span class="nobr">텍스트·이미지</span> AI 파이프라인 구축: LLM 2단계 분석(항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가), VLM 현장 <span class="nobr">사진·TBM</span> 회의록 분석, <span class="nobr">RAG·MCP</span> 근거 검증</li>
+        <li>vLLM(OpenAI 호환 API) 기반 <span class="nobr">LLM·VLM</span> 자체 서빙, <span class="nobr">FastAPI·ARQ·Redis</span> 워커로 대량 평가표 비동기 처리</li>
+        <li>내부 문서 RAG 구축: 표준 <span class="nobr">절차서·작업</span> <span class="nobr">지침·사고</span> 사례 텍스트 추출 → 문장 단위 청킹 → fastembed 임베딩 → pgvector 인덱싱, 근거 문서 첨부 챗봇</li>
+        <li>korean-law-mcp(MCP 서버)로 <span class="nobr">산업안전보건법·시행규칙</span> 조문 실시간 조회, 없는 조문 인용(할루시네이션) 차단</li>
+        <li>병합 <span class="nobr">셀·비정형</span> 칼럼이 섞인 <span class="nobr">엑셀(.xlsx)·한글(.hwpx)</span> 다중 양식 파서, 편집형 <span class="nobr">그리드·대시보드·PDF·DOCX·XLSX</span> 보고서 내보내기</li>
       </ul>
     </section>
+    
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
       <ul class="chips"><li>Next.js · React · TypeScript</li><li>Python · FastAPI</li><li>vLLM(로컬 LLM·VLM)</li><li>RAG · pgvector · fastembed</li><li>MCP</li><li>ARQ · Redis</li><li>Supabase(PostgreSQL)</li></ul>

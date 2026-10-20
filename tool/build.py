@@ -1452,6 +1452,74 @@ if ABOUT and ABOUT.get("work"):
       </div>
     </section>"""
 
+    def sections_html(w, at="end"):
+        """수치·근거 구역: work[].sections = [{"id", "title", "at", "frame", "tables", "note"}].
+        at 이 "top" 이면 설명 바로 아래, 아니면 맡은 일 아래에 둔다. frame 은 [{"k", "v"}] 짧은 정의 목록,
+        tables 는 [{"caption", "head", "rows": [{"th", "sub", "td": [...]}], "ours", "em", "num", "verdict", "stack", "note"}].
+        ours 는 레몬으로 칠할 열(제안 방법), em 은 굵게 쓸 열, num 은 숫자 표(오른쪽 맞춤), verdict 는 「채택·기각」 딱지를 붙일 열이다.
+        폰에서는 줄마다 카드로 쌓고 칸 이름(data-label)을 값 위에 작게 단다. 칸은 두 개씩 나란히, stack 이 "list" 면 한 줄에 하나씩."""
+
+        def frame(rows):
+            items = "".join(f'<div class="frame__row"><dt>{esc(r["k"])}</dt><dd>{keep_dots(r["v"])}</dd></div>' for r in rows)
+            return f'\n      <dl class="frame">{items}</dl>'
+
+        def cell(t, i, v):
+            cls = []
+            if t.get("ours") == i:
+                cls.append("is-ours")
+            if t.get("em") == i:
+                cls.append("is-em")
+            # 「80 → 0」「774 vs 520」「126 ms」처럼 숫자끼리·숫자와 단위는 한 줄에 둔다
+            body = re.sub(r"(\d[\d.,]*%?) (→|vs) (\d)", r"\1&nbsp;\2&nbsp;\3", keep_dots(v))
+            body = re.sub(r"(\d) (img/s|ms|fps|m)(?!\w)", r"\1&nbsp;\2", body)
+            if t.get("num"):
+                # 「61.10 ± 0.52」가 좁은 칸에서 접힐 때 ± 와 + 는 뒤 숫자와 함께 다음 줄로
+                body = body.replace("± ", "±&nbsp;").replace(" + ", " +&nbsp;")
+            if t.get("verdict") == i:
+                word, _, rest = v.partition(", ")
+                kind = "yes" if word in ("채택", "유지") else "no"
+                body = f'<span class="verdict verdict--{kind}">{esc(word)}</span>' + (f" {keep_dots(rest)}" if rest else "")
+            c = f' class="{" ".join(cls)}"' if cls else ""
+            return f'<td role="cell" data-label="{esc(t["head"][i])}"{c}>{body}</td>'
+
+        def table(t):
+            head = "".join(
+                f'<th scope="col" role="columnheader"{" class=" + chr(34) + "is-ours" + chr(34) if t.get("ours") == i else ""}>{esc(h)}</th>'
+                for i, h in enumerate(t["head"])
+            )
+            rows = "\n          ".join(
+                f'<tr role="row"><th scope="row" role="rowheader"><b>{keep_dots(r["th"])}</b>'
+                + (f'<span class="dt__sub">{keep_dots(r["sub"])}</span>' if r.get("sub") else "")
+                + "</th>"
+                + "".join(cell(t, i + 1, v) for i, v in enumerate(r["td"]))
+                + "</tr>"
+                for r in t["rows"]
+            )
+            kind = (" dt--num" if t.get("num") else "") + (" dt--list" if t.get("stack") == "list" else "")
+            note = f'\n      <p class="sec__note">{keep_dots(t["note"])}</p>' if t.get("note") else ""
+            cap = f'<caption>{esc(t["caption"])}</caption>' if t.get("caption") else ""
+            cols = f' style="--cols:{len(t["head"]) - 1}"' if t.get("num") else ""
+            return f"""
+      <table class="dt{kind}" role="table"{cols}>{cap}
+        <thead role="rowgroup"><tr role="row">{head}</tr></thead>
+        <tbody role="rowgroup">
+          {rows}
+        </tbody>
+      </table>{note}"""
+
+        out = []
+        for s in w.get("sections", []):
+            if (s.get("at") == "top") != (at == "top"):
+                continue
+            body = frame(s["frame"]) if s.get("frame") else ""
+            body += "".join(table(t) for t in s.get("tables", []))
+            if s.get("note"):
+                body += f'\n      <p class="sec__note">{keep_dots(s["note"])}</p>'
+            out.append(f"""<section class="sec" aria-labelledby="{s["id"]}">
+      <h2 id="{s["id"]}">{esc(s["title"])}</h2>{body}
+    </section>""")
+        return "\n    ".join(out)
+
     def media_html(w):
         items = []
         for m in w.get("media", []):
@@ -1523,6 +1591,7 @@ if ABOUT and ABOUT.get("work"):
       <p>{keep_dots(w["notes"])}</p>
       {terms_html(w)}
     </section>
+    {sections_html(w, "top")}
     {flow_html(w)}
     {problems_html(w)}
     <section class="sec desc" aria-labelledby="h-did">
@@ -1531,6 +1600,7 @@ if ABOUT and ABOUT.get("work"):
         {did}
       </ul>
     </section>
+    {sections_html(w)}
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
       <ul class="chips">{stack}</ul>
