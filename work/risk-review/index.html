@@ -91,12 +91,10 @@
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>고객 업무 재설계: 수작업 법령 <span class="nobr">대조·엑셀</span> 관리 → 업로드부터 AI <span class="nobr">분석·보완·현장</span> <span class="nobr">점검·보고서까지</span> 현장 단위 한 흐름으로 통합</li>
-        <li><span class="nobr">텍스트·이미지</span> AI 파이프라인 구축: LLM 2단계 분석(항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가), VLM 현장 <span class="nobr">사진·TBM</span> 회의록 분석, <span class="nobr">RAG·MCP</span> 근거 검증</li>
-        <li>vLLM(OpenAI 호환 API) 기반 <span class="nobr">LLM·VLM</span> 자체 서빙, <span class="nobr">FastAPI·ARQ·Redis</span> 워커로 대량 평가표 비동기 처리</li>
-        <li>내부 문서 RAG 구축: 표준 <span class="nobr">절차서·작업</span> <span class="nobr">지침·사고</span> 사례 텍스트 추출 → 문장 단위 청킹 → fastembed 임베딩 → pgvector 인덱싱, 근거 문서 첨부 챗봇</li>
-        <li>korean-law-mcp(MCP 서버)로 <span class="nobr">산업안전보건법·시행규칙</span> 조문 실시간 조회, 없는 조문 인용(할루시네이션) 차단</li>
-        <li>병합 <span class="nobr">셀·비정형</span> 칼럼이 섞인 <span class="nobr">엑셀(.xlsx)·한글(.hwpx)</span> 다중 양식 파서, 편집형 <span class="nobr">그리드·대시보드·PDF·DOCX·XLSX</span> 보고서 내보내기</li>
+        <li>고객 업무 재설계: 수작업 법령 <span class="nobr">대조·엑셀</span> 관리 → 업로드부터 AI <span class="nobr">분석·보완·현장</span> <span class="nobr">점검·보고서까지</span> 한 흐름으로 통합</li>
+        <li><span class="nobr">텍스트·이미지</span> AI 파이프라인: vLLM 자체 서빙 LLM 2단계 분석(항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가), VLM 현장 <span class="nobr">사진·TBM</span> 회의록 분석, <span class="nobr">ARQ·Redis</span> 비동기 처리</li>
+        <li>근거 검증: 내부 문서 <span class="nobr">RAG(fastembed·pgvector)로</span> 근거 문서 첨부, korean-law-mcp로 산업안전보건법 조문 실시간 조회해 없는 조문 인용 차단</li>
+        <li><span class="nobr">엑셀(.xlsx)·한글(.hwpx)</span> 다중 양식 파서, 편집형 <span class="nobr">그리드·대시보드·PDF·DOCX·XLSX</span> 보고서</li>
       </ul>
     </section>
     
