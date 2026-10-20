@@ -160,13 +160,13 @@ window.SCENE = (() => {
       const hot = seg(lt, 3.0, 0.4);
       s += base({ hex: hot * out, hexT: clamp((lt - 3.0) / 0.8), extra });
       const c1 = at([240, 150]);
-      s += chip(c1[0] + 34, c1[1] - 34, "보호구역 밖에 몰린 사고", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 2.1, 0.3) * (1 - seg(lt, 2.85, 0.25, E.in)) });
+      s += chip(c1[0] + 34, c1[1] - 34, "보호구역 밖 사고 집중", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 2.1, 0.3) * (1 - seg(lt, 2.85, 0.25, E.in)) });
       s += chip(c1[0] + 34, c1[1] - 34, "핫스폿 · 군집", { size: 12.5, fill: C.lemon, opacity: seg(lt, 3.6, 0.3) * out });
       // 범례
       const leg =
         text(P.x + 18, P.y + 26, "지도", { "font-size": 13.5, "font-weight": 700, fill: C.sub }) +
         g({ opacity: seg(lt, 0.3, 0.3) }, tag("rect", { x: P.x + 18, y: P.y + 50, width: 18, height: 18, rx: 5, fill: C.paper, stroke: C.ink, "stroke-width": 1.6 }) + text(P.x + 46, P.y + 59.5, "학교 · 경로당", { "font-size": 13.5, fill: C.ink })) +
-        g({ opacity: zone }, tag("circle", { cx: P.x + 27, cy: P.y + 92, r: 9, fill: C.lilac, stroke: "#5b4bd6", "stroke-width": 1.6, "stroke-dasharray": "4 3" }) + text(P.x + 46, P.y + 92.5, "지금의 보호구역", { "font-size": 13.5, fill: C.ink })) +
+        g({ opacity: zone }, tag("circle", { cx: P.x + 27, cy: P.y + 92, r: 9, fill: C.lilac, stroke: "#5b4bd6", "stroke-width": 1.6, "stroke-dasharray": "4 3" }) + text(P.x + 46, P.y + 92.5, "기존 보호구역", { "font-size": 13.5, fill: C.ink })) +
         g({ opacity: seg(lt, 1.1, 0.3) }, tag("circle", { cx: P.x + 27, cy: P.y + 124, r: 5, fill: C.red }) + text(P.x + 46, P.y + 124.5, "고령 보행자 사고", { "font-size": 13.5, fill: C.ink })) +
         g({ opacity: hot }, tag("path", { d: hexPath({ x: 0, y: 0, r: 10 }).replace(/M([\d.-]+) ([\d.-]+)/, "M$1 $2"), fill: "#ef4444", opacity: 0.7, transform: `translate(${P.x + 27 - M.x} ${P.y + 156 - M.y})` }) + text(P.x + 46, P.y + 156.5, "핫스폿(Hot Spot)", { "font-size": 13.5, fill: C.ink }));
       s += side(leg);
@@ -187,15 +187,15 @@ window.SCENE = (() => {
         s += chip(x, y, d.name, { size: 12, fill: C.paper, anchor: "middle", h: 22, pad: 8, opacity: distA });
       });
       // 오른쪽: 도로 폭이 사고에 주는 영향 — 하나의 값 → 구역마다 다른 값
-      let inner = text(P.x + 18, P.y + 26, "도로 폭의 영향", { "font-size": 13.5, "font-weight": 700, fill: C.sub });
+      let inner = text(P.x + 18, P.y + 26, "도로 폭 영향도", { "font-size": 13.5, "font-weight": 700, fill: C.sub });
       DIST.forEach((d, i) => {
         const y = P.y + 66 + i * 46;
         inner += text(P.x + 18, y, d.name, { "font-size": 13.5, "font-weight": 700, fill: C.ink });
         inner += tag("rect", { x: P.x + 82, y: y - 9, width: 118, height: 18, rx: 9, fill: C.mute });
         inner += tag("rect", { x: P.x + 82, y: y - 9, width: Math.max(10, 118 * vals[i]), height: 18, rx: 9, fill: lilacScale(vals[i]), stroke: C.ink, "stroke-width": 1.4 });
       });
-      inner += chip(P.x + 18, P.y + 262, "전역 회귀 · 값 하나", { size: 12.5, fill: C.paper, opacity: seg(lt, 0.6, 0.3) * (1 - seg(lt, 2.85, 0.25, E.in)) });
-      inner += chip(P.x + 18, P.y + 262, "GWR · 지역마다 따로", { size: 12.5, fill: C.lemon, opacity: seg(lt, 3.2, 0.3) * out });
+      inner += chip(P.x + 18, P.y + 262, "전역 회귀 · 단일 계수", { size: 12.5, fill: C.paper, opacity: seg(lt, 0.6, 0.3) * (1 - seg(lt, 2.85, 0.25, E.in)) });
+      inner += chip(P.x + 18, P.y + 262, "GWR · 지역별 계수", { size: 12.5, fill: C.lemon, opacity: seg(lt, 3.2, 0.3) * out });
       inner += chip(P.x + 18, P.y + 298, "Random Forest · 위험도", { size: 12.5, fill: C.paper, opacity: seg(lt, 4.1, 0.3) * out });
       s += side(inner);
       s += chip(at([240, 150])[0] + 40, at([240, 150])[1] + 52, "?", { size: 13, fill: C.paper, color: C.red, stroke: C.red, pad: 7, opacity: seg(lt, 1.4, 0.3) * (1 - seg(lt, 2.85, 0.25, E.in)) });
@@ -231,7 +231,7 @@ window.SCENE = (() => {
         const [x, y] = at(p);
         s += chip(x + 26, y - 30, "추천 입지", { size: 12.5, fill: C.lemon, opacity: seg(lt, 4.1 + i * 0.25, 0.3) });
       });
-      s += chip(M.x + M.w / 2, M.y + M.h / 2 - 8, "어디에 지정할까?", { size: 14, fill: C.paper, anchor: "middle", opacity: seg(lt, 1.0, 0.3) * (1 - sol) });
+      s += chip(M.x + M.w / 2, M.y + M.h / 2 - 8, "지정 근거 부재", { size: 14, fill: C.paper, anchor: "middle", opacity: seg(lt, 1.0, 0.3) * (1 - sol) });
       // 오른쪽: 위험도 범례와 보고서
       const rep = seg(lt, 4.5, 0.4);
       const ask = seg(lt, 0.5, 0.3) * (1 - seg(lt, 2.7, 0.25, E.in));
@@ -239,7 +239,7 @@ window.SCENE = (() => {
         { opacity: ask },
         text(P.x + 18, P.y + 26, "지정 근거", { "font-size": 13.5, "font-weight": 700, fill: C.sub }) +
           tag("rect", { x: P.x + 18, y: P.y + 48, width: P.w - 36, height: 120, rx: 10, fill: "none", stroke: C.wire, "stroke-width": 1.6, "stroke-dasharray": "6 5" }) +
-          text(P.x + P.w / 2, P.y + 108, "아직 없음", { "font-size": 14, "font-weight": 700, fill: C.sub, "text-anchor": "middle" }),
+          text(P.x + P.w / 2, P.y + 108, "근거 자료 없음", { "font-size": 14, "font-weight": 700, fill: C.sub, "text-anchor": "middle" }),
       );
       inner += text(P.x + 18, P.y + 26, "위험도", { "font-size": 13.5, "font-weight": 700, fill: C.sub, opacity: sol });
       [["높음", "#ef4444"], ["보통", "#3b82f6"], ["낮음", "#22c55e"]].forEach(([l, c], i) => {

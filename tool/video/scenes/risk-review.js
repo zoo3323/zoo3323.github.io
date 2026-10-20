@@ -47,7 +47,7 @@ window.SCENE = (() => {
       chip(60, 312, "산업안전보건법 제412조", { size: 13, fill: C.paper, stroke: lt > 1.9 && lt < 2.8 ? C.red : C.ink, color: C.ink }) +
         drawOn("M62 312H236", strike, { stroke: C.red, "stroke-width": 2.4 }),
     );
-    c += chip(250, 312, "실제로 없는 조문", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 1.9, 0.3) * (1 - seg(lt, 2.75, 0.25, E.in)) });
+    c += chip(250, 312, "존재하지 않는 조문", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 1.9, 0.3) * (1 - seg(lt, 2.75, 0.25, E.in)) });
     c += g({ opacity: real * out }, chip(60, 312, "산업안전보건법 제38조 · 안전조치", { size: 13, fill: C.lemon }) + tick(60 + chip.width("산업안전보건법 제38조 · 안전조치", { size: 13 }) + 16, 312, 0.9));
     // RAG 근거: 내부 문서 두 장
     const docs = ["작업 지침", "사고 사례"];
@@ -66,7 +66,7 @@ window.SCENE = (() => {
     const ask = seg(lt, 3.2, 0.45, E.inOut);
     const askX = 66 + chip.width("산업안전보건법 제412조", { size: 13 });
     s += drawOn(`M${n2(askX)} 312C380 312 420 186 536 186`, ask, { stroke: C.ink, "stroke-width": 2.2, "stroke-dasharray": ask >= 0.999 ? "6 5" : undefined, opacity: 1 - seg(lt, 4.0, 0.25, E.in) });
-    s += chip(650, 248, "없음 → 바로잡기", { size: 12, fill: C.paper, anchor: "middle", h: 22, pad: 8, opacity: seg(lt, 3.6, 0.25) * (1 - seg(lt, 4.3, 0.25, E.in)) });
+    s += chip(650, 248, "조문 부재 확인 → 교정", { size: 12, fill: C.paper, anchor: "middle", h: 22, pad: 8, opacity: seg(lt, 3.6, 0.25) * (1 - seg(lt, 4.3, 0.25, E.in)) });
     const fetch = seg(lt, 4.45, 0.45, E.inOut);
     s += drawOn("M536 336C470 336 430 372 340 372", fetch, { stroke: C.ink, "stroke-width": 2.2, "stroke-dasharray": fetch >= 0.999 ? "6 5" : undefined, opacity: out });
     return s;
@@ -112,7 +112,7 @@ window.SCENE = (() => {
     const [bx, by] = [lerp(420, 72, goB), lerp(168, 262, goB)];
     s += g({ transform: `translate(${n2(ax)} ${n2(ay)}) scale(${n2(shrink)})`, opacity: out }, sheet(0, 0, XLSX, "엑셀 .xlsx", { bad }));
     s += g({ transform: `translate(${n2(bx)} ${n2(by)}) scale(${n2(1 - 0.5 * goB)})`, opacity: out }, sheet(0, 0, HWPX, "한글 .hwpx", { bad }));
-    s += chip(400, 360, "병합 셀에서 읽다 깨짐", { size: 12.5, fill: C.red, color: C.paper, stroke: null, anchor: "middle", opacity: seg(lt, 1.35, 0.3) * (1 - seg(lt, 2.75, 0.25, E.in)) });
+    s += chip(400, 360, "병합 셀 파싱 오류", { size: 12.5, fill: C.red, color: C.paper, stroke: null, anchor: "middle", opacity: seg(lt, 1.35, 0.3) * (1 - seg(lt, 2.75, 0.25, E.in)) });
     // 파서
     const pa = seg(lt, 3.25, 0.35);
     s += drawOn("M190 178C230 178 236 222 296 222", seg(lt, 3.35, 0.3), { stroke: C.ink, "stroke-width": 2.2, opacity: out });
@@ -149,11 +149,11 @@ window.SCENE = (() => {
     s += g(
       { opacity: prob },
       card(60, 110, 300, 300) +
-        text(80, 136, "평가표 한 번에 분석", { "font-size": 14.5, "font-weight": 700, fill: C.ink }) +
+        text(80, 136, "평가표 일괄 분석", { "font-size": 14.5, "font-weight": 700, fill: C.ink }) +
         Array.from({ length: 9 }, (_, i) => tag("rect", { x: 80, y: 156 + i * 22, width: 260, height: 16, rx: 5, fill: C.mute })).join("") +
         tag("rect", { x: 400, y: 236, width: 340, height: 26, rx: 13, fill: C.paper, stroke: C.ink, "stroke-width": 2 }) +
         tag("rect", { x: 403, y: 239, width: 334 * Math.min(0.34, seg(lt, 0.4, 1.4, E.out) * 0.34), height: 20, rx: 10, fill: "#94a3b8" }) +
-        text(400, 214, "요청 하나", { "font-size": 13.5, "font-weight": 700, fill: INK2 }) +
+        text(400, 214, "단일 요청", { "font-size": 13.5, "font-weight": 700, fill: INK2 }) +
         chip(740, 290, "시간 초과", { size: 12.5, fill: C.red, color: C.paper, stroke: null, anchor: "end", opacity: seg(lt, 1.9, 0.3) }),
     );
     // 해결: 항목으로 나눠 큐에 넣고, 워커가 두 단계로 처리한다

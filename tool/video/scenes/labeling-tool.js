@@ -138,7 +138,7 @@ window.SCENE = (() => {
       const p1 = 1 - seg(lt, 2.85, 0.2, E.in);
       const p2 = seg(lt, 2.95, 0.25) * (1 - seg(lt, 4.2, 0.2, E.in));
       const p3 = seg(lt, 4.3, 0.25);
-      panel += g({ opacity: p1 }, ptitle("꼭짓점 찍기") + row(PN.y + 44, "네 점을 하나씩", "", 1) + chip(PN.x, PN.y + 86, "크기·방향 제각각", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 2.15, 0.3) }));
+      panel += g({ opacity: p1 }, ptitle("꼭짓점 수동 입력") + row(PN.y + 44, "네 점 직접 클릭", "", 1) + chip(PN.x, PN.y + 86, "크기·방향 불일치", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 2.15, 0.3) }));
       panel += g(
         { opacity: p2 },
         ptitle("카메라 보정") +
@@ -198,7 +198,7 @@ window.SCENE = (() => {
       over += chip(CV.x + 12, CV.y + 22, "모델 사전 라벨", { size: 12.5, fill: "#d9d2ff", opacity: seg(lt, 2.85, 0.3) * out });
       const fixed = cars[FOCUS];
       const fp = cam.P([fixed.c[0] + 0.45 * (1 - seg(lt, 4.55, 0.55, E.inOut)), fixed.c[1] - 0.35 * (1 - seg(lt, 4.55, 0.55, E.inOut)), 0]);
-      over += chip(fp[0] + 52, fp[1] + 6, "고침", { size: 12.5, fill: C.paper, opacity: seg(lt, 5.0, 0.25) * out });
+      over += chip(fp[0] + 52, fp[1] + 6, "수정 완료", { size: 12.5, fill: C.paper, opacity: seg(lt, 5.0, 0.25) * out });
       // 오른쪽 칸: 차마다 상태
       panel += ptitle("라벨");
       LABELED.forEach((ci, j) => {
@@ -245,10 +245,10 @@ window.SCENE = (() => {
         over += tag("path", { d: dpath(ps), fill: C.lemon, opacity: 0.6 * (1 - bad) + 0.15 * bad });
         over += tag("path", { d: dpath(ps), fill: "none", stroke: bad > 0.5 ? C.red : C.ink, "stroke-width": 2.4, "stroke-linejoin": "round" });
       });
-      over += chip(CV.x + 12, CV.y + 22, "어긋남", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 2.3, 0.25) * (1 - seg(lt, 3.55, 0.25, E.in)) });
+      over += chip(CV.x + 12, CV.y + 22, "라벨 어긋남", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 2.3, 0.25) * (1 - seg(lt, 3.55, 0.25, E.in)) });
       over += chip(CV.x + 12, CV.y + 22, "자동 재정렬", { size: 12.5, fill: C.lemon, opacity: seg(lt, 4.3, 0.3) });
       // 오른쪽 칸: 모은 프레임. 같은 장면이 쌓이다가, 각도가 바뀐 장면이 들어온다
-      panel += ptitle("모은 프레임");
+      panel += ptitle("수집 프레임");
       const tw = 99;
       const th = (tw * 9) / 16;
       const thumb = (i, a, camS, mark) => {

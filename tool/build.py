@@ -1219,7 +1219,7 @@ if ABOUT:
 :root {{ --ink: #17171a; --sub: #55554f; --rule: #d9d8d0; --lemon: #ffe55c; }}
 * {{ box-sizing: border-box; }}
 html {{ background: #fff; }}
-body {{ max-width: 182mm; margin: 0 auto; font: 9pt/1.5 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
+body {{ max-width: 182mm; margin: 0 auto; font: 9pt/1.5 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; color: var(--ink); word-break: keep-all; overflow-wrap: break-word; -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
 header {{ display: grid; grid-template-columns: 1fr 22mm; gap: 6mm; align-items: start; padding-bottom: 4mm; border-bottom: 2px solid var(--ink); }}
 h1 {{ margin: 0; font: 400 25pt/1 "Do Hyeon", sans-serif; letter-spacing: -0.01em; }}
 h1 small {{ margin-left: 2.5mm; font: 600 10.5pt/1 inherit; font-family: inherit; color: var(--sub); }}

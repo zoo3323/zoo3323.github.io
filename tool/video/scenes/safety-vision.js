@@ -78,7 +78,7 @@ window.SCENE = (() => {
     s += req("침입 요청", seg(lt, 4.3, 0.25) * out);
     // 바꿀 때 메모리를 완전히 비운다
     const flush = seg(lt, 4.45, 0.15) * (1 - seg(lt, 4.75, 0.2, E.in));
-    s += chip(BOX.x + BOX.w / 2 + 40, BOX.y + BOX.h / 2, "메모리 비움", { size: 12.5, fill: C.paper, anchor: "middle", opacity: flush });
+    s += chip(BOX.x + BOX.w / 2 + 40, BOX.y + BOX.h / 2, "메모리 해제", { size: 12.5, fill: C.paper, anchor: "middle", opacity: flush });
     s += g({ opacity: seg(lt, 3.95, 0.25) * out }, tick(BOX.x + BOX.w - 22, BOX.y + BOX.h / 2, 1.1, "#12804a"));
     return s;
   }
@@ -174,7 +174,7 @@ window.SCENE = (() => {
     let over = "";
     over += tag("path", { d: dpath(hand), fill: C.red, opacity: 0.12 * drawn * fixA });
     over += drawOn(dpath(hand), drawn, { stroke: C.red, "stroke-width": 2.6, "stroke-dasharray": drawn >= 0.999 ? "8 6" : undefined, opacity: fixA });
-    over += chip(hand[2][0] + 10, hand[2][1] - 24, "다시 그려야 함", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: wrong * fixA });
+    over += chip(hand[2][0] + 10, hand[2][1] - 24, "ROI 재작성 필요", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: wrong * fixA });
     // 해결: 마커를 찾아(레몬 테두리) 그 자리로 ROI 를 만든다. 카메라가 또 돌아도 따라간다
     corners.forEach(([x, y], i) => {
       const a = seg(lt, 2.95 + i * 0.12, 0.25);
@@ -187,13 +187,13 @@ window.SCENE = (() => {
     over += tag("path", { d: dpath(roi), fill: C.lemon, opacity: 0.38 * ru });
     over += drawOn(dpath(roi), ru, { stroke: C.ink, "stroke-width": 2.6 });
     const ok = seg(lt, 5.08, 0.3);
-    over += chip(MON.x + 14, MON.y + MON.h - 22, "마커 네 개 → ROI 자동 생성", { size: 12.5, fill: C.lemon, opacity: seg(lt, 3.7, 0.3) });
+    over += chip(MON.x + 14, MON.y + MON.h - 22, "마커 네 개로 ROI 자동 생성", { size: 12.5, fill: C.lemon, opacity: seg(lt, 3.7, 0.3) });
     let s = card(MON.x - 2, MON.y - 2, MON.w + 4, MON.h + 4, { rx: 12 });
     s += `<clipPath id="mon"><rect x="${MON.x}" y="${MON.y}" width="${MON.w}" height="${MON.h}" rx="11"/></clipPath>`;
     s += g({ "clip-path": "url(#mon)" }, yard(cam, { extra: over }));
     s += chip(MON.x + 14, MON.y + 22, "CAM 1", { size: 12.5, fill: C.paper });
-    s += chip(MON.x + MON.w - 14, MON.y + 22, "카메라 각도 바뀜", { size: 12.5, fill: C.paper, anchor: "end", opacity: seg(lt, 1.35, 0.25) * (1 - seg(lt, 2.4, 0.3, E.in)) + seg(lt, 4.05, 0.25) * (1 - seg(lt, 4.85, 0.2, E.in)) });
-    s += g({ opacity: ok }, chip(MON.x + MON.w - 14, MON.y + 22, "ROI가 그대로 따라감", { size: 12.5, fill: C.lemon, anchor: "end" }));
+    s += chip(MON.x + MON.w - 14, MON.y + 22, "카메라 각도 변경", { size: 12.5, fill: C.paper, anchor: "end", opacity: seg(lt, 1.35, 0.25) * (1 - seg(lt, 2.4, 0.3, E.in)) + seg(lt, 4.05, 0.25) * (1 - seg(lt, 4.85, 0.2, E.in)) });
+    s += g({ opacity: ok }, chip(MON.x + MON.w - 14, MON.y + 22, "ROI 자동 추종", { size: 12.5, fill: C.lemon, anchor: "end" }));
     return s;
   }
 
@@ -265,7 +265,7 @@ window.SCENE = (() => {
     // 같은 사람: 두 카메라를 잇는 호
     const link = seg(lt, 4.55, 0.5, E.inOut);
     s += drawOn("M372 300C392 338 432 338 452 300", link, { stroke: C.ink, "stroke-width": 2.2, "stroke-dasharray": link >= 0.999 ? "6 5" : undefined });
-    s += chip(412, 340, "같은 사람 · 전역 ID", { size: 12.5, fill: C.lemon, anchor: "middle", opacity: seg(lt, 4.8, 0.3) });
+    s += chip(412, 340, "동일인 전역 ID 부여", { size: 12.5, fill: C.lemon, anchor: "middle", opacity: seg(lt, 4.8, 0.3) });
     // GPU 부하
     const load = lerp(0.95, 0.42, fix) * seg(lt, 0.2, 0.8);
     const hot = load > 0.8;
@@ -273,7 +273,7 @@ window.SCENE = (() => {
     s += tag("rect", { x: 120, y: 380, width: 520, height: 24, rx: 12, fill: C.paper, stroke: C.ink, "stroke-width": 2 });
     s += tag("rect", { x: 123, y: 383, width: Math.max(0, 514 * load), height: 18, rx: 9, fill: hot ? C.red : "#4ade80" });
     s += chip(760, 392, "과부하", { size: 12.5, fill: C.red, color: C.paper, stroke: null, anchor: "end", opacity: seg(lt, 1.3, 0.3) * (1 - fix) });
-    s += chip(760, 392, "여유", { size: 12.5, fill: C.paper, anchor: "end", opacity: seg(lt, 3.3, 0.3) });
+    s += chip(760, 392, "부하 절감", { size: 12.5, fill: C.paper, anchor: "end", opacity: seg(lt, 3.3, 0.3) });
     return s;
   }
 

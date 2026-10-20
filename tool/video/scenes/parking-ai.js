@@ -102,7 +102,7 @@ window.SCENE = (() => {
         }
         s += footprint(cam, car, seg(lt, 3.9, 0.5) * out, { dots: seg(lt, 4.1, 0.3) });
         const fc = cam.P(ring[2]);
-        s += chip(fc[0] + 14, fc[1] + 4, "CFQ · 늘 볼록", { size: 13, fill: C.lemon, opacity: seg(lt, 4.35, 0.35) * out });
+        s += chip(fc[0] + 14, fc[1] + 4, "CFQ · 볼록 보장", { size: 13, fill: C.lemon, opacity: seg(lt, 4.35, 0.35) * out });
         return s;
       };
     }
@@ -122,7 +122,7 @@ window.SCENE = (() => {
         const dx = (1 - seg(lt, 0.85, 0.5)) * 30 + seg(lt, 3.35, 0.4, E.in) * 30;
         const rows = ["초점거리", "카메라 높이", "어안 왜곡 계수"];
         let p = card(560, 92, 212, 150, { opacity: 1 });
-        p += text(578, 116, "카메라마다 구할 값", { "font-size": 13.5, "font-weight": 700, fill: C.sub });
+        p += text(578, 116, "카메라별 보정값", { "font-size": 13.5, "font-weight": 700, fill: C.sub });
         rows.forEach((r, i) => {
           const y = 146 + i * 30;
           const a = seg(lt, 1.15 + i * 0.18, 0.3);
@@ -159,9 +159,9 @@ window.SCENE = (() => {
       const bad = 1 - seg(lt, 2.85, 0.25, E.in);
       const piStatus =
         chip(446, 360, "fp16", { size: 13, fill: C.paper, color: C.red, stroke: C.red, opacity: seg(lt, 0.95, 0.3) * bad }) +
-        chip(446 + chip.width("fp16") + 8, 360, "검출 사라짐", { size: 13, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 1.75, 0.3) * bad }) +
+        chip(446 + chip.width("fp16") + 8, 360, "검출 소실", { size: 13, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 1.75, 0.3) * bad }) +
         chip(446, 360, "INT8 · NCNN", { size: 13, fill: C.lemon, opacity: seg(lt, 3.2, 0.3) }) +
-        g({ opacity: seg(lt, 4.0, 0.3) }, chip(446 + chip.width("INT8 · NCNN") + 8, 360, "장비에서 채점", { size: 13, fill: C.paper, pad: 9 }));
+        g({ opacity: seg(lt, 4.0, 0.3) }, chip(446 + chip.width("INT8 · NCNN") + 8, 360, "실기기 채점 완료", { size: 13, fill: C.paper, pad: 9 }));
       const cards =
         box(34, "학습 GPU", cars.map((c) => (c.space >= SHOW[0] && c.space <= SHOW[1] ? 1 : 0)), fp32) +
         box(430, "라즈베리파이", piFp, piStatus) +

@@ -56,7 +56,7 @@
       <li><span class="fact__label">맡은 일</span><span class="fact__value">프로젝트 담당&nbsp;· 공간 데이터 분석</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>프로젝트 담당자로 공간 데이터 수집·전처리부터 모델링·시각화까지 이끌었습니다. 핫스폿(Hot Spot) 분석으로 사고 다발 구역을 찾고, Random Forest와 지리가중회귀(GWR)로 지역마다 다른 영향(공간적 이질성)을 반영해 최적입지를 도출했습니다.</p>
+      <p>프로젝트 담당자로 공간 데이터 수집·전처리부터 모델링·시각화까지 주도. 핫스폿(Hot Spot) 분석으로 사고 다발 구역 도출, Random Forest·지리가중회귀(GWR)로 지역별 영향 차이(공간적 이질성)를 반영해 최적입지 도출.</p>
     </section>
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
@@ -66,22 +66,22 @@
       <h2 id="h-solve">풀어야 했던 문제</h2>
       <div class="clip">
         <div class="clip__frame">
-          <video class="clip__video" src="/assets/video/senior-zone.mp4?v=a4db8073" poster="/assets/video/senior-zone.webp?v=47cc12bd" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="노인보호구역 입지 분석: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+          <video class="clip__video" src="/assets/video/senior-zone.mp4?v=223ff783" poster="/assets/video/senior-zone.webp?v=99f7b60a" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="노인보호구역 입지 분석: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
         </div>
         <ol class="solve solve--clip">
-          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>시설 옆 지정은 사고 지점과 어긋난다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>고령 보행자 사고로 핫스폿 분석</span></button></li>
-          <li data-at="5.9"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>같은 요인도 지역마다 영향이 다르다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>GWR로 지역별 영향을 따로 추정</span></button></li>
-          <li data-at="11.8"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>새로 지정하려면 객관적 근거가 필요하다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>위험도 지도와 보고서로 최적입지 제안</span></button></li>
+          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>시설 인접 지정, 실제 사고 지점과 불일치</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>고령 보행자 사고 기반 <span class="nobr">핫스폿·군집</span> 분석</span></button></li>
+          <li data-at="5.9"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>동일 요인의 지역별 영향 차이</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>GWR로 지역별 영향 개별 추정</span></button></li>
+          <li data-at="11.8"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>신규 지정의 객관적 근거 부재</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>위험도 <span class="nobr">지도·보고서로</span> 최적입지 제안</span></button></li>
         </ol>
       </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>고령 보행자 <span class="nobr">교통사고·노인</span> <span class="nobr">시설·도로</span> <span class="nobr">구조·인구</span> 데이터 수집, <span class="nobr">Pandas·GeoPandas</span> <span class="nobr">전처리·분석</span> 자동화 스크립트</li>
-        <li>QGIS에서 <span class="nobr">행정구역·교통·인구·시설</span> 레이어를 통합하고, 사고 <span class="nobr">건수·시간대·도로</span> <span class="nobr">구조·시설</span> 밀집도 기준 <span class="nobr">핫스폿·군집</span> 분석</li>
-        <li>scikit-learn Random Forest와 GWR(지리가중회귀)로 공간적 이질성을 반영한 위험도 모델링</li>
-        <li>위험도 지도와 분석 보고서로 시군별 노인보호구역 최적입지 제안</li>
+        <li>고령 보행자 <span class="nobr">교통사고·노인</span> <span class="nobr">시설·도로</span> <span class="nobr">구조·인구</span> 데이터 수집, <span class="nobr">Pandas·GeoPandas</span> <span class="nobr">전처리·분석</span> 자동화 스크립트 개발</li>
+        <li>QGIS <span class="nobr">행정구역·교통·인구·시설</span> 레이어 통합, 사고 <span class="nobr">건수·시간대·도로</span> <span class="nobr">구조·시설</span> 밀집도 기준 <span class="nobr">핫스폿·군집</span> 분석 수행</li>
+        <li>scikit-learn Random <span class="nobr">Forest·GWR(지리가중회귀)로</span> 공간적 이질성을 반영한 위험도 모델 구축</li>
+        <li>위험도 <span class="nobr">지도·분석</span> 보고서로 시군별 노인보호구역 최적입지 제안</li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-stack">

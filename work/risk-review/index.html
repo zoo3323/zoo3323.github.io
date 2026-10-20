@@ -56,7 +56,7 @@
       <li><span class="fact__label">맡은 일</span><span class="fact__value">1인 <span class="nobr">풀스택·LLM</span> 개발</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>업로드 → AI 분석 → 보완 → 현장 점검 → 보고서를 한 흐름으로 잇는 웹 플랫폼을 프런트엔드부터 AI 파이프라인까지 혼자 설계·구현했습니다. vLLM으로 서빙한 로컬 LLM·VLM에 내부 문서 RAG와 MCP 법령 조회를 붙여, 인용한 조문을 검증하고 근거와 함께 답합니다.</p>
+      <p>업로드 → AI 분석 → 보완 → 현장 점검 → 보고서를 한 흐름으로 잇는 웹 플랫폼을 프런트엔드부터 AI 파이프라인까지 1인 설계·구현. vLLM 서빙 로컬 LLM·VLM에 내부 문서 RAG·MCP 법령 조회를 결합해 인용 조문 검증·근거 기반 답변 구현.</p>
     </section>
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
@@ -66,24 +66,24 @@
       <h2 id="h-solve">풀어야 했던 문제</h2>
       <div class="clip">
         <div class="clip__frame">
-          <video class="clip__video" src="/assets/video/risk-review.mp4?v=eb9bcfc6" poster="/assets/video/risk-review.webp?v=b02a3354" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="위험성평가 AI: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+          <video class="clip__video" src="/assets/video/risk-review.mp4?v=2a3da541" poster="/assets/video/risk-review.webp?v=88f4da80" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="위험성평가 AI: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
         </div>
         <ol class="solve solve--clip">
-          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>AI가 없는 조문을 인용한다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>MCP로 조문 조회, RAG 근거를 붙인다</span></button></li>
-          <li data-at="6"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>평가표 양식이 제각각이고 병합 셀투성이</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>다중 양식 파서로 항목 단위 정리</span></button></li>
-          <li data-at="11.6"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>큰 평가표는 한 번에 분석하기 어렵다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">ARQ·Redis</span> 워커로 두 단계 나눠 분석</span></button></li>
+          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>존재하지 않는 조문 인용(할루시네이션)</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>MCP 조문 <span class="nobr">조회·RAG</span> 근거 첨부로 차단</span></button></li>
+          <li data-at="6"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>평가표 양식 <span class="nobr">상이·병합</span> 셀 파싱 오류</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>다중 양식 파서로 항목 단위 정규화</span></button></li>
+          <li data-at="11.6"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>대용량 평가표 단일 요청 분석 한계</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">ARQ·Redis</span> 워커로 2단계 비동기 분석</span></button></li>
         </ol>
       </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>vLLM(OpenAI 호환 API)으로 로컬 <span class="nobr">LLM·VLM을</span> 서빙하고 FastAPI 백엔드에 연동</li>
-        <li>내부 문서 RAG: 표준 <span class="nobr">절차서·작업</span> <span class="nobr">지침·사고</span> 사례를 텍스트 추출 → 문장 단위 청킹 → fastembed 임베딩 → pgvector 인덱싱</li>
-        <li>RAG 챗봇은 찾은 문서를 근거로 붙여 답하고, korean-law-mcp(MCP 서버)로 산업안전보건법 조문을 실시간 조회해 없는 조문 인용(할루시네이션) 차단</li>
-        <li><span class="nobr">ARQ·Redis</span> 워커로 항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가 2단계 비동기 분석 파이프라인</li>
-        <li>VLM으로 현장 <span class="nobr">사진·TBM</span> 회의록을 분석해 새 위험 요인 추출</li>
-        <li>병합 <span class="nobr">셀·비정형</span> 칼럼이 섞인 <span class="nobr">엑셀(.xlsx)·한글(.hwpx)</span> 평가표 파싱, 편집형 <span class="nobr">그리드·대시보드,</span> <span class="nobr">PDF·DOCX·XLSX</span> 보고서 내보내기</li>
+        <li>vLLM(OpenAI 호환 API) 기반 로컬 <span class="nobr">LLM·VLM</span> 서빙, FastAPI 백엔드 연동</li>
+        <li>내부 문서 RAG 파이프라인 구축: 표준 <span class="nobr">절차서·작업</span> <span class="nobr">지침·사고</span> 사례 텍스트 추출 → 문장 단위 청킹 → fastembed 임베딩 → pgvector 인덱싱</li>
+        <li>근거 문서를 붙여 답하는 RAG 챗봇 구현, korean-law-mcp(MCP 서버)로 산업안전보건법 조문을 실시간 조회해 없는 조문 인용(할루시네이션) 차단</li>
+        <li><span class="nobr">ARQ·Redis</span> 워커 기반 항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가 2단계 비동기 분석 파이프라인 구축</li>
+        <li>VLM 기반 현장 <span class="nobr">사진·TBM</span> 회의록 분석으로 신규 위험 요인 추출</li>
+        <li>병합 <span class="nobr">셀·비정형</span> 칼럼이 섞인 <span class="nobr">엑셀(.xlsx)·한글(.hwpx)</span> 평가표 파서 개발, 편집형 <span class="nobr">그리드·대시보드·PDF·DOCX·XLSX</span> 보고서 내보내기 구현</li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-stack">

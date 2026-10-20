@@ -56,33 +56,33 @@
       <li><span class="fact__label">맡은 일</span><span class="fact__value">영상 분석 서버 개발</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>GPU 한 대에서 화재·안전모·침입 감지와 다중 카메라 추적 모델을 함께 운영하는 FastAPI 추론 서버를 만들었습니다. RTSP 스트림을 받아 추론하고, 결과를 하나의 스키마로 정규화해 WebSocket으로 실시간 송출합니다.</p>
+      <p>GPU 한 대로 화재·안전모·침입 감지와 다중 카메라 추적 모델을 함께 운영하는 FastAPI 추론 서버 구축. RTSP 스트림 실시간 추론, 결과를 단일 스키마로 정규화해 WebSocket 실시간 송출.</p>
     </section>
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
-      <div class="flow"><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>RTSP 카메라</b><span>스트림마다 스레드&nbsp;· 끊기면 재연결</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">모델 라우터&nbsp;· 동적 로딩</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b><span class="nobr">화재·연기</span></b><span>YOLO</span></div><div class="flow__node flow__node--model"><b>안전모</b><span>YOLO&nbsp;· <span class="nobr">helmet·head</span></span></div><div class="flow__node flow__node--model"><b>침입</b><span>YOLO&nbsp;· ArUco 자동 ROI</span></div><div class="flow__node flow__node--model"><b>다중 카메라 추적</b><span>ByteTrack&nbsp;· ReID</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>결과 정규화</b><span>box&nbsp;· roi&nbsp;· count 스키마</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>실시간 송출</b><span>WebSocket</span></div></li></ol><p class="flow__note">GPU 한 대&nbsp;· Docker</p></div>
+      <div class="flow"><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>RTSP 카메라</b><span>스트림별 스레드&nbsp;· 끊김 시 재연결</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">모델 라우터&nbsp;· 동적 로딩</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b><span class="nobr">화재·연기</span></b><span>YOLO</span></div><div class="flow__node flow__node--model"><b>안전모</b><span>YOLO&nbsp;· <span class="nobr">helmet·head</span></span></div><div class="flow__node flow__node--model"><b>침입</b><span>YOLO&nbsp;· ArUco 자동 ROI</span></div><div class="flow__node flow__node--model"><b>다중 카메라 추적</b><span>ByteTrack&nbsp;· ReID</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>결과 정규화</b><span>box&nbsp;· roi&nbsp;· count 스키마</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>실시간 송출</b><span>WebSocket</span></div></li></ol><p class="flow__note">GPU 한 대&nbsp;· Docker</p></div>
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
       <div class="clip">
         <div class="clip__frame">
-          <video class="clip__video" src="/assets/video/safety-vision.mp4?v=22f791c8" poster="/assets/video/safety-vision.webp?v=6d419021" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="안전 영상 분석: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+          <video class="clip__video" src="/assets/video/safety-vision.mp4?v=6ddeca39" poster="/assets/video/safety-vision.webp?v=64d59be2" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="안전 영상 분석: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
         </div>
         <ol class="solve solve--clip">
-          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>모델 넷을 GPU 한 대에 올리면 OOM</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>필요한 모델만 올려 바꿔 끼운다</span></button></li>
-          <li data-at="5.7"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>카메라를 옮기면 ROI를 다시 그려야 한다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>ArUco 마커로 ROI 자동 생성</span></button></li>
-          <li data-at="11.2"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>모든 트랙을 ReID 하면 GPU가 버겁다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>믿을 만한 트랙만 ReID, 전역 ID 부여</span></button></li>
+          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>모델 4종 동시 적재 시 VRAM 부족(OOM)</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>동적 모델 매니저로 필요 모델만 교체 적재</span></button></li>
+          <li data-at="5.7"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>카메라 이동 시 ROI 재작성 필요</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>ArUco 마커 기반 ROI 자동 생성</span></button></li>
+          <li data-at="11.2"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>전 트랙 ReID로 GPU 부하 과다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>고신뢰 트랙만 ReID, 전역 ID 부여</span></button></li>
         </ol>
       </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>FastAPI 다중 모델 라우팅과 동적 모델 로딩: GPU에는 한 모델만 상주시키고 요청 시 교체해 VRAM 부족(OOM) 해결</li>
-        <li>RTSP 스트림 전용 스레드 디코딩과 자동 재연결, 결과를 <span class="nobr">box·roi·count</span> 스키마로 정규화해 WebSocket 송출</li>
-        <li>YOLO 계열 검출로 <span class="nobr">화재·연기와</span> 안전모 <span class="nobr">착용(helmet)·미착용(head)</span> 감지</li>
-        <li>ArUco 마커로 침입 감지 ROI를 자동 생성해, 카메라를 다시 달아도 재설정 없이 동작</li>
-        <li>ByteTrack 추적과 ResNet50 ReID로 여러 카메라를 지나는 같은 사람에게 전역 ID 부여, 신뢰도 높은 트랙만 ReID해 GPU 부하 절감</li>
+        <li>FastAPI 다중 모델 <span class="nobr">라우팅·동적</span> 모델 로딩 구현: GPU에 한 모델만 상주시키고 요청 시 교체해 VRAM 부족(OOM) 해결</li>
+        <li>RTSP 스트림 전용 스레드 <span class="nobr">디코딩·자동</span> 재연결 구현, 결과를 <span class="nobr">box·roi·count</span> 스키마로 정규화해 WebSocket 송출</li>
+        <li>YOLO 계열 검출 모델로 <span class="nobr">화재·연기,</span> 안전모 <span class="nobr">착용(helmet)·미착용(head)</span> 감지 기능 개발</li>
+        <li>ArUco 마커 기반 침입 감지 ROI 자동 생성, 카메라 재설치 후에도 재설정 없이 동작</li>
+        <li>ByteTrack <span class="nobr">추적·ResNet50</span> ReID로 다중 카메라 동일인 전역 ID 부여, 고신뢰 트랙만 ReID해 GPU 부하 절감</li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-stack">
