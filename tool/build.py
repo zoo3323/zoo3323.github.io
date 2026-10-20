@@ -1105,9 +1105,10 @@ if ABOUT:
     about_icon = (
         f'<img class="app-icon app-icon--photo" src="{esc(photo)}" width="350" height="450" alt="">' if photo else ABOUT_ICON
     )
-    cv = cv_list(a["career"] + a.get("education", []))
     more_cv = "\n    ".join(
         filter(None, [
+            cv_section("career", "경력", a["career"]),
+            cv_section("edu", "학력", a.get("education")),
             cv_section("certs", "자격증", a.get("certs")),
             cv_section(
                 "work",
@@ -1155,12 +1156,6 @@ if ABOUT:
     <section class="sec desc" aria-label="소개">
       <p class="desc__lead">{esc(a["lead"])}</p>
       {about_text}
-    </section>
-    <section class="sec" aria-labelledby="h-cv">
-      <h2 id="h-cv">경력과 학력</h2>
-      <ol class="cv">
-        {cv}
-      </ol>
     </section>
     {more_cv}
     <section class="sec" aria-labelledby="h-skills">
