@@ -26,7 +26,7 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `assets/shots.js` | 미리보기 화면을 눌러 크게 보기 |
 | `assets/grab.js` | 넘치는 진열대 줄·앱 화면 줄을 마우스로 잡아 옆으로 끌기(편 손·쥔 손 커서, 놓으면 가까운 멈춤 자리로) |
 | `assets/cursor/` | 사이트 커서 그림 다섯(레몬 화살표 `arrow`, 가리키는 손 `point`, 편 손 `open`, 쥔 분홍 손 `fist`, 돋보기 `zoom`; 32px·64px). 원본은 `tool/cursor/*.svg`, 고친 뒤 `node tool/cursor/render.mjs` 로 다시 굽는다(Playwright 필요). 쓰는 곳은 `site.css` 맨 위의 `--cur…` 변수. 같은 이름으로 다시 구우면 브라우저 캐시에 옛 그림이 남을 수 있으니 이름을 바꾼다 |
-| `assets/pet.js`, `closet.js` | 스크린펫 꺼내 보기, 옷 분류 딱지 |
+| `assets/pet.js` | 스크린펫 꺼내 보기 |
 | `assets/tryon.js` | 옷장 「배경 지우고 AI로 입혀 보기」 시연(옷 고르기 → 배경 지우기 → 내 사진 고르기 → 입혀 보기, 결과 비교 막대). 웹에서 AI 를 돌리지 않고 미리 만든 그림만 보여 준다 |
 | `assets/img/`, `assets/fonts/` | 그림과 글꼴 |
 
