@@ -13,7 +13,7 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `tool/apps/<앱>/app.json` | 앱 한 개의 정보(이름, 색, 버전, 플랫폼, 설명) |
 | `tool/apps/<앱>/pack.html` | 진열대의 봉지 속에 넣을 물건 |
 | `tool/apps/<앱>/preview.html` | 앱 페이지의 「미리보기」 |
-| `tool/apps/<앱>/demo.html` | (있으면) 미리보기 아래의 따로 해 보는 구역 |
+| `tool/apps/<앱>/demo.html` | (있으면) 미리보기 아래의 따로 해 보는 구역. 구역을 더 두려면 `app.json` 의 `"demos": [{"file", "title", "id"}]`(demo.html 앞에 나온다) |
 | `tool/about.json` | 소개 페이지 `/about/`의 내용(경력·학력·자격증·회사 프로젝트·개인 프로젝트·연구·논문·기술·공개한 도구) |
 | `tool/build.py` | 위 파일들로 HTML을 만든다. `site.css`·스크립트 주소 끝에 내용 해시(`?v=`)를 붙여, 새로 올리면 브라우저가 옛 사본(GitHub Pages 10분 캐시) 대신 새 파일을 받는다 |
 | `index.html`, `<앱>/index.html`, `work/<이름>/index.html`, `about/index.html`, `404.html` | 만들어진 결과. 직접 고치지 않는다 |
@@ -27,6 +27,7 @@ NamJuKim의 1인 개발자 개발 기록입니다. <https://zoo3323.github.io>
 | `assets/grab.js` | 넘치는 진열대 줄·앱 화면 줄을 마우스로 잡아 옆으로 끌기(편 손·쥔 손 커서, 놓으면 가까운 멈춤 자리로) |
 | `assets/cursor/` | 사이트 커서 그림 다섯(레몬 화살표 `arrow`, 가리키는 손 `point`, 편 손 `open`, 쥔 분홍 손 `fist`, 돋보기 `zoom`; 32px·64px). 원본은 `tool/cursor/*.svg`, 고친 뒤 `node tool/cursor/render.mjs` 로 다시 굽는다(Playwright 필요). 쓰는 곳은 `site.css` 맨 위의 `--cur…` 변수. 같은 이름으로 다시 구우면 브라우저 캐시에 옛 그림이 남을 수 있으니 이름을 바꾼다 |
 | `assets/pet.js`, `closet.js` | 스크린펫 꺼내 보기, 옷 분류 딱지 |
+| `assets/tryon.js` | 옷장 「배경 지우고 AI로 입혀 보기」 시연(옷 고르기 → 배경 지우기 → 내 사진 고르기 → 입혀 보기, 결과 비교 막대). 웹에서 AI 를 돌리지 않고 미리 만든 그림만 보여 준다 |
 | `assets/img/`, `assets/fonts/` | 그림과 글꼴 |
 
 첫 화면은 마트 진열대처럼 칸으로 나뉜 벽에 고리로 건 봉지들이고, 봉지를 누르면 나오는 앱 페이지는 앱 장터의 앱 화면처럼 짜여 있습니다.
@@ -148,6 +149,7 @@ python3 -m http.server 8765    # http://127.0.0.1:8765 에서 미리 보기
 - **버전 기록**: 그 앱의 `app.json`에서 `version`을 올리고 `history` 맨 위에 `{"version", "date", "notes"}`를 하나 더합니다. 앱 페이지의 「새로운 기능」에는 지금 버전의 기록이, 그 아래 접힌 「버전 기록」에는 나머지가 나옵니다. 버전이 없는 웹 서비스는 `version`을 `null`로 두면 「업데이트 기록」이 됩니다.
 - **소개**: `tool/about.json`의 경력·학력·기술·공개한 도구를 고칩니다. 소개 페이지에서 `career`는 「경력」, `education`은 「학력」 구역으로 따로 나옵니다. 앱 페이지의 개발자 이름은 소개 페이지로 이어집니다. 「다루는 기술」은 줄 세 개(비전 AI·LLM·개발) 안팎으로 짧게 둡니다. `"main": true`인 줄은 노란 칩으로 진하게 보입니다.
 - **이름 글씨를 따로 쓰는 앱**: 이름 글자만 담은 글꼴 조각을 `tool/wordmarks.py`로 만들고 `assets/site.css` 맨 위에 `@font-face`를 한 줄 더한 뒤 `app.json`의 `mark.font`에 그 이름을 적습니다.
+- **옷장 체험 칸 그림**(`assets/img/mylittlecloset/try/`): 인물 2·옷 3은 Codex 이미지 생성(가상 인물·생성 이미지), 옷 배경은 맥 Apple Vision(`VNGenerateForegroundInstanceMaskRequest`)으로 지움, 입힌 결과 `result-<인물>-<옷>.webp` 6장은 FASHN tryon-v1.6(앱과 같은 설정: 흰 바탕 옷 JPEG, flat-lay, balanced). 인물·옷을 늘리면 결과도 조합마다 새로 만들어야 합니다(유료). 그림마다 만든 방법은 `*.webp.json`(저장소 밖)에 적어 둡니다.
 - **스크린펫 동물 추가**: `assets/img/pocketpet/`의 `thumb/`, `atlas/`(스프라이트 위 다섯 줄, 1536×1040), 큐티 그림체면 `stage/`에 그림을 넣고 `tool/apps/pocketpet/demo.html`의 선반에 버튼 한 줄을 더합니다.
 
 ## 그림과 글꼴

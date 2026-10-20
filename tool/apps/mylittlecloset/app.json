@@ -54,7 +54,8 @@
     ]
   ],
   "scripts": [
-    "closet.js"
+    "closet.js",
+    "tryon.js"
   ],
   "history": [
     {
@@ -123,5 +124,12 @@
       "notes": "첫 버전. 옷 등록, 옷장 찾기, 정리, 백업."
     }
   ],
-  "demoTitle": "스티커 시트로 골라 보기"
+  "demoTitle": "스티커 시트로 골라 보기",
+  "demos": [
+    {
+      "file": "tryon.html",
+      "title": "배경 지우고 AI로 입혀 보기",
+      "id": "h-try"
+    }
+  ]
 }

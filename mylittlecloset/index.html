@@ -21,6 +21,7 @@
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css?v=2af880a6">
 <script src="/assets/closet.js?v=05a42f2d" defer></script>
+<script src="/assets/tryon.js?v=2ae6a784" defer></script>
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -66,6 +67,52 @@
   <li style="--k:calc(1560 / 1440)"><img src="/assets/img/mylittlecloset/screen-outfit.webp" width="720" height="1440" alt="코디 만들기 화면. 고른 옷 스티커가 위쪽 판에 붙고, 아래 옷 목록에서 고른 옷에 체크 표시가 있다." loading="lazy"></li>
 </ul>
 <p class="sec__note">화면 속 옷과 기록은 견본입니다.</p>
+    </section>
+    <section class="sec" aria-labelledby="h-try">
+      <h2 id="h-try">배경 지우고 AI로 입혀 보기</h2>
+      <div class="try" data-try>
+  <figure class="try__stage" aria-live="polite">
+    <div class="try__frame" data-frame>
+      <img class="try__img try__img--photo" data-photo src="/assets/img/mylittlecloset/try/garment-shirt.webp" width="600" height="800" alt="나무 바닥에 펼쳐 둔 체크 셔츠 사진">
+      <div class="try__sheet" data-sheet-layer hidden><img class="try__img try__img--cut" data-cut width="600" height="800" alt=""></div>
+      <img class="try__img try__img--person" data-person-img width="600" height="900" alt="" hidden>
+      <img class="try__img try__img--result" data-result width="600" height="900" alt="" hidden>
+      <span class="try__sweep" data-sweep aria-hidden="true"></span>
+      <span class="try__busy" data-busy hidden><span>AI가 입혀 보는 중</span></span>
+      <span class="try__mini" data-mini hidden><img width="600" height="800" alt=""></span>
+      <input class="try__compare" data-compare type="range" min="0" max="100" value="50" aria-label="원래 사진과 입힌 결과 비교" hidden>
+      <span class="try__labels" data-labels hidden aria-hidden="true"><span>원래 사진</span><span>입힌 결과</span></span>
+    </div>
+    <figcaption class="try__cap" data-cap>옷 사진을 고른 뒤 배경을 지워 보세요.</figcaption>
+  </figure>
+  <ol class="try__steps">
+    <li class="try__step" data-step="1">
+      <p class="try__title"><span class="try__num">1</span>옷 고르기</p>
+      <div class="try__picks" role="group" aria-label="옷 사진">
+        <button type="button" class="try__pick" data-garment="shirt" aria-pressed="true"><img src="/assets/img/mylittlecloset/try/garment-shirt-s.webp" width="160" height="213" alt=""><span>체크 셔츠</span></button>
+        <button type="button" class="try__pick" data-garment="knit" aria-pressed="false"><img src="/assets/img/mylittlecloset/try/garment-knit-s.webp" width="160" height="213" alt=""><span>니트</span></button>
+        <button type="button" class="try__pick" data-garment="denim" aria-pressed="false"><img src="/assets/img/mylittlecloset/try/garment-denim-s.webp" width="160" height="213" alt=""><span>데님 재킷</span></button>
+      </div>
+    </li>
+    <li class="try__step" data-step="2">
+      <p class="try__title"><span class="try__num">2</span>배경 지우기</p>
+      <button type="button" class="btn try__go" data-cut-go>배경 지우기</button>
+    </li>
+    <li class="try__step" data-step="3">
+      <p class="try__title"><span class="try__num">3</span>내 사진 고르기</p>
+      <div class="try__picks try__picks--people" role="group" aria-label="내 사진(견본 인물)">
+        <button type="button" class="try__pick" data-person="a" aria-pressed="false" disabled><img src="/assets/img/mylittlecloset/try/person-a-s.webp" width="160" height="240" alt=""><span>인물 A</span></button>
+        <button type="button" class="try__pick" data-person="b" aria-pressed="false" disabled><img src="/assets/img/mylittlecloset/try/person-b-s.webp" width="160" height="240" alt=""><span>인물 B</span></button>
+      </div>
+    </li>
+    <li class="try__step" data-step="4">
+      <p class="try__title"><span class="try__num">4</span>AI로 입혀 보기</p>
+      <button type="button" class="btn try__go" data-wear-go disabled>입혀 보기</button>
+      <button type="button" class="try__reset" data-reset hidden>처음부터</button>
+    </li>
+  </ol>
+</div>
+<p class="sec__note">배경 지우기는 지금 앱에 있는 기능이고, AI 입혀 보기는 추가할 예정인 기능을 미리 보여 주는 시연입니다. 인물과 옷 사진은 생성 이미지이고, 배경은 Apple Vision으로 지웠으며, 입힌 결과는 FASHN tryon-v1.6으로 미리 만들어 두었습니다. 이 화면에서 AI를 실제로 돌리지는 않습니다.</p>
     </section>
     <section class="sec" aria-labelledby="h-demo">
       <h2 id="h-demo">스티커 시트로 골라 보기</h2>
