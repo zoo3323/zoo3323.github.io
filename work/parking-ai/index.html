@@ -56,14 +56,14 @@
       <li><span class="fact__label">맡은 일</span><span class="fact__value">모델 <span class="nobr">연구·개발,</span> 엣지 배포</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>카메라마다 하던 보정 단계 없이 원본 영상에서 가려진 하단면까지 검출. 처음 보는 현장 AP50 80.32%, 현장 찬 칸 놓침 80 → 0/511, 라즈베리파이 5 프레임당 69.5 ms.</p>
+      <p>원본 영상 한 장에서 가려진 부분까지 차량 하단면(footprint) 네 꼭짓점을 바로 출력하는 <span class="nobr">one-stage</span> 2.5D 검출 모델. 옆 칸까지 덮는 2D 상자 대신 바닥에 닿는 영역으로 주차면 점유를 판단하고, 카메라마다 하던 <span class="nobr">캘리브레이션·어안</span> 왜곡 보정 단계 제거.</p>
       <div class="term" role="note" aria-label="용어 풀이: CFQ"><svg class="term__fig" viewBox="0 0 176 112" aria-hidden="true" focusable="false"><path d="M30 20 136 28 142 76 38 88Z" fill="#ffe55c" fill-opacity=".75" stroke="#17171a" stroke-width="2" stroke-linejoin="round"/><path d="M14 54.5 158 51.5" stroke="#17171a" stroke-width="1.6" stroke-dasharray="5 4"/><path d="M30 20 38 88M136 28 142 76" stroke="#17171a" stroke-width="4" stroke-linecap="round"/><g fill="#fff" stroke="#17171a" stroke-width="1.6"><circle cx="30" cy="20" r="3.4"/><circle cx="136" cy="28" r="3.4"/><circle cx="142" cy="76" r="3.4"/><circle cx="38" cy="88" r="3.4"/></g><g font-size="11" font-weight="700" fill="#17171a" text-anchor="middle"><text x="34" y="105">뒤 변</text><text x="140" y="95">앞 변</text><text x="88" y="45">차량 축</text></g></svg><div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>CFQ</b><span class="term__full">Convex Footprint Quadrilateral</span></p><p class="term__desc">차량 축과 앞뒤 변의 <span class="nobr">폭·기울기로</span> 늘 볼록한 사각형을 내는 하단면 표현.</p><p class="term__more"><a class="get get--line term__go" href="/about/#h-research">논문 바로가기</a></p></div></div>
     </section>
     
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
       <div class="flow"><p class="flow__title">학습</p><ol class="flow__steps" style="--n:4"><li class="flow__step flow__step--group"><p class="flow__label">데이터</p><div class="flow__nodes"><div class="flow__node flow__node--in"><b>합성 데이터</b><span>CARLA 주차장&nbsp;· 어안 렌즈 포함</span></div><div class="flow__node flow__node--in"><b>실제 영상</b><span>라벨링 도구로 만든 하단면 라벨</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>학습</b><span><span class="nobr">열화·가림·야간</span> 조명 증강, 합동 <span class="nobr">학습·미세조정</span></span></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>경량화</b><span>지식 증류&nbsp;· INT8 양자화</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>모델 릴리스</b><span><span class="nobr">ONNX·NCNN</span>&nbsp;· 입출력 계약 버전 관리</span></div></li></ol></div>
-<div class="flow"><p class="flow__title">현장</p><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>원본 영상</b><span>CCTV&nbsp;· 기둥 카메라, 보정 없이 그대로</span></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>2.5D 하단면 검출</b><span>중심점 one-stage&nbsp;· CFQ 볼록 사각형</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>트래킹</b><span>하단면 트래커&nbsp;· 앞뒤 카메라 결합</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>점유 판정</b><span>주차면 ROI를 덮는 넓이 → <span class="nobr">입차·출차</span></span></div></li></ol><p class="flow__note">라즈베리파이&nbsp;· Jetson&nbsp;· GPU <span class="nobr">서버(TensorRT·DeepStream)에서</span> 동작</p></div>
+<div class="flow"><p class="flow__title">현장</p><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>원본 영상</b><span>CCTV&nbsp;· 기둥 카메라, 보정 없이 그대로</span></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>2.5D 하단면 검출</b><span>중심점 <span class="nobr">one-stage</span>&nbsp;· CFQ 볼록 사각형</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>트래킹</b><span>하단면 트래커&nbsp;· 앞뒤 카메라 결합</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>점유 판정</b><span>주차면 ROI를 덮는 넓이 → <span class="nobr">입차·출차</span></span></div></li></ol><p class="flow__note">라즈베리파이&nbsp;· Jetson&nbsp;· GPU <span class="nobr">서버(TensorRT·DeepStream)에서</span> 동작</p></div>
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
@@ -84,7 +84,7 @@
       <ul>
         <li>모델 설계부터 <span class="nobr">데이터셋·지표</span> 설계, 실험, 정량 평가, <span class="nobr">경량화·현장</span> 배포까지 전 과정 주도, 투고 논문 제1저자</li>
         <li>CFQ(Convex Footprint Quadrilateral) 표현 설계: 꼭짓점 순서가 고정된 볼록 사각형 출력 보장, 합성 검증 AP50:95 61.10 ± 0.52%(평행사변형 57.32%)</li>
-        <li>중심점 기반 one-stage 검출기로 가려진 꼭짓점까지 추정하는 amodal 하단면 검출, CARLA <span class="nobr">합성·실제</span> CCTV 합동 학습으로 sim-to-real 격차 축소</li>
+        <li>중심점 기반 <span class="nobr">one-stage</span> 검출기로 가려진 꼭짓점까지 추정하는 amodal 하단면 검출, CARLA <span class="nobr">합성·실제</span> CCTV 합동 학습으로 <span class="nobr">sim-to-real</span> 격차 축소</li>
         <li><span class="nobr">품질·지연·비용</span> 비교로 장비별 경량화 선택: GPU 서버 640 입력 + 지식 증류, 라즈베리파이 INT8 양자화</li>
         <li>앞뒤 카메라 하단면 트랙 결합, 주차면 ROI 점유 비율 기반 <span class="nobr">입차·출차</span> 판정</li>
       </ul>

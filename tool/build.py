@@ -857,6 +857,12 @@ def keep_dots(text):
     """「연구·개발」처럼 가운뎃점으로 이은 말은 줄바꿈하지 않게 묶는다(좁은 칸에서 점 뒤에서 끊기지 않게)."""
     # 띄어 쓴 가운뎃점(「A · B」)은 앞 낱말에 붙여, 줄이 「·」로 시작하지 않게 한다
     joined = re.sub(r"[^\s·]+(?:·[^\s·]+)+", lambda m: f'<span class="nobr">{m.group(0)}</span>', esc(text))
+    # 「one-stage」「sim-to-real」처럼 짧은 영어 하이픈 낱말도 하이픈에서 끊지 않는다(긴 저장소 이름은 그대로 둔다)
+    joined = re.sub(
+        r"(?<![\w-])[A-Za-z]+(?:-[A-Za-z]+)+(?![\w-])",
+        lambda m: f'<span class="nobr">{m.group(0)}</span>' if len(m.group(0)) <= 11 else m.group(0),
+        joined,
+    )
     return joined.replace(" · ", "&nbsp;· ")
 
 
