@@ -1829,7 +1829,6 @@ a.get--line:hover {
 }
 .sec p {
   margin: 0;
-  max-width: 40rem;
 }
 .sec p + p {
   margin-top: 0.6rem;
@@ -1910,7 +1909,6 @@ a.get--line:hover {
   transform: rotate(-135deg);
 }
 .history__list {
-  max-width: 40rem;
   margin: 0.25rem 0 0;
   padding: 0;
   list-style: none;
@@ -2384,7 +2382,6 @@ svg.app-icon {
   color: var(--sub);
 }
 .cv {
-  max-width: 40rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -2921,7 +2918,6 @@ svg.app-icon {
    칸 이름(data-label)을 값 위에 작게 단다. 제안 방법 열(is-ours)은 레몬으로 옅게, 결정 칸은 채택·기각 딱지 */
 .frame {
   margin: 0;
-  max-width: 46rem;
 }
 .frame__row {
   display: grid;
@@ -3146,7 +3142,6 @@ svg.app-icon {
   grid-template-columns: 9.5rem minmax(0, 1fr);
   gap: 0.75rem 1.25rem;
   align-items: center;
-  max-width: 44rem;
   margin-top: 1.1rem;
   padding: 0.9rem 1.1rem;
   border-radius: 0.9rem;
@@ -3282,9 +3277,6 @@ svg.app-icon {
 }
 
 /* 회사·개인 프로젝트와 논문 줄: 앞에 작은 그림(진열대 카드 그림·앱 화면)을 둔다 */
-.cv:has(.cv__row) {
-  max-width: 44rem;
-}
 .cv li.cv__row {
   display: grid;
   grid-template-columns: 9.5rem minmax(0, 1fr);
