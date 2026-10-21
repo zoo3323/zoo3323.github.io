@@ -1535,7 +1535,7 @@ if ABOUT and ABOUT.get("work"):
         items = []
         for m in w.get("media", []):
             note = '<span class="shots__note">생성 이미지</span>' if m.get("generated") else ""
-            cap = f'<p class="shots__cap">{esc(m["caption"])}{note}</p>' if m.get("caption") else ""
+            cap = f'<p class="shots__cap">{keep_dots(m["caption"])}{note}</p>' if m.get("caption") else ""
             if m["type"] == "video":
                 poster = f' poster="{esc(m["poster"])}"' if m.get("poster") else ""
                 items.append(

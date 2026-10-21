@@ -2097,6 +2097,7 @@ a.get--line:hover {
   font-size: 0.875rem;
   line-height: 1.45;
   color: var(--sub);
+  text-wrap: balance;
 }
 .shots__note {
   display: inline-block;
