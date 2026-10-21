@@ -1285,7 +1285,7 @@ h2 + .item {{ border-top: 0; padding-top: 0.6mm; }}
 .item time {{ color: var(--sub); font-variant-numeric: tabular-nums; white-space: nowrap; }}
 .item p, .item ul {{ grid-column: 1 / -1; margin: 0.7mm 0 0; }}
 .item ul {{ padding-left: 0; list-style: none; }}
-.item li {{ margin: 0.25mm 0; }}
+.item li {{ margin: 0.25mm 0; text-wrap: pretty; }}
 .skills {{ display: grid; grid-template-columns: 19mm minmax(0, 1fr); gap: 1.1mm 3mm; margin: 0; }}
 .skills dt {{ font-weight: 700; }}
 .skills dd {{ margin: 0; color: #33333a; }}
