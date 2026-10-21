@@ -20,7 +20,7 @@
   },
   "rest": -0.5,
   "status": "출시 준비 중",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "package": "dev.njkim.moacam",
   "platforms": [
     {
@@ -31,12 +31,15 @@
       "short": "웹"
     }
   ],
-  "labelLine": "0.2.0 · 견본 화면",
+  "labelLine": "0.3.0 · 견본 화면",
   "language": {
     "code": "KO",
     "name": "한국어"
   },
   "highlights": [],
+  "privacy": {
+    "date": "2026-10-21"
+  },
   "about": [
     "공기계에 앱을 깔거나 집 PC에서 연결 링크를 열면 그 기기가 카메라가 됩니다. 로그인한 내 폰에서 영상과 소리를 실시간으로 보고, 가족을 초대해 카메라마다 볼 수 있는 범위를 정합니다."
   ],
@@ -50,11 +53,16 @@
   "info": [
     [
       "만든 도구",
-      "Flutter, React, Node.js, WebRTC"
+      "Flutter, React, Cloudflare Workers, Firebase, WebRTC"
     ]
   ],
   "scripts": [],
   "history": [
+    {
+      "version": "0.3.0",
+      "date": "2026-10-21",
+      "notes": "가입할 때 이메일 인증을 거치고, 서버를 집마다 따로 돌게 옮겼습니다. 집 Wi-Fi와 LTE처럼 직접 이어지지 않는 네트워크에서도 영상이 중계 서버를 거쳐 이어집니다."
+    },
     {
       "version": "0.2.0",
       "date": "2026-10-13",

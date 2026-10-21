@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>모아캠 개인정보처리방침 | NamJuKim</title>
+<meta name="description" content="모아캠 개인정보처리방침. 다루는 정보와 쓰는 권한, 문의처를 적었습니다.">
+<link rel="canonical" href="https://zoo3323.github.io/moacam/privacy">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NamJuKim">
+<meta property="og:title" content="모아캠 개인정보처리방침 | NamJuKim">
+<meta property="og:description" content="모아캠 개인정보처리방침. 다루는 정보와 쓰는 권한, 문의처를 적었습니다.">
+<meta property="og:url" content="https://zoo3323.github.io/moacam/privacy">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css?v=8712d6dc">
+</head>
+<body>
+<div class="wall">
+<main id="doc">
+<article class="doc" style="--tone:#ffd60a;--tone-ink:#141414;--accent:#c80d25;--bag:#ffffff;--mark:'Mark Moacam';--mark-weight:400;--mark-size:2.5;--mark-tracking:0">
+  <header class="doc__head">
+    <img class="doc__icon" src="/assets/img/moacam/icon.webp" width="256" height="256" alt="">
+    <div>
+      <h1>모아캠 개인정보처리방침</h1>
+      <p class="doc__meta">시행일 <time datetime="2026-10-21">2026. 10. 21.</time> · NamJuKim</p>
+    </div>
+  </header>
+  <p class="doc__lead">모아캠은 안 쓰는 폰이나 PC 웹캠을 카메라로 두고, 로그인한 내 폰이나 브라우저에서 실시간으로 보는 서비스입니다. 영상과 소리는 녹화하지 않고 서버에 저장하지 않습니다. 계정과 집·카메라 설정을 운영하는 데 필요한 정보만 받습니다.</p>
+
+<h2>받는 정보와 쓰는 곳</h2>
+<dl class="doc__list">
+  <div><dt>계정</dt><dd>이메일 주소, 비밀번호, 가입할 때 정한 이름, 계정마다 붙는 번호. 로그인과 본인 확인, 가족 목록과 기록에 이름을 보여 주는 데 씁니다. 비밀번호는 로그인을 맡은 Firebase Authentication이 보관하며, 개발자의 서버는 받지 않습니다.</dd></div>
+  <div><dt>집과 가족</dt><dd>집 이름, 구성원의 이름·이메일·역할(소유자·관리자·가족), 카메라마다 정한 권한(영상·소리·촬영 중지). 가족을 초대하면 초대받는 사람의 이메일 주소. 같은 집 사람끼리 카메라를 나눠 보는 데 씁니다.</dd></div>
+  <div><dt>카메라</dt><dd>카메라 이름과 종류(안드로이드·웹), 카메라 기기의 상태(촬영 중인지, 마이크 사용, 배터리 잔량, 충전 여부, 화면 켜짐, 화면 꺼짐 방지 여부, 마지막 연결 시각), 연결할 때 카메라 기기가 보낸 기기 종류 문자열(브라우저·앱 정보). 카메라가 켜져 있는지와 상태를 가족에게 보여 주는 데 씁니다.</dd></div>
+  <div><dt>접속 기록</dt><dd>누가 언제 어떤 카메라를 봤는지, 카메라 추가·삭제·촬영 중지, 가족 초대·권한 변경 같은 일. 집의 관리자가 확인하고 잘못된 사용을 막는 데 씁니다.</dd></div>
+  <div><dt>연결 정보</dt><dd>영상을 이어 주려고 두 기기가 주고받는 연결 정보(네트워크 주소가 들어 있음)는 서버가 전달만 하고 저장하지 않습니다. 접속한 IP 주소는 너무 많은 요청을 막는 데 잠깐 쓰고 저장하지 않습니다.</dd></div>
+</dl>
+
+<h2>영상과 소리</h2>
+<p>카메라 기기와 보는 기기는 영상과 소리를 암호화된 연결(WebRTC)로 직접 주고받습니다. 두 기기가 직접 이어지지 않는 네트워크에서는 Cloudflare의 중계 서버(TURN)를 거치는데, 중계 서버는 암호화된 상태 그대로 넘겨 주기만 하고 내용을 볼 수 없습니다. 모아캠은 영상과 소리를 녹화하거나 저장하지 않습니다.</p>
+<p>소리는 집의 관리자가 소리 권한을 준 사람에게만, 카메라 기기에서 「소리 함께 보내기」를 켰을 때만 전해집니다.</p>
+<p>카메라를 두는 이용자는 촬영되는 곳에 있는 사람에게 카메라가 있다는 것을 알리고 동의를 받아야 합니다. 다른 사람의 공간을 몰래 촬영하는 데 쓸 수 없습니다.</p>
+
+<h2>보관 기간</h2>
+<dl class="doc__list">
+  <div><dt>계정과 집·카메라 설정</dt><dd>계정을 삭제할 때까지. 집 소유자가 계정을 삭제하면 그 집과 카메라·가족 정보가 함께 지워집니다.</dd></div>
+  <div><dt>접속 기록</dt><dd>90일. 지난 기록은 새 기록이 쌓일 때 지웁니다.</dd></div>
+  <div><dt>초대</dt><dd>수락하거나 만료될 때까지(초대를 만들 때 정한 1시간~7일).</dd></div>
+  <div><dt>카메라 연결 요청</dt><dd>10분. 기기 종류 문자열도 이때 함께 지웁니다.</dd></div>
+  <div><dt>저장소의 복구 기록</dt><dd>서버 저장소(Cloudflare)는 장애에 대비해 지운 데이터를 최대 30일 동안 복구 기록으로 가지고 있다가 자동으로 없앱니다. 이 기록은 복구 말고는 쓰지 않습니다.</dd></div>
+</dl>
+
+<h2>처리를 맡기는 곳과 국외 이전</h2>
+<p>모아캠은 아래 두 회사의 서비스로 운영합니다. 두 회사 모두 미국 회사이고, 정보는 이용자가 가입하고 앱·웹을 쓸 때마다 인터넷으로 그 회사의 서버에 전송됩니다. 이 이전을 원하지 않으면 계정을 삭제해 이용을 멈출 수 있지만, 그러면 서비스를 쓸 수 없습니다.</p>
+<dl class="doc__list">
+  <div><dt>Google LLC (Firebase Authentication)</dt><dd>로그인과 이메일 인증. 이메일 주소, 비밀번호, 계정 번호, 로그인 시각과 접속 IP 주소를 Google의 데이터센터에 계정을 삭제할 때까지 보관합니다. <a href="https://firebase.google.com/support/privacy">Firebase 개인정보 보호</a></dd></div>
+  <div><dt>Cloudflare, Inc. (Workers, Durable Objects, TURN)</dt><dd>서버와 영상 중계. 위 「받는 정보」의 계정·집·카메라·기록 정보를 Cloudflare가 정하는 데이터센터에 위 보관 기간 동안 둡니다. 중계하는 영상은 저장하지 않습니다. <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare 개인정보처리방침</a></dd></div>
+</dl>
+<p>이 밖에 다른 회사나 사람에게 개인정보를 제공하지 않습니다. 광고와 이용 통계 도구도 넣지 않았습니다.</p>
+
+<h2>기기에 저장하는 정보</h2>
+<dl class="doc__list">
+  <div><dt>안드로이드 앱</dt><dd>로그인 상태(Firebase), 이 폰을 카메라로 등록했을 때 받는 기기 열쇠. 기기 열쇠는 안드로이드의 암호화 저장소에 둡니다.</dd></div>
+  <div><dt>웹 브라우저</dt><dd>로그인 상태(Firebase, 브라우저 저장소), 가입 중에 적은 이름(가입을 마치면 지움). PC를 카메라로 등록하면 기기 열쇠를 쿠키(<code>moacam_device</code>, 1년)에, 연결 승인을 기다리는 동안 요청 정보를 쿠키(<code>moacam_claim</code>, 10분)에 둡니다. 두 쿠키는 카메라 연결에만 쓰며 광고·추적에 쓰지 않습니다. 브라우저에서 쿠키를 지우면 그 PC는 카메라 연결이 풀립니다.</dd></div>
+</dl>
+
+<h2>앱이 쓰는 권한</h2>
+<dl class="doc__list">
+  <div><dt>카메라</dt><dd>이 폰을 카메라로 쓸 때 영상을 찍습니다.</dd></div>
+  <div><dt>마이크</dt><dd>「소리 함께 보내기」를 켰을 때 소리를 보냅니다.</dd></div>
+  <div><dt>알림</dt><dd>촬영 중이라는 알림을 계속 띄웁니다.</dd></div>
+  <div><dt>전면 서비스(카메라·마이크)</dt><dd>화면을 끄거나 다른 앱으로 넘어가도 촬영을 이어 갑니다. 촬영 중에는 알림이 늘 떠 있고, 알림의 「촬영 중지」나 앱에서 끌 수 있습니다.</dd></div>
+  <div><dt>화면 꺼짐 방지, 인터넷·네트워크 상태, 오디오 설정</dt><dd>촬영이 끊기지 않게 하고, 서버에 연결하고, 영상 연결에 맞게 소리 장치를 설정합니다.</dd></div>
+</dl>
+<p>위치·연락처·사진첩 권한은 쓰지 않습니다.</p>
+
+<h2 id="delete">계정과 정보 지우기</h2>
+<p>모아캠 계정은 앱을 다시 설치하지 않아도 웹에서 지울 수 있습니다.</p>
+<ol>
+  <li>안드로이드 앱 또는 웹(<a href="https://moacam.knj990327.workers.dev">moacam.knj990327.workers.dev</a>)에 로그인합니다.</li>
+  <li>「우리 집」 탭에서 「계정 삭제」를 누릅니다.</li>
+  <li>비밀번호를 한 번 더 넣으면 바로 지워집니다.</li>
+</ol>
+<dl class="doc__list">
+  <div><dt>바로 지워지는 것</dt><dd>계정(이메일·비밀번호·이름), 내가 소유한 집과 그 카메라·기기 등록·가족 구성·권한·초대·접속 기록. 다른 사람의 집에 가족으로 들어가 있었다면 그 집에서 빠지고, 그 집 기록에서 내 이름과 내가 한 일이 지워집니다.</dd></div>
+  <div><dt>잠시 남는 것</dt><dd>다른 집이 내 이메일로 보낸 아직 수락하지 않은 초대는 만료될 때(최대 7일) 지워집니다. 서버 저장소의 복구 기록은 최대 30일 뒤 없어집니다.</dd></div>
+</dl>
+<p>로그인할 수 없어 직접 지우기 어렵다면 가입한 이메일로 아래 문의 메일에 「모아캠 계정 삭제」를 요청해 주세요. 본인 확인 뒤 지우고 결과를 알려 드립니다. 이 밖에 내 정보의 열람·정정·처리정지도 같은 메일로 요청할 수 있습니다.</p>
+
+<h2>아동의 개인정보</h2>
+<p>모아캠은 만 14세 미만 아동을 대상으로 하지 않습니다. 만 14세 미만이 가입한 것을 알게 되면 그 계정과 정보를 바로 지웁니다.</p>
+  <h2>문의와 개인정보 보호책임자</h2>
+<p>개인정보에 관한 문의나 열람·정정·삭제·처리정지 요청은 아래 메일로 보내 주세요. 보내 주신 메일 주소와 내용은 답장과 요청 처리에만 쓰고, 처리를 마친 날부터 1년이 지나면 복구할 수 없게 지웁니다.</p>
+<dl class="doc__list">
+  <div><dt>개인정보 보호책임자</dt><dd>NamJuKim(개발자)</dd></div>
+  <div><dt>메일</dt><dd><a href="mailto:joo24587@gmail.com">joo24587@gmail.com</a></dd></div>
+</dl>
+
+<h2>안전하게 지키는 방법</h2>
+<p>문의 메일은 개발자만 열 수 있는 메일 계정에 보관하고, 보관 기간이 지나면 지웁니다. 개인정보를 다른 곳에 옮겨 적거나 따로 모아 두지 않습니다.</p>
+
+<h2>권익 침해 구제</h2>
+<p>개인정보 침해로 인한 구제나 상담이 필요하면 아래 기관에 신청하거나 문의할 수 있습니다.</p>
+<dl class="doc__list">
+  <div><dt>개인정보분쟁조정위원회</dt><dd>1833-6972 · <a href="https://www.kopico.go.kr">www.kopico.go.kr</a></dd></div>
+  <div><dt>개인정보침해신고센터</dt><dd>국번 없이 118 · <a href="https://privacy.kisa.or.kr">privacy.kisa.or.kr</a></dd></div>
+  <div><dt>경찰청 사이버범죄 신고</dt><dd>국번 없이 182 · <a href="https://ecrm.police.go.kr">ecrm.police.go.kr</a></dd></div>
+</dl>
+
+<h2>방침의 변경</h2>
+<p>이 방침은 2026년 10월 21일부터 적용합니다. 내용을 바꾸면 이 페이지에 바뀐 내용과 새 시행일을 적고, 이용자의 권리에 큰 영향을 주는 변경은 시행 전에 먼저 알립니다.</p>
+</article>
+</main>
+<footer class="foot">
+  <p>© 2026 NamJuKim</p>
+</footer>
+</div>
+</body>
+</html>
