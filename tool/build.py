@@ -1279,7 +1279,7 @@ h2 + .item {{ border-top: 0; padding-top: 0.6mm; }}
 .item .unit {{ margin-left: 1.8mm; font-weight: 600; color: var(--sub); }}
 .item time {{ color: var(--sub); font-variant-numeric: tabular-nums; white-space: nowrap; }}
 .item p, .item ul {{ grid-column: 1 / -1; margin: 0.7mm 0 0; }}
-.item ul {{ padding-left: 4.2mm; }}
+.item ul {{ padding-left: 0; list-style: none; }}
 .item li {{ margin: 0.25mm 0; }}
 .skills {{ display: grid; grid-template-columns: 19mm minmax(0, 1fr); gap: 1.1mm 3mm; margin: 0; }}
 .skills dt {{ font-weight: 700; }}

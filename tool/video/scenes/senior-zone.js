@@ -1,4 +1,4 @@
-// 노인보호구역 입지 분석: 지도 한 장. 세 장(시설 옆 지정 → 사고 핫스폿, 전역 회귀 → GWR, 근거 필요 → 위험도 지도·보고서)
+// 노인보호구역 입지 분석: 지도 한 장. 세 장(흩어진 노인 시설·사고 데이터 → 시설 가중치를 넣은 사고 핫스폿, 전역 회귀 → GWR, 근거 필요 → 위험도 지도·보고서)
 // 지명은 쓰지 않는다(가·나·다·라 지역). 지도는 도식이다.
 "use strict";
 window.SCENE = (() => {
@@ -39,15 +39,24 @@ window.SCENE = (() => {
   around(360, 254, 8, 24);
   around(140, 240, 5, 20);
   [[60, 300], [430, 120], [300, 300], [70, 200], [190, 90]].forEach((p) => ACC.push(p));
-  // 시설(학교·경로당)과 지금의 보호구역
+  // 노인 시설(모은 시설 데이터). 시설이 모인 곳일수록 보호구역 가중치가 크다
   const FAC = [
-    { p: [64, 104], k: "학" },
-    { p: [190, 300], k: "경" },
-    { p: [420, 300], k: "학" },
-    { p: [430, 196], k: "경" },
+    [212, 126],
+    [268, 178],
+    [336, 232],
+    [386, 278],
+    [160, 220],
+    [82, 104],
+    [420, 190],
+    [196, 302],
+    [440, 300],
+    [330, 110],
   ];
-  // 사고 밀도(핫스폿)
+  const facW = (x, y) => FAC.reduce((s, [fx, fy]) => s + Math.exp(-((x - fx) ** 2 + (y - fy) ** 2) / (2 * 40 * 40)), 0);
+  const FMAX = Math.max(...FAC.map(([x, y]) => facW(x, y)));
+  // 사고 밀도에 시설 가중치를 곱한 위험 점수(핫스폿)
   const density = (x, y) => ACC.reduce((s, [ax, ay]) => s + Math.exp(-((x - ax) ** 2 + (y - ay) ** 2) / (2 * 26 * 26)), 0);
+  const score = (x, y) => density(x, y) * (0.35 + 0.65 * Math.min(1, facW(x, y) / FMAX));
   const HEX = [];
   {
     const r = 17;
@@ -56,7 +65,7 @@ window.SCENE = (() => {
       for (let col = 0; col * hw < M.w + hw; col++) {
         const x = col * hw + (row % 2 ? hw / 2 : 0);
         const y = row * r * 1.5;
-        HEX.push({ x, y, r, d: density(x, y) });
+        HEX.push({ x, y, r, d: score(x, y) });
       }
     const max = Math.max(...HEX.map((h) => h.d));
     HEX.forEach((h) => (h.v = h.d / max));
@@ -76,7 +85,7 @@ window.SCENE = (() => {
     { name: "라 지역", pts: [[240, 150], [360, 140], [480, 132], [480, 336], [232, 336], [236, 260]], gwr: 0.95 },
   ];
   const lilacScale = (v) => mixColor("#f4f1ff", "#9d8cf0", v);
-  // 길마다 잘게 나눠, 조각마다 사고 밀도로 위험도를 칠한다
+  // 길마다 잘게 나눠, 조각마다 위험 점수로 위험도를 칠한다
   const DMAX = Math.max(...HEX.map((h) => h.d));
   const RISK = ROADS.map((r) => {
     const out = [];
@@ -87,7 +96,7 @@ window.SCENE = (() => {
       for (let k = 0; k < n; k++) {
         const p0 = mix2(a, b, k / n);
         const p1 = mix2(a, b, (k + 1) / n);
-        const v = density((p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2) / DMAX;
+        const v = score((p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2) / DMAX;
         out.push({ p0, p1, color: v > 0.42 ? "#ef4444" : v > 0.12 ? "#3b82f6" : "#22c55e" });
       }
     }
@@ -102,6 +111,8 @@ window.SCENE = (() => {
     if (o.dist) DIST.forEach((d, i) => (m += tag("path", { d: dpath(d.pts.map(at)), fill: lilacScale(o.dist[i]), opacity: 0.9 * (o.distA ?? 1) })));
     // 강
     m += tag("path", { d: dpath([...RIVER_TOP.map(at), ...RIVER_TOP.slice().reverse().map((p) => at([p[0], p[1] + 24]))]), fill: "#cfe3f3" });
+    // 길 아래에 까는 층(시설 가중치)
+    if (o.under) m += o.under;
     // 핫스폿 육각 칸
     if (o.hex > 0.002)
       HEX.forEach((h, i) => {
@@ -131,9 +142,12 @@ window.SCENE = (() => {
     return s;
   }
 
+  // 노인 시설 표시: 흰 동그라미 안의 집 모양
+  const house = (x, y, k = 1) =>
+    tag("path", { d: `M${n2(x - 5.5 * k)} ${n2(y + 4.6 * k)}V${n2(y - 0.6 * k)}L${n2(x)} ${n2(y - 5.6 * k)}L${n2(x + 5.5 * k)} ${n2(y - 0.6 * k)}V${n2(y + 4.6 * k)}Z`, fill: C.ink });
   const facility = (f, a) => {
-    const [x, y] = at(f.p);
-    return g({ opacity: a }, tag("rect", { x: x - 11, y: y - 11, width: 22, height: 22, rx: f.k === "학" ? 5 : 11, fill: C.paper, stroke: C.ink, "stroke-width": 1.8 }) + text(x, y + 0.5, f.k, { "font-size": 12, "font-weight": 700, fill: C.ink, "text-anchor": "middle" }));
+    const [x, y] = at(f);
+    return g({ opacity: a }, tag("circle", { cx: x, cy: y, r: 10.5, fill: C.paper, stroke: C.ink, "stroke-width": 1.7 }) + house(x, y));
   };
   const dots = (a, color = C.red) =>
     ACC.map((p, i) => {
@@ -149,27 +163,50 @@ window.SCENE = (() => {
     if (t < beats[1].at) {
       const lt = t;
       const out = 1 - seg(lt, 5.5, 0.3, E.in);
-      const zone = seg(lt, 0.55, 0.4) * (1 - seg(lt, 3.0, 0.4, E.in));
-      let extra = "";
-      FAC.forEach((f) => {
-        const [x, y] = at(f.p);
-        extra += tag("circle", { cx: x, cy: y, r: 40, fill: C.lilac, opacity: 0.45 * zone, stroke: "#5b4bd6", "stroke-width": 1.8, "stroke-dasharray": "5 4" });
+      // 지도: 노인 시설과 사고 지점이 먼저 따로 찍힌다
+      const glow = seg(lt, 3.05, 0.6) * out;
+      const hot = seg(lt, 3.6, 0.4);
+      // 시설 가중치는 길 아래에 깔리는 보라 번짐, 사고 지점과 시설 표시는 길 위에
+      let under = "";
+      FAC.forEach((f, i) => {
+        const [x, y] = at(f);
+        const a = glow * seg(lt, 3.05 + i * 0.04, 0.5);
+        if (a > 0.002) under += tag("circle", { cx: x, cy: y, r: 30 + 16 * a, fill: "url(#fw)", opacity: a });
       });
-      extra += dots(clamp((lt - 1.05) / 1.2));
-      FAC.forEach((f) => (extra += facility(f, seg(lt, 0.3, 0.3))));
-      const hot = seg(lt, 3.0, 0.4);
-      s += base({ hex: hot * out, hexT: clamp((lt - 3.0) / 0.8), extra });
+      let extra = g({ opacity: 1 - 0.45 * hot }, dots(clamp((lt - 1.0) / 1.2)));
+      FAC.forEach((f, i) => (extra += facility(f, seg(lt, 0.35 + i * 0.05, 0.3))));
+      s += base({ hex: hot * out, hexT: clamp((lt - 3.6) / 0.8), under, extra });
       const c1 = at([240, 150]);
-      s += chip(c1[0] + 34, c1[1] - 34, "보호구역 밖 사고 집중", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 2.1, 0.3) * (1 - seg(lt, 2.85, 0.25, E.in)) });
-      s += chip(c1[0] + 34, c1[1] - 34, "핫스폿 · 군집", { size: 12.5, fill: C.lemon, opacity: seg(lt, 3.6, 0.3) * out });
-      // 범례
-      const leg =
-        text(P.x + 18, P.y + 26, "지도", { "font-size": 13.5, "font-weight": 700, fill: C.sub }) +
-        g({ opacity: seg(lt, 0.3, 0.3) }, tag("rect", { x: P.x + 18, y: P.y + 50, width: 18, height: 18, rx: 5, fill: C.paper, stroke: C.ink, "stroke-width": 1.6 }) + text(P.x + 46, P.y + 59.5, "학교 · 경로당", { "font-size": 13.5, fill: C.ink })) +
-        g({ opacity: zone }, tag("circle", { cx: P.x + 27, cy: P.y + 92, r: 9, fill: C.lilac, stroke: "#5b4bd6", "stroke-width": 1.6, "stroke-dasharray": "4 3" }) + text(P.x + 46, P.y + 92.5, "기존 보호구역", { "font-size": 13.5, fill: C.ink })) +
-        g({ opacity: seg(lt, 1.1, 0.3) }, tag("circle", { cx: P.x + 27, cy: P.y + 124, r: 5, fill: C.red }) + text(P.x + 46, P.y + 124.5, "고령 보행자 사고", { "font-size": 13.5, fill: C.ink })) +
-        g({ opacity: hot }, tag("path", { d: hexPath({ x: 0, y: 0, r: 10 }).replace(/M([\d.-]+) ([\d.-]+)/, "M$1 $2"), fill: "#ef4444", opacity: 0.7, transform: `translate(${P.x + 27 - M.x} ${P.y + 156 - M.y})` }) + text(P.x + 46, P.y + 156.5, "핫스폿(Hot Spot)", { "font-size": 13.5, fill: C.ink }));
-      s += side(leg);
+      s += chip(c1[0] + 34, c1[1] - 34, "가중 핫스폿", { size: 12.5, fill: C.lemon, opacity: seg(lt, 4.35, 0.3) * out });
+      // 오른쪽: 데이터 묶음. 흩어져 있다가 한 지도로 모인다
+      const align = seg(lt, 2.95, 0.55, E.inOut);
+      const SRC = [
+        { label: "고령 보행자 사고", icon: (x, y) => tag("circle", { cx: x, cy: y, r: 5, fill: C.red }), r: -6, dx: -6, dy: -3 },
+        { label: "노인 시설", icon: (x, y) => house(x, y, 0.85), r: 5, dx: 10, dy: 5 },
+        { label: "도로·인구", icon: (x, y) => tag("path", { d: `M${x - 8} ${y + 4}L${x + 8} ${y - 4}`, stroke: "#c9c4b6", "stroke-width": 5, "stroke-linecap": "round" }), r: -4, dx: -2, dy: 2 },
+      ];
+      let inner = text(P.x + 18, P.y + 26, "데이터", { "font-size": 13.5, "font-weight": 700, fill: C.sub });
+      SRC.forEach((d, i) => {
+        const x = P.x + 16;
+        const y = P.y + 48 + i * 44;
+        const cx = x + 94;
+        const cy = y + 18;
+        const rot = d.r * (1 - align);
+        const tr = `translate(${n2(d.dx * (1 - align))} ${n2(d.dy * (1 - align))}) rotate(${n2(rot)} ${cx} ${cy})`;
+        inner += g(
+          { opacity: seg(lt, 0.3 + i * 0.25, 0.3), transform: tr },
+          tag("rect", { x, y, width: 188, height: 36, rx: 9, fill: C.paper, stroke: C.ink, "stroke-width": 1.6 }) +
+            d.icon(x + 18, cy) +
+            text(x + 34, cy + 0.5, d.label, { "font-size": 14, "font-weight": 700, fill: C.ink }) +
+            g({ opacity: seg(lt, 3.35 + i * 0.08, 0.25) }, tick(x + 170, cy, 0.8)),
+        );
+      });
+      inner += chip(P.x + 18, P.y + 196, "따로 흩어진 데이터", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 1.85, 0.3) * (1 - seg(lt, 2.75, 0.25, E.in)) });
+      inner += chip(P.x + 18, P.y + 196, "한 지도로 통합", { size: 12.5, fill: C.lemon, opacity: seg(lt, 3.45, 0.3) * out });
+      inner +=
+        g({ opacity: seg(lt, 3.2, 0.3) * out }, tag("circle", { cx: P.x + 27, cy: P.y + 244, r: 12, fill: "url(#fw)" }) + text(P.x + 46, P.y + 244.5, "시설 가중치", { "font-size": 13.5, fill: C.ink })) +
+        g({ opacity: hot * out }, tag("path", { d: hexPath({ x: 0, y: 0, r: 10 }), fill: "#ef4444", opacity: 0.7, transform: `translate(${P.x + 27 - M.x} ${P.y + 278 - M.y})` }) + text(P.x + 46, P.y + 278.5, "핫스폿(Hot Spot)", { "font-size": 13.5, fill: C.ink }));
+      s += side(inner);
     }
     // ── 2장 ──
     else if (t < beats[2].at) {
@@ -261,5 +298,6 @@ window.SCENE = (() => {
     return s;
   }
 
-  return { beats, duration, draw, bg: BG, poster: 4.6 };
+  const defs = '<radialGradient id="fw"><stop offset="0" stop-color="#8f7cf0" stop-opacity="0.78"/><stop offset="0.55" stop-color="#a596f3" stop-opacity="0.42"/><stop offset="1" stop-color="#b9adff" stop-opacity="0"/></radialGradient>';
+  return { beats, duration, draw, defs, bg: BG, poster: 4.9 };
 })();

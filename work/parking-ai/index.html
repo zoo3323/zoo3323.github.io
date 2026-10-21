@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=7113bac5">
+<link rel="stylesheet" href="/assets/site.css?v=02833ffc">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -69,13 +69,13 @@
       <h2 id="h-solve">풀어야 했던 문제</h2>
       <div class="clip">
         <div class="clip__frame">
-          <video class="clip__video" src="/assets/video/parking-ai.mp4?v=231eeaa8" poster="/assets/video/parking-ai.webp?v=3e64d47f" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="2.5D 차량 하단면 검출: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+          <video class="clip__video" src="/assets/video/parking-ai.mp4?v=38f59680" poster="/assets/video/parking-ai.webp?v=3e64d47f" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="2.5D 차량 하단면 검출: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
         </div>
         <ol class="solve solve--clip">
           <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>2D 상자가 옆 칸까지 덮음</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>하단면 직접 검출, 겹친 넓이로 점유 판정</span></button></li>
           <li data-at="5.3"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>하단면 대부분이 가려짐</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>가려진 꼭짓점까지 추정, CFQ로 볼록 보장</span></button></li>
           <li data-at="11.1"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>카메라마다 보정값 필요</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>보정 없이 원본 영상에서 바로 검출</span></button></li>
-          <li data-at="16.4"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>라즈베리파이에서 결과 불일치</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>실기기 <span class="nobr">채점·지식</span> 증류로 정확도 보완</span></button></li>
+          <li data-at="16.4"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>라즈베리파이 CPU에서 느린 처리 속도</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>INT8 <span class="nobr">양자화·병목</span> 제거로 엔진 최적화</span></button></li>
         </ol>
       </div>
     </section>
@@ -83,8 +83,8 @@
       <h2 id="h-did">맡은 일</h2>
       <ul>
         <li>모델 설계부터 <span class="nobr">데이터셋·지표</span> 설계, 실험, 정량 평가, <span class="nobr">경량화·현장</span> 배포까지 전 과정 주도, 투고 논문 제1저자</li>
-        <li>CFQ(Convex Footprint Quadrilateral) 표현 설계: 꼭짓점 순서가 고정된 볼록 사각형 출력 보장, 합성 검증 AP50:95 61.10 ± 0.52%(평행사변형 57.32%)</li>
-        <li>중심점 기반 <span class="nobr">one-stage</span> 검출기로 가려진 꼭짓점까지 추정하는 amodal 하단면 검출, CARLA <span class="nobr">합성·실제</span> CCTV 합동 학습으로 <span class="nobr">sim-to-real</span> 격차 축소</li>
+        <li>CFQ 표현 설계: 꼭짓점 순서가 고정된 볼록 사각형 출력 보장, 합성 검증 AP50:95 61.10 ± 0.52%(평행사변형 57.32%)</li>
+        <li><span class="nobr">one-stage</span> 검출기로 가려진 꼭짓점까지 추정하는 amodal 하단면 검출, CARLA <span class="nobr">합성·실제</span> CCTV 합동 학습으로 <span class="nobr">sim-to-real</span> 격차 축소</li>
         <li><span class="nobr">품질·지연·비용</span> 비교로 장비별 경량화 선택: GPU 서버 640 입력 + 지식 증류, 라즈베리파이 INT8 양자화</li>
         <li>앞뒤 카메라 하단면 트랙 결합, 주차면 ROI 점유 비율 기반 <span class="nobr">입차·출차</span> 판정</li>
       </ul>
@@ -100,7 +100,7 @@
     <section class="sec" aria-labelledby="h-media">
       <h2 id="h-media">자료</h2>
       <ul class="shots shots--wide shots--work">
-        <li><img src="/assets/img/work/parking-ai/parking-occupancy.webp" width="1600" height="900" alt="야외 주차장 CCTV 화면에 주차면이 칸마다 그려져 있고, 차가 선 칸은 빨강, 빈 칸은 초록으로 칠해져 있다. 차 하단면 라벨의 중심이 든 칸을 찬 칸으로 셌다. 번호판과 사람, 간판은 흐리게 가렸다." loading="lazy"><p class="shots__cap">주차면별 점유(빨강)·빈 칸(초록) 구분 — 차 하단면 라벨 기준</p></li>
+        <li><img src="/assets/img/work/parking-ai/parking-occupancy.webp" width="1600" height="900" alt="야외 주차장 CCTV 화면에 주차면이 칸마다 그려져 있고, 차가 선 칸은 빨강, 빈 칸은 초록으로 칠해져 있다. 차 하단면 라벨의 중심이 든 칸을 찬 칸으로 셌다. 번호판과 사람, 간판은 흐리게 가렸다." loading="lazy"><p class="shots__cap">차 하단면 라벨 기준 주차면별 점유(빨강)·빈 칸(초록) 구분</p></li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-others">

@@ -1843,25 +1843,19 @@ a.get--line:hover {
 .desc__lead {
   font-weight: 700;
 }
+/* 목록은 점(불릿) 없이 줄 사이 가는 선으로 나눈다. 칸 폭을 다 써서 넓은 화면에서는 맡은 일이 한 줄에 든다 */
 .desc ul {
   margin: 0.9rem 0 0;
   padding: 0;
-  max-width: 40rem;
   list-style: none;
 }
 .desc li {
-  position: relative;
-  padding: 0.15rem 0 0.15rem 1.1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--rule);
 }
-.desc li::before {
-  content: "";
-  position: absolute;
-  left: 0.15rem;
-  top: 0.95em;
-  width: 0.35rem;
-  height: 0.35rem;
-  border-radius: 50%;
-  background: var(--tone-ink, var(--ink));
+.desc li:first-child {
+  padding-top: 0;
+  border-top: 0;
 }
 .news__ver {
   font-size: 0.9375rem;
@@ -3624,18 +3618,12 @@ a.cv__art:hover {
   list-style: none;
 }
 .doc li {
-  position: relative;
-  padding: 0.1rem 0 0.1rem 1.1rem;
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--rule);
 }
-.doc li::before {
-  content: "";
-  position: absolute;
-  left: 0.15rem;
-  top: 0.95em;
-  width: 0.35rem;
-  height: 0.35rem;
-  border-radius: 50%;
-  background: var(--tone-ink, var(--ink));
+.doc li:first-child {
+  padding-top: 0.1rem;
+  border-top: 0;
 }
 .doc__list {
   margin: 0.7rem 0 0;

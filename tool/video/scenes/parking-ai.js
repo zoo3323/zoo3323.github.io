@@ -1,4 +1,4 @@
-// 2.5D 차량 하단면 검출: 높이 단 CCTV 로 본 주차 줄. 네 장(2D 상자 → 하단면, 가려진 꼭짓점 → CFQ, 보정값 → 보정 없이, 엣지 장비)
+// 2.5D 차량 하단면 검출: 높이 단 CCTV 로 본 주차 줄. 네 장(2D 상자 → 하단면, 가려진 꼭짓점 → CFQ, 보정값 → 보정 없이, 라즈베리파이 처리 속도 → 엔진 최적화)
 "use strict";
 window.SCENE = (() => {
   const lot = makeLot({
@@ -24,7 +24,7 @@ window.SCENE = (() => {
     { at: 11.1, solve: 2.7 },
     { at: 16.4, solve: 2.8 },
   ];
-  const duration = 22;
+  const duration = 22.8;
 
   function draw(t) {
     const RED = C.red;
@@ -138,42 +138,73 @@ window.SCENE = (() => {
       }
     }
 
-    // 4장: 라즈베리파이에서 결과가 달라진다 → 실제 장비에서 채점, 지식 증류로 보완
+    // 4장: 라즈베리파이 CPU에서는 한 프레임 처리가 느리다 → 구간별로 나눠 재고, INT8 양자화·병목 제거로 엔진 최적화
     if (t >= beats[3].at) {
       const lt = t - beats[3].at;
       const m = seg(lt, 0.05, 0.75, E.lin);
-      // 작은 화면: 주차 줄 가운데만 잘라 크게 본다
-      const mini = (fp) => g({ transform: "scale(1.42) translate(-118 -112)" }, world({ ...st, fp, zoom: 0 }));
-      const box = (x, label, fp, status) => {
-        const w = 336;
-        const y = 104;
-        const sx = 308 / W;
-        return (
-          card(x, y, w, 290) +
-          chip(x + 16, y + 26, label, { size: 13, fill: C.paper }) +
-          `<clipPath id="mini${x}"><rect x="${x + 14}" y="${y + 48}" width="308" height="173.25" rx="10"/></clipPath>` +
-          g({ "clip-path": `url(#mini${x})` }, g({ transform: `translate(${x + 14} ${y + 48}) scale(${n2(sx)})` }, mini(fp))) +
-          tag("rect", { x: x + 14, y: y + 48, width: 308, height: 173.25, rx: 10, fill: "none", stroke: C.ink, "stroke-width": 1.5 }) +
-          status
+      const CX = 34;
+      const CY = 110;
+      const VX = CX + 16;
+      const VY = CY + 50;
+      const VW = 304;
+      const VH = 171;
+      // 왼쪽 작은 화면: 주차 줄 가운데만 잘라 크게 본다(장비에서 도는 하단면 검출)
+      const fpOn = cars.map((c) => (c.space >= SHOW[0] && c.space <= SHOW[1] ? 1 : 0));
+      const mini = g({ transform: `translate(${VX} ${VY}) scale(${n2(VW / W)})` }, g({ transform: "scale(1.42) translate(-118 -112)" }, world({ ...st, fp: fpOn, zoom: 0 })));
+      let s = card(CX, CY, 732, 284);
+      s += chip(CX + 16, CY + 26, "라즈베리파이 · CPU", { size: 13, fill: C.paper });
+      s += `<clipPath id="pimini"><rect x="${VX}" y="${VY}" width="${VW}" height="${VH}" rx="10"/></clipPath>` + g({ "clip-path": "url(#pimini)" }, mini);
+      s += tag("rect", { x: VX, y: VY, width: VW, height: VH, rx: 10, fill: "none", stroke: C.ink, "stroke-width": 1.5 });
+
+      // 오른쪽: 한 프레임 처리 시간. 문제 동안 한 덩어리로 느리게 차오르고, 해결에서 구간별로 나눠 본 뒤 구간마다 줄인다
+      const BX = 376;
+      const BY = 178;
+      const BH = 30;
+      const PARTS = [
+        { name: "검출 모델", fill: C.lilac, w0: 168, w1: 90, fix: "INT8 양자화", at: 3.4 },
+        { name: "화질 검사", fill: "#cfe3f3", w0: 62, w1: 12, fix: "정수 연산", at: 3.75 },
+        { name: "상태 저장", fill: "#ffd8a8", w0: 34, w1: 4, fix: "변화 시만 저장", at: 4.05 },
+        { name: "기타", fill: C.mute, w0: 92, w1: 92 },
+      ];
+      const total0 = PARTS.reduce((a, p) => a + p.w0, 0);
+      const grow = seg(lt, 0.8, 1.5, E.inOut);
+      const split = seg(lt, 2.95, 0.4);
+      s += text(BX, BY - 22, "한 프레임 처리 시간", { "font-size": 13.5, "font-weight": 700, fill: C.sub });
+      // 문제: 한 덩어리 막대가 느리게 차오른다
+      if (grow > 0 && split < 1) s += tag("rect", { x: BX, y: BY, width: Math.max(BH, total0 * grow), height: BH, rx: 8, fill: "#f6c9cf", stroke: C.red, "stroke-width": 1.8, opacity: 1 - split });
+      s += chip(BX + total0, BY + BH + 24, "처리 지연", { size: 12.5, fill: C.red, color: C.paper, stroke: null, anchor: "end", opacity: seg(lt, 2.0, 0.3) * (1 - seg(lt, 2.75, 0.25, E.in)) });
+      // 해결: 구간별로 나눠 보고(병목 찾기), 구간마다 줄인다. 처음 길이는 점선으로 남긴다
+      if (split > 0) {
+        s += tag("rect", { x: BX, y: BY, width: total0, height: BH, rx: 8, fill: "none", stroke: C.wire, "stroke-width": 1.5, "stroke-dasharray": "5 4", opacity: split });
+        let x = BX;
+        let bar = "";
+        let seams = "";
+        PARTS.forEach((p, i) => {
+          const w = p.fix ? lerp(p.w0, p.w1, seg(lt, p.at, 0.5, E.inOut)) : p.w0;
+          bar += tag("rect", { x, y: BY, width: w + 0.5, height: BH, fill: p.fill });
+          x += w;
+          if (i < PARTS.length - 1) seams += `M${n2(x)} ${BY}V${BY + BH}`;
+        });
+        const end = x;
+        s += `<clipPath id="pibar"><rect x="${BX}" y="${BY}" width="${n2(end - BX)}" height="${BH}" rx="8"/></clipPath>`;
+        s += g(
+          { opacity: split },
+          g({ "clip-path": "url(#pibar)" }, bar + tag("path", { d: seams, stroke: C.ink, "stroke-width": 1.2 })) +
+            tag("rect", { x: BX, y: BY, width: end - BX, height: BH, rx: 8, fill: "none", stroke: C.ink, "stroke-width": 1.8 }),
         );
-      };
-      const piGone = seg(lt, 1.15, 0.5, E.in);
-      const piBack = seg(lt, 3.55, 0.45);
-      const piFp = cars.map((c) => (c.space >= SHOW[0] && c.space <= SHOW[1] ? (1 - piGone) * (lt < 3 ? 1 : 0) + piBack : 0));
-      const fp32 = chip(50, 360, "학습 모델", { size: 13, fill: C.paper });
-      const bad = 1 - seg(lt, 2.85, 0.25, E.in);
-      const piStatus =
-        chip(446, 360, "fp16", { size: 13, fill: C.paper, color: C.red, stroke: C.red, opacity: seg(lt, 0.95, 0.3) * bad }) +
-        chip(446 + chip.width("fp16") + 8, 360, "검출 소실", { size: 13, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 1.75, 0.3) * bad }) +
-        chip(446, 360, "INT8 · NCNN", { size: 13, fill: C.lemon, opacity: seg(lt, 3.2, 0.3) }) +
-        g({ opacity: seg(lt, 4.0, 0.3) }, chip(446 + chip.width("INT8 · NCNN") + 8, 360, "실기기 채점 완료", { size: 13, fill: C.paper, pad: 9 }));
-      const cards =
-        box(34, "학습 GPU", cars.map((c) => (c.space >= SHOW[0] && c.space <= SHOW[1] ? 1 : 0)), fp32) +
-        box(430, "라즈베리파이", piFp, piStatus) +
-        drawOn("M378 236C392 214 408 214 422 236", seg(lt, 2.95, 0.45, E.inOut), { stroke: C.ink, "stroke-width": 2.6 }) +
-        tag("path", { d: "M414.5 235l7.5 1.5 0.5-7.5", fill: "none", stroke: C.ink, "stroke-width": 2.6, "stroke-linecap": "round", "stroke-linejoin": "round", opacity: seg(lt, 3.35, 0.15) }) +
-        chip(400, 196, "지식 증류", { size: 13, fill: C.lemon, anchor: "middle", opacity: seg(lt, 3.05, 0.3) });
-      return dip(m, BG, () => world(st), () => tag("rect", { x: 0, y: 0, width: W, height: H, fill: BG }) + cards);
+        s += chip(end + 12, BY + BH / 2, "엔진 최적화", { size: 13, fill: C.lemon, opacity: seg(lt, 4.45, 0.3) });
+        // 구간 이름과 고친 방법
+        PARTS.forEach((p, i) => {
+          const y = BY + 76 + i * 32;
+          s += g(
+            { opacity: split * seg(lt, 3.0 + i * 0.08, 0.3) },
+            tag("rect", { x: BX, y: y - 8, width: 16, height: 16, rx: 4, fill: p.fill, stroke: C.ink, "stroke-width": 1.4 }) +
+              text(BX + 26, y + 0.5, p.name, { "font-size": 14.5, "font-weight": 700, fill: C.ink }),
+          );
+          if (p.fix) s += chip(BX + total0, y, p.fix, { size: 12.5, fill: C.lemon, anchor: "end", opacity: seg(lt, p.at + 0.05, 0.3) });
+        });
+      }
+      return dip(m, BG, () => world(st), () => tag("rect", { x: 0, y: 0, width: W, height: H, fill: BG }) + s);
     }
     return world(st) + over + panel;
   }
