@@ -2076,11 +2076,12 @@ a.get--line:hover {
 .shots--wide img {
   border-radius: 0.7rem;
 }
-/* 회사 프로젝트 자료: 옆으로 밀지 않고 한 줄에 하나씩 칸 폭에 맞춰 크게 둔다(누르면 더 크게 본다).
-   그림 비율이 제각각(CCTV·지도)이라 높이는 34rem 을 넘지 않게 하고, 넘으면 비율대로 폭을 줄인다. */
+/* 회사 프로젝트 자료: 옆으로 밀지 않고 넓은 화면은 한 줄에 둘씩, 폰은 하나씩 둔다(누르면 크게 본다).
+   그림 높이는 16.875rem 까지(16:9 그림이면 폭 30rem)이고, 칸이 그보다 좁으면 칸 폭에 맞춰 비율대로 줄인다. */
 .shots.shots--work {
   display: grid;
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 0.875rem;
   margin: 0;
   padding: 0.25rem 0 0;
   overflow: visible;
@@ -2094,7 +2095,12 @@ a.get--line:hover {
   width: auto;
   max-width: 100%;
   height: auto;
-  max-height: 34rem;
+  max-height: 16.875rem;
+}
+@media (max-width: 640px) {
+  .shots.shots--work {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 /* 그림 아래 짧은 설명. 실제 자료가 없어 만든 그림에는 「생성 이미지」 딱지를 붙인다. */
 .shots__cap {
