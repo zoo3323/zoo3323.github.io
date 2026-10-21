@@ -1858,6 +1858,15 @@ a.get--line:hover {
   padding-top: 0;
   border-top: 0;
 }
+/* 맡은 일의 향상·개선 수치: 조금 굵게, 아래쪽에 옅은 레몬 형광펜 */
+.gain {
+  font-weight: 650;
+  color: var(--ink);
+  background: linear-gradient(transparent 58%, rgb(255 229 92 / 0.6) 58%, rgb(255 229 92 / 0.6) 92%, transparent 92%);
+  padding: 0 0.1em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
 .news__ver {
   font-size: 0.9375rem;
   font-weight: 600;

@@ -868,6 +868,8 @@ def keep_dots(text):
     joined = re.sub(r"(\d) (img/s|ms|fps)(?!\w)", r"\1&nbsp;\2", joined)
     # 지표 이름과 값 사이에 가운뎃점 묶음(<span class="nobr">)이 끼어 있어도 붙인다
     joined = re.sub(r'(AP50(?::95)?)((?:</span>)?) ((?:<span class="nobr">)?\d)', r"\1\2&nbsp;\3", joined)
+    # 「**6.6%**」처럼 별표 둘로 감싼 성과 수치는 살짝 강조한다(맡은 일의 향상·개선 수치)
+    joined = re.sub(r"\*\*(.+?)\*\*", r'<strong class="gain">\1</strong>', joined)
     return joined.replace(" · ", "&nbsp;· ")
 
 
@@ -1290,6 +1292,7 @@ h2 + .item {{ border-top: 0; padding-top: 0.6mm; }}
 .skills dt {{ font-weight: 700; }}
 .skills dd {{ margin: 0; color: #33333a; }}
 .nobr {{ white-space: nowrap; }}
+.gain {{ font-weight: 700; }}
 footer {{ margin-top: 5mm; padding-top: 2mm; border-top: 1px solid var(--rule); font-size: 8pt; color: var(--sub); }}
 @media screen {{ body {{ padding: 12mm 4mm; }} }}
 </style>

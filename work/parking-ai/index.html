@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=8712d6dc">
+<link rel="stylesheet" href="/assets/site.css?v=65b8793d">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -82,11 +82,11 @@
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>CFQ 표현 설계: 기존 평행사변형 표현 대비 검출 정확도 6.6% 향상, 무효 사각형 0건</li>
-        <li>중심점 기반 <span class="nobr">one-stage</span> 구조: 2단계 방식(검출 후 꼭짓점 회귀) 대비 파라미터 <span class="nobr">89%·추론</span> 시간 55% 감소(64.0&nbsp;→&nbsp;7.0M, 74.5&nbsp;→&nbsp;33.6&nbsp;ms)</li>
-        <li>amodal <span class="nobr">검출·<span class="nobr">sim-to-real</span></span> 학습: 꼭짓점 독립 회귀 대비 가려진 차량 검출률 <span class="nobr">47%·어안</span> 주변부 검출률 17% 향상</li>
-        <li>라즈베리파이: 쿼리 기반 경량 <span class="nobr">검출기(1.84M·흑백</span> 640×480) NCNN INT8, 추론 126&nbsp;→&nbsp;68 <span class="nobr">ms·실제</span> 시험 AP50&nbsp;76.89%</li>
-        <li>GPU 서버: 640 입력 지식 증류 모델로 RTX 5080 1대에 카메라 <span class="nobr">207대·주차면</span> 866면 동시 추론, GPU 약 13%</li>
+        <li>CFQ 표현 설계: 기존 평행사변형 표현 대비 검출 정확도 <strong class="gain">6.6% 향상</strong>, 무효 사각형 <strong class="gain">0건</strong></li>
+        <li>중심점 기반 <span class="nobr">one-stage</span> 구조: 2단계 방식(검출 후 꼭짓점 회귀) 대비 파라미터 <strong class="gain">89%</strong>, 추론 시간 <strong class="gain">55% 감소</strong></li>
+        <li>amodal 검출과 <span class="nobr">sim-to-real</span> 학습: 꼭짓점 독립 회귀 대비 가려진 차량 검출률 <strong class="gain">47%</strong>, 어안 주변부 검출률 <strong class="gain">17% 향상</strong></li>
+        <li>라즈베리파이: 쿼리 기반 경량 검출기 NCNN INT8 변환, 추론 <strong class="gain">126&nbsp;→&nbsp;68&nbsp;ms</strong>, 실제 시험 AP50&nbsp;76.89%</li>
+        <li>GPU 서버: 640 입력 지식 증류 모델로 RTX 5080 1대에 카메라 207대와 주차면 866면 동시 추론, GPU 사용률 약 13%</li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-eval">
