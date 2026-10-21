@@ -1852,6 +1852,7 @@ a.get--line:hover {
 .desc li {
   padding: 0.5rem 0;
   border-top: 1px solid var(--rule);
+  text-wrap: pretty;
 }
 .desc li:first-child {
   padding-top: 0;

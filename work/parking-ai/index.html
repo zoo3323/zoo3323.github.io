@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=02833ffc">
+<link rel="stylesheet" href="/assets/site.css?v=45849a96">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -83,15 +83,16 @@
       <h2 id="h-did">맡은 일</h2>
       <ul>
         <li>모델 설계부터 <span class="nobr">데이터셋·지표</span> 설계, 실험, 정량 평가, <span class="nobr">경량화·현장</span> 배포까지 전 과정 주도, 투고 논문 제1저자</li>
-        <li>CFQ 표현 설계: 꼭짓점 순서가 고정된 볼록 사각형 출력 보장, 합성 검증 AP50:95 61.10 ± 0.52%(평행사변형 57.32%)</li>
+        <li>CFQ 표현 설계: 볼록 사각형 출력 보장, 실제 CCTV 시험 AP50&nbsp;80.32%&nbsp;· AP50:95&nbsp;33.16%(실제 이미지 미세조정), 비교 방법 중 최고</li>
         <li><span class="nobr">one-stage</span> 검출기로 가려진 꼭짓점까지 추정하는 amodal 하단면 검출, CARLA <span class="nobr">합성·실제</span> CCTV 합동 학습으로 <span class="nobr">sim-to-real</span> 격차 축소</li>
-        <li><span class="nobr">품질·지연·비용</span> 비교로 장비별 경량화 선택: GPU 서버 640 입력 + 지식 증류, 라즈베리파이 INT8 양자화</li>
+        <li><span class="nobr">품질·지연·비용</span> 비교로 장비별 경량화 선택: GPU 서버 640 입력 + 지식 증류, 라즈베리파이 NCNN INT8(추론 126&nbsp;→&nbsp;68&nbsp;ms)</li>
+        <li>라즈베리파이 엔진 최적화: <span class="nobr">py-spy</span> 병목 분석 후 화질 검사 정수 <span class="nobr">연산·디코더</span> 연산 재배치 등으로 0.77&nbsp;→&nbsp;1.46&nbsp;fps(CPU 상한 80%), 판정 동일</li>
         <li>앞뒤 카메라 하단면 트랙 결합, 주차면 ROI 점유 비율 기반 <span class="nobr">입차·출차</span> 판정</li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-eval">
       <h2 id="h-eval">정량 평가</h2>
-      <dl class="frame"><div class="frame__row"><dt>데이터셋</dt><dd>CARLA 합성 230,865장&nbsp;· 실제 CCTV 6,779장, 실제는 현장 단위로 <span class="nobr">학습·검증·시험</span> 분할</dd></div><div class="frame__row"><dt>지표</dt><dd><span class="nobr">AP50·AP50:95·꼭짓점</span> <span class="nobr">오차·비정상</span> 사각형 비율, 현장은 찬 칸 <span class="nobr">놓침·청구</span> 시간 오차</dd></div><div class="frame__row"><dt>가드레일</dt><dd>통과 기준 학습 전 고정, 시험셋 1회 개봉, 라즈베리파이 실기기 채점</dd></div><div class="frame__row"><dt>불확실성</dt><dd>시드 3회 평균 ± 표준편차 보고, 시드별 순위 일치 확인</dd></div></dl>
+      <dl class="frame"><div class="frame__row"><dt>데이터셋</dt><dd>CARLA 합성 230,865장&nbsp;· 실제 CCTV 6,779장, 실제는 현장 단위로 <span class="nobr">학습·검증·시험</span> 분할</dd></div><div class="frame__row"><dt>지표</dt><dd><span class="nobr">AP50·AP50:95·꼭짓점</span> <span class="nobr">오차·비정상</span> 사각형 비율, 현장은 찬 칸 <span class="nobr">놓침·청구</span> 시간 오차</dd></div><div class="frame__row"><dt>가드레일</dt><dd>통과 기준 학습 전 고정, 시험셋 1회 개봉, 라즈베리파이 실기기 채점</dd></div><div class="frame__row"><dt>불확실성</dt><dd>학습은 시드 3회 평균 ± <span class="nobr">표준편차·순위</span> 일치 확인, 실제 CCTV 미세조정은 1회</dd></div></dl>
     </section>
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>

@@ -863,6 +863,11 @@ def keep_dots(text):
         lambda m: f'<span class="nobr">{m.group(0)}</span>' if len(m.group(0)) <= 11 else m.group(0),
         joined,
     )
+    # 「126 → 68 ms」「AP50 80.32%」처럼 숫자끼리·숫자와 단위·지표 이름과 값은 한 줄에 둔다
+    joined = re.sub(r"(\d[\d.,]*%?) (→|vs) (\d)", r"\1&nbsp;\2&nbsp;\3", joined)
+    joined = re.sub(r"(\d) (img/s|ms|fps)(?!\w)", r"\1&nbsp;\2", joined)
+    # 지표 이름과 값 사이에 가운뎃점 묶음(<span class="nobr">)이 끼어 있어도 붙인다
+    joined = re.sub(r'(AP50(?::95)?)((?:</span>)?) ((?:<span class="nobr">)?\d)', r"\1\2&nbsp;\3", joined)
     return joined.replace(" · ", "&nbsp;· ")
 
 
