@@ -1293,6 +1293,14 @@ a {
   height: auto;
   margin-inline: auto;
 }
+/* 웹 서비스(스코어랩): 브라우저 창 그림을 칸 폭에 가깝게 가로로 넓게 */
+.showcase--web {
+  display: grid;
+  align-items: center;
+}
+.showcase--web img {
+  width: calc(var(--p) * 9.4);
+}
 
 /* 가나디야: 컵케이크를 든 시바 한 마리 */
 .mascot {
