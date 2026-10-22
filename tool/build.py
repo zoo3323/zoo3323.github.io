@@ -1343,7 +1343,8 @@ footer {{ margin-top: 5mm; padding-top: 2mm; border-top: 1px solid var(--rule); 
 
 # ── 회사 프로젝트: 진열대 작은 봉지의 뒷면. 앱 페이지와 같은 틀에 개요·맡은 일·쓴 기술·자료(이미지·영상) ──
 # 자료는 about.json 의 work[].media 에 {"type": "image"|"video", "src", "poster", "w", "h", "alt", "caption", "generated"} 로 적으면 나온다.
-# caption 은 그림 아래 짧은 설명이고, generated 가 참이면 「생성 이미지」 딱지가 붙는다(실제 자료가 없어 만든 그림).
+# caption 은 그림 아래 어떤 그림인지 담백한 한 줄이다(점선·색 풀이는 적지 않는다). generated 가 참이면 「생성 이미지」 딱지가 붙지만,
+# 2026-10-22 사용자 결정으로 지금은 어느 그림에도 쓰지 않는다(그림 귀퉁이 딱지도 지웠다).
 
 if ABOUT and ABOUT.get("work"):
     minis = {it["href"]: it for it in shelf_items() if isinstance(it, dict)}
