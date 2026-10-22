@@ -1103,7 +1103,9 @@ if ABOUT:
             link = f' <a href="{esc(x["link"])}">{esc(x["linkLabel"])}</a>' if x.get("link") else ""
             if x.get("links"):
                 link = " " + " · ".join(f'<a href="{esc(l["href"])}">{esc(l["label"])}</a>' for l in x["links"])
-            notes = f'<p>{keep_dots(x["notes"])}{link}</p>' if x.get("notes") else ""
+            # brief: 소개 페이지에만 쓰는 짧은 설명(1280px 에서 링크까지 세 줄 안). 상세 페이지·이력서는 notes 그대로
+            text = x.get("brief") or x.get("notes")
+            notes = f'<p>{keep_dots(text)}{link}</p>' if text else ""
             head = f'<div class="cv__head"><b>{esc(x["org"])}</b><span>{esc(x["unit"])}</span><time>{esc(x["period"])}</time></div>'
             art = cv_art(x)
             # anchor: 진열대 카드가 이 줄로 바로 오게 하는 이름(예: Claude Code 플러그인 카드 → #p-plugins)

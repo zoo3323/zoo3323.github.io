@@ -336,7 +336,8 @@
             }
           ]
         }
-      ]
+      ],
+      "brief": "캘리브레이션 없이 원본 영상 한 장에서 가려진 차량 하단면까지 검출하는 one-stage 2.5D 모델. 대구 북구청, 구미 아파트, 대구 칠곡 주차폴 세 현장에 배포."
     },
     {
       "org": "라벨링 도구",
@@ -421,7 +422,8 @@
             }
           ]
         }
-      ]
+      ],
+      "brief": "주차면의 직선·직각·2.5×5 m 크기로 카메라를 보정하고, 앞변 클릭과 모델 사전 라벨로 하단면을 만드는 사내 라벨링 도구. 1인당 하루 처리량 약 100 → 2,000장."
     },
     {
       "org": "안전 영상 분석",
@@ -524,7 +526,8 @@
             }
           ]
         }
-      ]
+      ],
+      "brief": "GPU 한 대로 안전모·화재·침입 감지와 다중 카메라 추적을 함께 돌리는 FastAPI 실시간 영상 분석 서버."
     },
     {
       "org": "위험성평가 AI",
@@ -666,7 +669,8 @@
             }
           ]
         }
-      ]
+      ],
+      "brief": "공공기관 위험성평가표 검토를 업로드부터 보고서까지 한 흐름으로 만든 1인 개발 플랫폼. 등급은 코드로 계산하고 인용 조문은 법령 조회로 검증, LLM은 근거 문장만 작성."
     },
     {
       "org": "노인보호구역 입지 분석",
@@ -750,7 +754,8 @@
             }
           ]
         }
-      ]
+      ],
+      "brief": "노인 시설 분포를 가중치로 넣은 사고 핫스폿 분석과 Random Forest·GWR로 경상북도 주요 시군의 노인보호구역 최적입지 도출."
     }
   ],
   "projects": [
@@ -771,7 +776,8 @@
         ],
         "fit": "cover",
         "tone": "#a3e635"
-      }
+      },
+      "brief": "시험지 PDF 업로드부터 자동채점·유형 분석·학부모 리포트까지 잇는 학원용 웹 서비스. 실제 시험지 198문항 기준 정답 추출 12.6 → 100%, 유형 정확도 2 → 94%로 개선."
     },
     {
       "org": "가나디야",
@@ -791,7 +797,8 @@
         ],
         "fit": "phones",
         "tone": "#ffd9c2"
-      }
+      },
+      "brief": "반려견 맞춤 화식 밀키트 MVP 앱. AI 상담은 Claude 도구 호출로 보호자 말을 피할 원료·위험 신호 프로필로 바꾸고, 추천은 검수한 규칙 엔진이 결정."
     },
     {
       "org": "Claude Code 에이전트 플러그인",
@@ -820,7 +827,8 @@
           "href": "https://github.com/zoo3323/usage-statusline",
           "label": "usage-statusline"
         }
-      ]
+      ],
+      "brief": "paper-summary는 논문 PDF를 빠짐없이 번역하고 스크립트로 완전성을 검증해 번역본·요약본 HTML 생성, usage‑statusline은 Claude·Codex 사용량을 상태줄에 표시."
     }
   ],
   "research": [
@@ -828,7 +836,8 @@
       "org": "MDPI MAKE 투고 논문",
       "unit": "제1저자",
       "period": "2026. 10. 투고",
-      "notes": "「Convex Footprint Quadrilateral: Axis-Based Amodal Vehicle Footprint Detection in Parking Surveillance」. 차량 축 기준 앞뒤 변의 폭·기울기로 항상 볼록한 사각형을 만드는 CFQ(Convex Footprint Quadrilateral) 표현 제안, 중심점 기반 one-stage 검출기와 결합해 카메라 캘리브레이션 없이 가려진 하단면까지 검출(amodal). 학술지 Machine Learning and Knowledge Extraction(MDPI) 투고."
+      "notes": "「Convex Footprint Quadrilateral: Axis-Based Amodal Vehicle Footprint Detection in Parking Surveillance」. 차량 축 기준 앞뒤 변의 폭·기울기로 항상 볼록한 사각형을 만드는 CFQ(Convex Footprint Quadrilateral) 표현 제안, 중심점 기반 one-stage 검출기와 결합해 카메라 캘리브레이션 없이 가려진 하단면까지 검출(amodal). 학술지 Machine Learning and Knowledge Extraction(MDPI) 투고.",
+      "brief": "「Convex Footprint Quadrilateral」. 차량 축 기준 앞뒤 변의 폭·기울기로 늘 볼록한 사각형을 만드는 CFQ 표현과 중심점 one-stage 검출기로, 캘리브레이션 없이 가려진 하단면까지 검출."
     }
   ]
 }
