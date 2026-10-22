@@ -4,12 +4,13 @@
     "poster": "/assets/video/parking-ai.webp",
     "w": 1280,
     "h": 720,
-    "duration": 22.8,
+    "duration": 28.2,
     "at": [
       0,
       5.3,
       11.1,
-      16.4
+      16.4,
+      22.4
     ]
   },
   "labeling-tool": {
@@ -57,18 +58,6 @@
     "at": [
       0,
       5.9,
-      11.8
-    ]
-  },
-  "pole-engine": {
-    "src": "/assets/video/pole-engine.mp4",
-    "poster": "/assets/video/pole-engine.webp",
-    "w": 1280,
-    "h": 720,
-    "duration": 17.6,
-    "at": [
-      0,
-      5.8,
       11.8
     ]
   }

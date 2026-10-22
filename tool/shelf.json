@@ -102,22 +102,6 @@
           "photo": true
         },
         {
-          "name": "주차폴 점유 판정 엔진",
-          "kind": "신라이앤씨 · 2026",
-          "line": "하단면 모델로 앞뒤 카메라 입출차 판정",
-          "tone": "#d6ecff",
-          "ink": "#0b2a3d",
-          "rest": 0.4,
-          "size": 1.3,
-          "href": "/work/pole-engine/",
-          "image": "/assets/img/work/pole-engine/card.webp",
-          "imageSize": [
-            900,
-            600
-          ],
-          "photo": true
-        },
-        {
           "name": "안전 영상 분석",
           "kind": "패턴앤 · 2025",
           "line": "YOLO·ReID로 안전모·화재·침입 감지, 다중 카메라 추적",
