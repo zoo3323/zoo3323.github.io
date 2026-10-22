@@ -768,6 +768,7 @@
     },
     {
       "org": "Claude Code 에이전트 플러그인",
+      "anchor": "p-plugins",
       "unit": "공개 저장소",
       "period": "2026",
       "notes": "paper-summary: 에이전트가 논문 PDF 원문 블록을 빠짐없이 번역하고 스크립트가 완전성을 검증하는 구조로 한국어 번역본·요약본·용어사전 HTML 생성. usage-statusline: Claude·Codex 사용량과 컨텍스트 게이지를 상태줄에 표시.",

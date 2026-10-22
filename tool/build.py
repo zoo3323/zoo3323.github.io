@@ -1085,7 +1085,9 @@ if ABOUT:
             notes = f'<p>{keep_dots(x["notes"])}{link}</p>' if x.get("notes") else ""
             head = f'<div class="cv__head"><b>{esc(x["org"])}</b><span>{esc(x["unit"])}</span><time>{esc(x["period"])}</time></div>'
             art = cv_art(x)
-            rows.append(f'<li class="cv__row">{art}{head}{notes}</li>' if art else f"<li>{head}{notes}</li>")
+            # anchor: 진열대 카드가 이 줄로 바로 오게 하는 이름(예: Claude Code 플러그인 카드 → #p-plugins)
+            aid = f' id="{esc(x["anchor"])}"' if x.get("anchor") else ""
+            rows.append(f'<li class="cv__row"{aid}>{art}{head}{notes}</li>' if art else f"<li{aid}>{head}{notes}</li>")
         return "\n        ".join(rows)
 
     # 회사 프로젝트·논문 줄의 그림은 진열대 카드와 같은 그림이다
