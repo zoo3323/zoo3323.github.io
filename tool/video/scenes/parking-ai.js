@@ -151,7 +151,7 @@ window.SCENE = (() => {
     const BH = 30;
     // 한 프레임 처리 시간(그림 길이). 합이 0.77 → 2.12 fps 비율(약 2.75배)이 되게 잡았다
     const PARTS = [
-      { name: "하단면 모델", fill: C.lilac, w0: 120, w1: 58, fix: "INT8 · fp16", at: 3.35 },
+      { name: "하단면 모델", fill: C.lilac, w0: 120, w1: 58, fix: "INT8 · 흑백 입력", at: 3.35 },
       { name: "옛 검출기", fill: "#cfe3f3", w0: 90, w1: 28, fix: "1 스레드", at: 3.6 },
       { name: "화질 검사", fill: "#d4f2e1", w0: 45, w1: 8, fix: "정수 연산", at: 3.85 },
       { name: "디코더", fill: "#ffd8a8", w0: 40, w1: 12, fix: "연산 순서 변경", at: 4.1 },

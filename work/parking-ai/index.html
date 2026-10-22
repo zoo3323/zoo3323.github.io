@@ -52,15 +52,15 @@
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
       <li><span class="fact__label">회사</span><span class="fact__value">신라이앤씨</span></li>
-      <li><span class="fact__label">기간</span><span class="fact__value">2026</span></li>
+      <li><span class="fact__label">기간</span><span class="fact__value">2026. 7. – 9.</span></li>
       <li><span class="fact__label">맡은 일</span><span class="fact__value">모델 <span class="nobr">연구·개발,</span> <span class="nobr">서버·엣지</span> 배포</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>원본 영상 한 장에서 가려진 부분까지 차량 하단면(footprint) 네 꼭짓점을 바로 출력하는 <span class="nobr">one-stage</span> 2.5D 검출 모델. 옆 칸까지 덮는 2D 상자 대신 바닥에 닿는 영역으로 주차면 점유를 판단하고, 카메라마다 하던 <span class="nobr">캘리브레이션·어안</span> 왜곡 보정 단계 제거. 대구 북구청 주차장 CCTV, 구미 아파트 지하주차장, 대구 칠곡 노상주차장 세 현장에 배포.</p>
+      <p>원본 영상 한 장에서 가려진 부분까지 차량 하단면(footprint) 네 꼭짓점을 바로 출력하는 <span class="nobr">one-stage</span> 2.5D 검출 모델. 옆 칸까지 덮는 2D 상자 대신 바닥에 닿는 영역으로 주차면 점유를 판단하고, 카메라마다 하던 <span class="nobr">캘리브레이션·어안</span> 왜곡 보정 단계 제거. 대구 북구청 주차장 CCTV, 구미 아파트 지하주차장, 대구 칠곡 노상주차장 세 현장에 배포, 확대 진행 중.</p>
     </section>
     <section class="sec" aria-labelledby="h-sites">
       <h2 id="h-sites">현장 배포</h2>
-      <dl class="frame"><div class="frame__row"><dt>대구 북구청</dt><dd>주차장 CCTV 2대, 실제 영상 3,169장 <span class="nobr">라벨링·파인튜닝</span> 뒤 배포</dd></div><div class="frame__row"><dt>구미 아파트</dt><dd>지하주차장 카메라 <span class="nobr">207대·주차면</span> 866면, RTX 5080 1대로 동시 추론, 현장 프레임 233장(찬 칸 <span class="nobr">563·빈</span> 칸 228) 칸 판정 오류 0건</dd></div><div class="frame__row"><dt>대구 칠곡</dt><dd>노상주차장 한칸주차 장비 39대(라즈베리파이 5, 기존 사내 엔진 기반), 현장 벤치마크 점유 시간 정확도 <span class="nobr">99.69%·주차</span> 1:1 일치 98.4%</dd></div></dl>
+      <dl class="frame"><div class="frame__row"><dt>대구 북구청</dt><dd>주차장 CCTV 2대, 실제 영상 3,169장 <span class="nobr">라벨링·파인튜닝</span> 뒤 배포</dd></div><div class="frame__row"><dt>구미 아파트</dt><dd>지하주차장 카메라 <span class="nobr">207대·주차면</span> 866면, RTX 5080 1대로 카메라당 약 5&nbsp;fps(초당 약 1,000 프레임) 동시 추론, 현장 프레임 233장(찬 칸 <span class="nobr">563·빈</span> 칸 228) 칸 판정 오류 0건</dd></div><div class="frame__row"><dt>대구 칠곡</dt><dd>노상주차장 한칸주차 장비 39대(라즈베리파이 5, 기존 사내 엔진 기반), 현장 벤치마크 점유 시간 정확도 <span class="nobr">99.69%·주차</span> 1:1 일치 98.4%</dd></div></dl>
     </section>
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
@@ -73,14 +73,14 @@
       <div class="term term--plain" role="note" aria-label="용어 풀이: 한칸주차"><div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>한칸주차</b><span class="term__full">주차면 한 칸마다 세우는 카메라 기둥</span></p><p class="term__desc">칸마다 앞뒤 카메라가 달린 기둥(라즈베리파이 5)을 세워 그 칸의 <span class="nobr">입차·출차를</span> 판정하는 노상주차 장비.</p></div></div>
       <div class="clip">
         <div class="clip__frame">
-          <video class="clip__video" src="/assets/video/parking-ai.mp4?v=83b7541f" poster="/assets/video/parking-ai.webp?v=00d81fb6" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="2.5D 차량 하단면 검출: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+          <video class="clip__video" src="/assets/video/parking-ai.mp4?v=78ab6e73" poster="/assets/video/parking-ai.webp?v=00d81fb6" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="2.5D 차량 하단면 검출: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
         </div>
         <ol class="solve solve--clip">
           <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>2D 상자가 옆 칸까지 덮음</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>하단면 직접 검출, 겹친 넓이로 점유 판정</span></button></li>
           <li data-at="5.3"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>하단면 대부분이 가려짐</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>가려진 꼭짓점까지 추정, CFQ로 볼록 보장</span></button></li>
           <li data-at="11.1"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>카메라마다 보정값 필요</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>보정 없이 원본 영상에서 바로 검출</span></button></li>
           <li data-at="16.4"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>한칸주차 저속 프레임에서 ID가 자주 바뀜</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>하단면 트래커, 앞뒤 카메라 ID로 교체 판정</span></button></li>
-          <li data-at="22.4"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>한칸주차 장비에서 느린 엔진 처리</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">INT8·fp16·병목</span> 제거로 0.77&nbsp;→&nbsp;2.12&nbsp;fps</span></button></li>
+          <li data-at="22.4"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>한칸주차 장비에서 느린 엔진 처리</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>경량 <span class="nobr">검출기·INT8·병목</span> 제거로 0.77&nbsp;→&nbsp;2.12&nbsp;fps</span></button></li>
         </ol>
       </div>
     </section>
@@ -114,9 +114,9 @@
     <section class="sec" aria-labelledby="h-others">
       <h2 id="h-others">다른 회사 프로젝트</h2>
       <ul class="others">
-      <li><a href="/work/labeling-tool/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/labeling-tool/card-s.webp" width="900" height="600" alt=""></span><span><b>라벨링 도구</b><span>신라이앤씨 · 2026</span></span><span class="get get--small">보기</span></a></li>
-      <li><a href="/work/safety-vision/"><span style="--tone:#d4f2e1;--tone-ink:#0b3d24;--accent:#0b3d24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/safety-vision/card-s.webp" width="900" height="600" alt=""></span><span><b>안전 영상 분석</b><span>패턴앤 · 2025</span></span><span class="get get--small">보기</span></a></li>
-      <li><a href="/work/risk-review/"><span style="--tone:#d4f2e1;--tone-ink:#0b3d24;--accent:#0b3d24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/risk-review/card-s.webp" width="900" height="600" alt=""></span><span><b>위험성평가 AI</b><span>패턴앤 · 2026</span></span><span class="get get--small">보기</span></a></li>
+      <li><a href="/work/labeling-tool/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/labeling-tool/card-s.webp" width="900" height="600" alt=""></span><span><b>라벨링 도구</b><span>신라이앤씨 · 2026. 7. – 9.</span></span><span class="get get--small">보기</span></a></li>
+      <li><a href="/work/safety-vision/"><span style="--tone:#d4f2e1;--tone-ink:#0b3d24;--accent:#0b3d24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/safety-vision/card-s.webp" width="900" height="600" alt=""></span><span><b>안전 영상 분석</b><span>패턴앤 · 2025. 8. – 12.</span></span><span class="get get--small">보기</span></a></li>
+      <li><a href="/work/risk-review/"><span style="--tone:#d4f2e1;--tone-ink:#0b3d24;--accent:#0b3d24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/risk-review/card-s.webp" width="900" height="600" alt=""></span><span><b>위험성평가 AI</b><span>패턴앤 · 2026. 1. – 5.</span></span><span class="get get--small">보기</span></a></li>
       <li><a href="/work/senior-zone/"><span style="--tone:#ece7df;--tone-ink:#2d2a24;--accent:#2d2a24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/senior-zone/card-s.webp" width="900" height="600" alt=""></span><span><b>노인보호구역 입지 분석</b><span>제이솔루션 · 2024 – 2025</span></span><span class="get get--small">보기</span></a></li>
       </ul>
     </section>

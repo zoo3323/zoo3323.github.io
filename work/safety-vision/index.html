@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>안전 영상 분석 · 패턴앤 | NamJuKim</title>
-<meta name="description" content="사업장 CCTV의 RTSP 영상에서 안전모 미착용·화재·침입을 감지하고, 여러 카메라에 걸쳐 사람을 추적하는 실시간 영상 분석 서버">
+<meta name="description" content="사업장 CCTV의 RTSP 영상에서 화재·연기, 안전모 미착용, 출입 금지 구역 침입을 감지하고 여러 카메라의 인원을 파악하는 실시간 영상 분석 서버">
 <link rel="canonical" href="https://zoo3323.github.io/work/safety-vision/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NamJuKim">
 <meta property="og:title" content="안전 영상 분석 · 패턴앤 | NamJuKim">
-<meta property="og:description" content="사업장 CCTV의 RTSP 영상에서 안전모 미착용·화재·침입을 감지하고, 여러 카메라에 걸쳐 사람을 추적하는 실시간 영상 분석 서버">
+<meta property="og:description" content="사업장 CCTV의 RTSP 영상에서 화재·연기, 안전모 미착용, 출입 금지 구역 침입을 감지하고 여러 카메라의 인원을 파악하는 실시간 영상 분석 서버">
 <meta property="og:url" content="https://zoo3323.github.io/work/safety-vision/">
 <meta property="og:image" content="https://zoo3323.github.io/assets/og/work-safety-vision.jpg?v=1faf20d5">
 <meta property="og:image:width" content="1200">
@@ -46,51 +46,50 @@
       <span class="work-art work-art--photo"><img src="/assets/img/work/safety-vision/card-s.webp" width="900" height="600" alt=""></span>
       <div>
         <h1 class="app-name">안전 영상 분석</h1>
-        <p class="app-sub">사업장 CCTV의 RTSP 영상에서 안전모 미착용·화재·침입을 감지하고, 여러 카메라에 걸쳐 사람을 추적하는 실시간 영상 분석 서버</p>
+        <p class="app-sub">사업장 CCTV의 RTSP 영상에서 화재·연기, 안전모 미착용, 출입 금지 구역 침입을 감지하고 여러 카메라의 인원을 파악하는 실시간 영상 분석 서버</p>
         <p class="app-dev"><a href="/about/#h-work">NamJuKim</a></p>
       </div>
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
       <li><span class="fact__label">회사</span><span class="fact__value">패턴앤</span></li>
-      <li><span class="fact__label">기간</span><span class="fact__value">2025</span></li>
+      <li><span class="fact__label">기간</span><span class="fact__value">2025. 8. – 12.</span></li>
       <li><span class="fact__label">맡은 일</span><span class="fact__value">영상 분석 서버 개발</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>GPU 한 대로 <span class="nobr">화재·안전모·침입</span> 감지와 다중 카메라 추적 모델을 함께 운영하는 FastAPI 추론 서버 구축. RTSP 스트림 실시간 추론, 결과를 단일 스키마로 정규화해 WebSocket 실시간 송출.</p>
+      <p>GPU 한 대로 <span class="nobr">화재·안전모·침입</span> 감지와 다중 카메라 인원 파악 모델 4종을 함께 운용하는 FastAPI 추론 서버 구축. RTSP 스트림을 카메라별 스레드로 디코딩하고 끊기면 자동 재연결해 장애를 카메라 단위로 격리, 결과를 단일 스키마로 정규화해 WebSocket 실시간 송출.</p>
     </section>
     
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
-      <div class="flow"><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>RTSP 카메라</b><span>스트림별 스레드&nbsp;· 끊김 시 재연결</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">모델 라우터&nbsp;· 동적 로딩</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b><span class="nobr">화재·연기</span></b><span>YOLO</span></div><div class="flow__node flow__node--model"><b>안전모</b><span>YOLO&nbsp;· <span class="nobr">helmet·head</span></span></div><div class="flow__node flow__node--model"><b>침입</b><span>YOLO&nbsp;· ArUco 자동 ROI</span></div><div class="flow__node flow__node--model"><b>다중 카메라 추적</b><span>ByteTrack&nbsp;· ReID</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>결과 정규화</b><span>box&nbsp;· roi&nbsp;· count 스키마</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>실시간 송출</b><span>WebSocket</span></div></li></ol><p class="flow__note">GPU 한 대&nbsp;· Docker</p></div>
+      <div class="flow"><ol class="flow__steps" style="--n:4"><li class="flow__step"><div class="flow__node flow__node--in"><b>RTSP 카메라</b><span>스트림별 스레드&nbsp;· 끊김 시 재연결</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">모델 라우터&nbsp;· 동적 로딩</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b><span class="nobr">화재·연기</span></b><span>YOLO</span></div><div class="flow__node flow__node--model"><b>안전모</b><span>YOLO&nbsp;· <span class="nobr">helmet·head</span></span></div><div class="flow__node flow__node--model"><b>침입</b><span>YOLO&nbsp;· ArUco 자동 ROI</span></div><div class="flow__node flow__node--model"><b>다중 카메라 인원 파악</b><span>인원 수 집계</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>결과 정규화</b><span>box&nbsp;· roi&nbsp;· count 스키마</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>실시간 송출</b><span>WebSocket</span></div></li></ol><p class="flow__note">GPU 한 대&nbsp;· Docker</p></div>
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
       
       <div class="clip">
         <div class="clip__frame">
-          <video class="clip__video" src="/assets/video/safety-vision.mp4?v=6ddeca39" poster="/assets/video/safety-vision.webp?v=64d59be2" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="안전 영상 분석: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+          <video class="clip__video" src="/assets/video/safety-vision.mp4?v=2be13eb1" poster="/assets/video/safety-vision.webp?v=f02b95ae" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="안전 영상 분석: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
         </div>
         <ol class="solve solve--clip">
           <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>모델 4종 동시 적재 시 VRAM 부족(OOM)</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>동적 모델 매니저로 필요 모델만 교체 적재</span></button></li>
           <li data-at="5.7"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>카메라 이동 시 ROI 재작성 필요</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>ArUco 마커 기반 ROI 자동 생성</span></button></li>
-          <li data-at="11.2"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>전 트랙 ReID로 GPU 부하 과다</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>고신뢰 트랙만 ReID, 전역 ID 부여</span></button></li>
+          <li data-at="11.2"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>스트림 <span class="nobr">끊김·모델마다</span> 다른 결과 형식</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>카메라별 <span class="nobr">스레드·자동</span> 재연결, 단일 스키마</span></button></li>
         </ol>
       </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>FastAPI 다중 모델 라우팅과 동적 모델 로딩 구현: GPU에 한 모델만 상주시키고 요청 시 교체해 VRAM 부족(OOM) 해결</li>
-        <li>RTSP 스트림 전용 스레드 디코딩과 자동 재연결 구현, 결과를 box, roi, count 스키마로 정규화해 WebSocket 송출</li>
+        <li>모델 라우터와 동적 모델 매니저 구현: 상주 모델 <strong class="gain">4개 → 1개</strong>로 GPU 1대에서 모델 4종 운용, VRAM 부족(OOM) 해결</li>
+        <li>카메라별 디코딩 스레드와 자동 재연결로 카메라 장애 개별 격리, 결과를 box, roi, count 단일 스키마로 통일해 WebSocket 송출</li>
         <li>YOLO 계열 검출 모델로 화재와 연기, 안전모 착용(helmet)과 미착용(head) 감지 기능 개발</li>
         <li>ArUco 마커 기반 침입 감지 ROI 자동 생성, 카메라 재설치 후에도 재설정 없이 동작</li>
-        <li>ByteTrack 추적과 ResNet50 ReID로 다중 카메라 동일인 전역 ID 부여, 고신뢰 트랙만 ReID해 GPU 부하 절감</li>
       </ul>
     </section>
     
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
-      <ul class="chips"><li>Python</li><li>FastAPI · WebSocket</li><li>PyTorch · YOLO</li><li>ByteTrack · ReID</li><li>OpenCV · ArUco</li><li>Docker · CUDA</li></ul>
+      <ul class="chips"><li>Python</li><li>FastAPI · WebSocket</li><li>PyTorch · YOLO</li><li>OpenCV · ArUco</li><li>Docker · CUDA</li></ul>
     </section>
     <section class="sec" aria-labelledby="h-media">
       <h2 id="h-media">자료</h2>
@@ -102,9 +101,9 @@
     <section class="sec" aria-labelledby="h-others">
       <h2 id="h-others">다른 회사 프로젝트</h2>
       <ul class="others">
-      <li><a href="/work/parking-ai/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/parking-ai/card-s.webp" width="900" height="600" alt=""></span><span><b>2.5D 차량 하단면 검출</b><span>신라이앤씨 · 2026</span></span><span class="get get--small">보기</span></a></li>
-      <li><a href="/work/labeling-tool/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/labeling-tool/card-s.webp" width="900" height="600" alt=""></span><span><b>라벨링 도구</b><span>신라이앤씨 · 2026</span></span><span class="get get--small">보기</span></a></li>
-      <li><a href="/work/risk-review/"><span style="--tone:#d4f2e1;--tone-ink:#0b3d24;--accent:#0b3d24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/risk-review/card-s.webp" width="900" height="600" alt=""></span><span><b>위험성평가 AI</b><span>패턴앤 · 2026</span></span><span class="get get--small">보기</span></a></li>
+      <li><a href="/work/parking-ai/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/parking-ai/card-s.webp" width="900" height="600" alt=""></span><span><b>2.5D 차량 하단면 검출</b><span>신라이앤씨 · 2026. 7. – 9.</span></span><span class="get get--small">보기</span></a></li>
+      <li><a href="/work/labeling-tool/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/labeling-tool/card-s.webp" width="900" height="600" alt=""></span><span><b>라벨링 도구</b><span>신라이앤씨 · 2026. 7. – 9.</span></span><span class="get get--small">보기</span></a></li>
+      <li><a href="/work/risk-review/"><span style="--tone:#d4f2e1;--tone-ink:#0b3d24;--accent:#0b3d24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/risk-review/card-s.webp" width="900" height="600" alt=""></span><span><b>위험성평가 AI</b><span>패턴앤 · 2026. 1. – 5.</span></span><span class="get get--small">보기</span></a></li>
       <li><a href="/work/senior-zone/"><span style="--tone:#ece7df;--tone-ink:#2d2a24;--accent:#2d2a24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/senior-zone/card-s.webp" width="900" height="600" alt=""></span><span><b>노인보호구역 입지 분석</b><span>제이솔루션 · 2024 – 2025</span></span><span class="get get--small">보기</span></a></li>
       </ul>
     </section>

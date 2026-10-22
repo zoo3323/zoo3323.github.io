@@ -23,7 +23,9 @@
   "code": "scorelab",
   "platforms": [
     {
-      "name": "웹"
+      "name": "웹",
+      "store": "https://staging.getscorelab.net",
+      "storeLabel": "웹에서 열기"
     }
   ],
   "labelLine": "모두의 창업 2기 1라운드 · 견본 화면",

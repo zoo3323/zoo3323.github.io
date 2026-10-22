@@ -61,7 +61,7 @@ window.SCENE = (() => {
     const mcpA = seg(lt, 2.9, 0.35) * out;
     const ragA = seg(lt, 4.35, 0.35) * out;
     s += node(540, 150, 220, 72, "법령 MCP", "korean-law-mcp · 조문 조회", C.lemon, mcpA);
-    s += node(540, 300, 220, 72, "내부 문서 RAG", "fastembed · pgvector", C.lemon, ragA);
+    s += node(540, 300, 220, 72, "내부 문서 RAG", "BGE-M3 · pgvector", C.lemon, ragA);
     // 조문 확인: 인용 칩 → MCP 로 물어보고 답을 받는다
     const ask = seg(lt, 3.2, 0.45, E.inOut);
     const askX = 66 + chip.width("산업안전보건법 제412조", { size: 13 });

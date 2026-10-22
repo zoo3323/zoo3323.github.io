@@ -1,20 +1,20 @@
-// 안전 영상 분석: 세 장(모델 넷이 GPU 한 대에 → 동적 모델 매니저, 카메라를 옮기면 ROI 다시 그리기 → ArUco 마커로 자동, 모든 트랙 ReID → 믿을 만한 트랙만)
+// 안전 영상 분석: 세 장(모델 넷이 GPU 한 대에 → 동적 모델 매니저, 카메라를 옮기면 ROI 다시 그리기 → ArUco 마커로 자동, 한 대 끊기면 전체 멈춤 → 카메라별 스레드·자동 재연결과 단일 스키마)
 "use strict";
 window.SCENE = (() => {
   const BG = "#d4f2e1";
   const beats = [
     { at: 0, solve: 2.7 },
     { at: 5.7, solve: 2.7 },
-    { at: 11.2, solve: 2.8 },
+    { at: 11.2, solve: 3.0 },
   ];
-  const duration = 17.6;
+  const duration = 18.4;
 
   // ── 1장: GPU 메모리 ──
   const MODELS = [
     { name: "화재·연기", w: 112, fill: "#ffc9b9" },
     { name: "안전모", w: 92, fill: "#fff0a0" },
     { name: "침입", w: 78, fill: "#c9e8ff" },
-    { name: "다중 카메라 추적", w: 152, fill: "#d9d2ff" },
+    { name: "인원 파악", w: 96, fill: "#d9d2ff" },
   ];
   const BOX = { x: 318, y: 206, w: 330, h: 70 }; // VRAM 칸
   const BH = 54;
@@ -197,83 +197,169 @@ window.SCENE = (() => {
     return s;
   }
 
-  // ── 3장: ReID ──
-  const TILE = [
-    { x: 40, y: 88, w: 348, h: 222 },
-    { x: 412, y: 88, w: 348, h: 222 },
+  // ── 3장: 스트림 끊김과 결과 형식 ──
+  // 문제: 디코딩 루프 하나가 카메라 셋을 차례로 돌려, 한 대가 끊기면 모두 멈추고 모델마다 결과 모양이 다르다.
+  // 해결: 카메라마다 디코딩 스레드를 두어 끊긴 카메라만 다시 붙고, 결과는 box·roi·count 한 스키마로 WebSocket 에 보낸다.
+  const CAMS = [0, 1, 2].map((i) => ({ x: 36, y: 96 + i * 108, w: 168, h: 88 }));
+  const camY = (i) => CAMS[i].y + CAMS[i].h / 2;
+  const LOOP = { x: 262, y: 172, w: 178, h: 120 };
+  const LANE = { x: 262, w: 178, h: 56 };
+  const MID = LOOP.y + LOOP.h / 2;
+  const OX = 488;
+  const BUS = 460;
+  const ROWS = [
+    { name: "화재", fill: "#ffc9b9", raw: "[[12,40,88,96,.91]]" },
+    { name: "안전모", fill: "#fff0a0", raw: '{"helmet":2,"head":1}' },
+    { name: "침입", fill: "#c9e8ff", raw: '"ALERT zone_3"' },
+    { name: "인원 파악", fill: "#d9d2ff", raw: "count=7" },
   ];
-  const floor = (T) => {
-    const top = T.y + T.h * 0.3;
-    let s = tag("rect", { x: T.x, y: T.y, width: T.w, height: T.h, fill: "#dfe5e1" });
-    s += tag("path", { d: `M${T.x} ${n2(top)}H${T.x + T.w}V${T.y + T.h}H${T.x}Z`, fill: "#e9e7df" });
-    let l = "";
-    for (let i = -3; i <= 3; i++) l += `M${n2(T.x + T.w / 2 + i * 30)} ${n2(top)}L${n2(T.x + T.w / 2 + i * 120)} ${T.y + T.h}`;
-    s += tag("path", { d: l, fill: "none", stroke: "#cfccc2", "stroke-width": 1.5 });
-    return s;
+  const rowY = (k) => MID + (k - 1.5) * 46;
+  const MONO = '"SF Mono", Menlo, monospace';
+  // 멈춘 동안은 화면 속 시간도 선다: [시작, 끝]
+  const STOP = [
+    [[1.35, 3.1]],
+    [[1.0, 3.1], [3.75, 4.85]],
+    [[1.35, 3.1]],
+  ];
+  const streamT = (i, lt) => STOP[i].reduce((t, [a, b]) => t - clamp(lt - a, 0, b - a), lt);
+  const stopped = (i, lt) => STOP[i].some(([a, b]) => lt >= a && lt < b);
+  const cut = (i, lt) => i === 1 && ((lt >= 1.0 && lt < 3.1) || (lt >= 3.75 && lt < 4.85));
+  const bez = (p0, p1, p2, p3, u) => {
+    const v = 1 - u;
+    return [0, 1].map((k) => v * v * v * p0[k] + 3 * v * v * u * p1[k] + 3 * v * u * u * p2[k] + u * u * u * p3[k]);
   };
-  // 사람 그림표와 검출 상자. conf 가 낮으면 점선 상자
-  function person(x, y, sc, o = {}) {
-    const bw = 30 * sc;
-    const bh = 60 * sc;
-    let s = tag("circle", { cx: x, cy: y - bh * 0.72, r: 6.5 * sc, fill: "#55606e" });
-    s += tag("rect", { x: x - 8.5 * sc, y: y - bh * 0.58, width: 17 * sc, height: bh * 0.58, rx: 6 * sc, fill: "#55606e" });
-    s += tag("rect", { x: x - bw / 2 - 4, y: y - bh - 2, width: bw + 8, height: bh + 6, rx: 5, fill: "none", stroke: o.color || C.ink, "stroke-width": 2.2, "stroke-dasharray": o.weak ? "5 4" : undefined, opacity: o.boxA ?? 1 });
-    if (o.id) s += chip(x - bw / 2 - 4, y - bh - 14, o.id, { size: 11.5, fill: o.idFill || C.paper, h: 20, pad: 7, opacity: o.idA ?? 1 });
+
+  function camTile(i, lt) {
+    const T = CAMS[i];
+    const st = streamT(i, lt);
+    const top = T.y + T.h * 0.34;
+    let inner = tag("rect", { x: T.x, y: T.y, width: T.w, height: T.h, fill: "#dfe5e1" });
+    inner += tag("path", { d: `M${T.x} ${n2(top)}H${T.x + T.w}V${T.y + T.h}H${T.x}Z`, fill: "#e9e7df" });
+    // 걷는 사람 둘. 스트림이 멈추면 같이 선다
+    [
+      [0.2, 0.66, 20, 0.9],
+      [0.72, 0.9, -14, 1.1],
+    ].forEach(([x0, fy, v, sc]) => {
+      const span = T.w + 30;
+      const x = T.x - 15 + ((((x0 * T.w + v * st + i * 23) % span) + span) % span);
+      const y = T.y + fy * T.h;
+      inner += tag("circle", { cx: x, cy: y - 25 * sc, r: 5 * sc, fill: "#55606e" });
+      inner += tag("rect", { x: x - 6 * sc, y: y - 19 * sc, width: 12 * sc, height: 19 * sc, rx: 4 * sc, fill: "#55606e" });
+    });
+    const stop = stopped(i, lt);
+    const bad = cut(i, lt);
+    if (stop) inner += tag("rect", { x: T.x, y: T.y, width: T.w, height: T.h, fill: bad ? "#fde3e6" : "#8b8a82", opacity: bad ? 0.75 : 0.45 });
+    let s = card(T.x - 2, T.y - 2, T.w + 4, T.h + 4, { rx: 12, stroke: bad ? C.red : C.ink });
+    s += `<clipPath id="cam${i}"><rect x="${T.x}" y="${T.y}" width="${T.w}" height="${T.h}" rx="11"/></clipPath>`;
+    s += g({ "clip-path": `url(#cam${i})` }, inner);
+    s += chip(T.x + 10, T.y + 17, `CAM ${i + 1}`, { size: 11.5, fill: C.paper, h: 20, pad: 7 });
+    s += tag("circle", { cx: T.x + T.w - 15, cy: T.y + 17, r: 5, fill: stop ? C.wire : C.green, stroke: C.paper, "stroke-width": 1.5 });
+    if (bad) s += chip(T.x + T.w / 2, T.y + T.h / 2 + 8, "연결 끊김", { size: 12.5, fill: C.red, color: C.paper, stroke: null, anchor: "middle" });
+    else if (stop) s += chip(T.x + T.w / 2, T.y + T.h / 2 + 8, "멈춤", { size: 12.5, fill: C.paper, anchor: "middle" });
     return s;
   }
-  // ReID 를 할 때마다 상자에서 퍼지는 고리
-  const ping = (x, y, u, color) => (u <= 0 || u >= 1 ? "" : tag("circle", { cx: x, cy: y, r: 10 + 26 * E.out(u), fill: "none", stroke: color, "stroke-width": 2.4, opacity: 0.7 * (1 - u) }));
 
-  function reidBeat(lt) {
-    const fix = seg(lt, 2.8, 0.35);
+  // 카메라에서 가운데 칸으로 가는 선과 그 위를 흐르는 프레임
+  function wire(i, lt, toY, a) {
+    const p0 = [CAMS[i].x + CAMS[i].w + 4, camY(i)];
+    const p3 = [LOOP.x - 4, toY];
+    const mx = (p0[0] + p3[0]) / 2;
+    const p1 = [mx, p0[1]];
+    const p2 = [mx, p3[1]];
+    const bad = cut(i, lt);
+    let s = tag("path", { d: `M${n2(p0[0])} ${n2(p0[1])}C${n2(p1[0])} ${n2(p1[1])} ${n2(p2[0])} ${n2(p2[1])} ${n2(p3[0])} ${n2(p3[1])}`, fill: "none", stroke: bad ? C.red : C.ink, "stroke-width": 2.2, "stroke-dasharray": bad ? "5 5" : undefined });
+    if (!stopped(i, lt)) {
+      const st = streamT(i, lt);
+      for (let k = 0; k < 2; k++) {
+        const q = bez(p0, p1, p2, p3, (st * 1.1 + k * 0.5 + i * 0.17) % 1);
+        s += tag("rect", { x: q[0] - 5, y: q[1] - 4, width: 10, height: 8, rx: 2, fill: C.lemon, stroke: C.ink, "stroke-width": 1.2 });
+      }
+    }
+    if (bad) {
+      const q = bez(p0, p1, p2, p3, 0.5);
+      s += tag("circle", { cx: q[0], cy: q[1], r: 9.5, fill: C.paper, stroke: C.red, "stroke-width": 1.6 }) + cross(q[0], q[1], 0.75, C.red);
+    }
+    return g({ opacity: a }, s);
+  }
+
+  function streamBeat(lt) {
+    const sol = seg(lt, 3.0, 0.35, E.inOut);
+    const stall = lt >= 1.35 && lt < 3.1;
+    const ax = LOOP.x + LOOP.w;
+    const line = { fill: "none", "stroke-width": 2.2, "stroke-linecap": "round", "stroke-linejoin": "round" };
     let s = "";
-    TILE.forEach((T, i) => {
-      s += card(T.x - 2, T.y - 2, T.w + 4, T.h + 4, { rx: 12 });
-      s += `<clipPath id="tile${i}"><rect x="${T.x}" y="${T.y}" width="${T.w}" height="${T.h}" rx="11"/></clipPath>`;
+    CAMS.forEach((_, i) => (s += camTile(i, lt)));
+    // 가운데 → 결과로 잇는 선
+    const head = (x, y, color) => tag("path", { d: `M${x - 8} ${y - 6}L${x} ${y}L${x - 8} ${y + 6}`, ...line, stroke: color });
+    if (sol < 0.99) {
+      const color = stall ? C.red : C.ink;
+      s += g({ opacity: 1 - sol }, tag("path", { d: `M${ax + 6} ${MID}H${OX - 12}`, ...line, stroke: color, "stroke-dasharray": stall ? "5 5" : undefined }) + head(OX - 12, MID, color));
+    }
+    if (sol > 0.01) {
+      let b = tag("path", { d: `M${BUS} ${camY(0)}V${camY(2)}M${BUS} ${MID}H${OX - 12}`, ...line, stroke: C.ink }) + head(OX - 12, MID, C.ink);
+      CAMS.forEach((_, i) => {
+        const bad = cut(i, lt);
+        b += tag("path", { d: `M${ax + 4} ${camY(i)}H${BUS}`, ...line, stroke: bad ? C.red : C.ink, "stroke-dasharray": bad ? "5 5" : undefined });
+      });
+      s += g({ opacity: sol }, b);
+    }
+    // 문제: 디코딩 루프 하나
+    if (sol < 0.99) {
+      const a = 1 - sol;
+      CAMS.forEach((_, i) => (s += wire(i, lt, MID + (i - 1) * 24, a)));
+      let b = card(LOOP.x, LOOP.y, LOOP.w, LOOP.h, { stroke: stall ? C.red : C.ink, fill: stall ? "#fde3e6" : C.paper });
+      b += text(LOOP.x + 16, LOOP.y + 28, "디코딩 루프 하나", { "font-size": 15, "font-weight": 700, fill: C.ink });
+      b += text(LOOP.x + 16, LOOP.y + 51, "카메라 셋을 차례로", { "font-size": 12.5, fill: C.sub });
+      b += chip(LOOP.x + LOOP.w / 2, LOOP.y + LOOP.h - 27, "한 대 끊기면 전체 멈춤", { size: 12, fill: C.red, color: C.paper, stroke: null, anchor: "middle", h: 23, pad: 8, opacity: seg(lt, 1.4, 0.3) });
+      s += g({ opacity: a }, b);
+    }
+    // 해결: 카메라마다 디코딩 스레드
+    if (sol > 0.01) {
+      CAMS.forEach((_, i) => {
+        const y = camY(i);
+        s += wire(i, lt, y, sol);
+        const bad = cut(i, lt);
+        let b = card(LANE.x, y - LANE.h / 2, LANE.w, LANE.h, { stroke: bad ? C.red : C.ink });
+        b += text(LANE.x + 14, y - 9, `디코딩 스레드 ${i + 1}`, { "font-size": 13.5, "font-weight": 700, fill: C.ink });
+        if (bad) {
+          b += text(LANE.x + 14, y + 13, "재연결 중", { "font-size": 12, "font-weight": 700, fill: C.red });
+          const on = Math.floor(lt * 6) % 3;
+          for (let k = 0; k < 3; k++) b += tag("circle", { cx: LANE.x + 86 + k * 10, cy: y + 13, r: 2.6, fill: C.red, opacity: k === on ? 1 : 0.25 });
+        } else if (i === 1 && lt >= 4.85) {
+          b += chip(LANE.x + 14, y + 14, "자동 재연결", { size: 11.5, fill: C.lemon, h: 20, pad: 7, opacity: seg(lt, 4.85, 0.25) });
+        } else {
+          b += text(LANE.x + 14, y + 13, "실행 중", { "font-size": 12, fill: C.sub });
+        }
+        if (!bad) b += tick(LANE.x + LANE.w - 20, y, 0.9, "#12804a");
+        s += g({ opacity: sol, transform: `translate(${n2((1 - sol) * -10)} 0)` }, b);
+      });
+    }
+    // 결과: 모델마다 다른 모양 → box·roi·count 한 스키마
+    const uni = seg(lt, 3.35, 0.4, E.inOut);
+    const bad = seg(lt, 1.8, 0.3) * (1 - sol);
+    s += chip(OX, rowY(0) - 36, "모델마다 다른 결과 형식", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: bad });
+    s += chip(OX, rowY(0) - 36, "단일 스키마", { size: 12.5, fill: C.lemon, opacity: uni });
+    ROWS.forEach((r, k) => {
+      const y = rowY(k);
+      const sx = OX + 76;
+      let row = chip(OX, y, r.name, { size: 12, fill: r.fill, h: 24, pad: 8 });
+      row += g({ opacity: 1 - uni }, text(sx, y + 0.5, r.raw, { "font-size": 12, "font-family": MONO, fill: bad > 0.5 ? C.red : C.ink }));
+      row += g({ opacity: uni }, chip(sx, y, "{ box, roi, count }", { size: 11.5, family: MONO, weight: 600, fill: C.paper, h: 22, pad: 8 }));
+      s += g({ opacity: seg(lt, 0.45 + k * 0.15, 0.3) * (stall ? 0.45 : 1) }, row);
     });
-    // 사람들: [타일, x(0~1), 바닥 y(0~1), 크기, 믿을 만한가, ID]
-    const walk = seg(lt, 3.3, 1.2, E.inOut);
-    const people = [
-      { t: 0, x: lerp(0.55, 1.18, walk), y: 0.84, sc: 1.2, strong: true, id: "ID 7", star: true },
-      { t: 0, x: 0.25, y: 0.72, sc: 1.0, strong: true, id: "ID 3" },
-      { t: 0, x: 0.4, y: 0.52, sc: 0.72, strong: false },
-      { t: 1, x: 0.72, y: 0.68, sc: 1.0, strong: true, id: "ID 5" },
-      { t: 1, x: 0.24, y: 0.52, sc: 0.72, strong: false },
-      { t: 1, x: lerp(-0.2, 0.38, seg(lt, 4.1, 0.95, E.out)), y: 0.86, sc: 1.2, strong: true, id: "ID 7", star: true, enter: true },
-    ];
-    TILE.forEach((T, ti) => {
-      let inner = floor(T);
-      people
-        .filter((p) => p.t === ti)
-        .forEach((p, k) => {
-          const x = T.x + p.x * T.w;
-          const y = T.y + p.y * T.h;
-          const a = p.enter ? seg(lt, 4.1, 0.2) : 1;
-          // 문제: 모든 상자가 쉬지 않고 ReID. 해결: 믿을 만한 상자만 한 번
-          let pings = "";
-          for (let n = 0; n < 7; n++) {
-            const t0 = 0.35 + n * 0.34 + k * 0.09;
-            if (t0 < 2.75) pings += ping(x, y - 30 * p.sc, (lt - t0) / 0.5, C.red);
-          }
-          if (p.strong && !p.enter) pings += ping(x, y - 30 * p.sc, (lt - (3.0 + k * 0.15)) / 0.6, C.ink);
-          const idFill = p.star && lt > 4.35 ? C.lemon : C.paper;
-          inner += g({ opacity: a }, pings + person(x, y, p.sc, { weak: !p.strong && fix > 0.5, id: p.strong ? p.id : null, idFill, color: !p.strong && fix > 0.5 ? C.wire : C.ink }));
-        });
-      s += g({ "clip-path": `url(#tile${ti})` }, inner);
-      s += chip(T.x + 12, T.y + 20, `CAM ${ti + 1}`, { size: 12, fill: C.paper, h: 22, pad: 8 });
-    });
-    // 같은 사람: 두 카메라를 잇는 호
-    const link = seg(lt, 4.55, 0.5, E.inOut);
-    s += drawOn("M372 300C392 338 432 338 452 300", link, { stroke: C.ink, "stroke-width": 2.2, "stroke-dasharray": link >= 0.999 ? "6 5" : undefined });
-    s += chip(412, 340, "동일인 전역 ID 부여", { size: 12.5, fill: C.lemon, anchor: "middle", opacity: seg(lt, 4.8, 0.3) });
-    // GPU 부하
-    const load = lerp(0.95, 0.42, fix) * seg(lt, 0.2, 0.8);
-    const hot = load > 0.8;
-    s += text(40, 392, "GPU 부하", { "font-size": 14, "font-weight": 700, fill: "#24533a" });
-    s += tag("rect", { x: 120, y: 380, width: 520, height: 24, rx: 12, fill: C.paper, stroke: C.ink, "stroke-width": 2 });
-    s += tag("rect", { x: 123, y: 383, width: Math.max(0, 514 * load), height: 18, rx: 9, fill: hot ? C.red : "#4ade80" });
-    s += chip(760, 392, "과부하", { size: 12.5, fill: C.red, color: C.paper, stroke: null, anchor: "end", opacity: seg(lt, 1.3, 0.3) * (1 - fix) });
-    s += chip(760, 392, "부하 절감", { size: 12.5, fill: C.paper, anchor: "end", opacity: seg(lt, 3.3, 0.3) });
+    // WebSocket 으로 흘러 나간다
+    const ws = seg(lt, 3.9, 0.35);
+    const wx = OX + 112;
+    const y0 = rowY(3) + 18;
+    const y1 = 386;
+    const down = tag("path", { d: `M${wx - 6} ${y1 - 8}L${wx} ${y1}L${wx + 6} ${y1 - 8}`, ...line, stroke: C.ink });
+    s += g({ opacity: ws }, tag("path", { d: `M${wx} ${y0}V${y1}`, ...line, stroke: C.ink }) + down + chip(wx, 406, "WebSocket 실시간 송출", { size: 13, fill: C.lemon, anchor: "middle" }));
+    if (ws > 0.5) {
+      for (let k = 0; k < 2; k++) {
+        const u = ((lt - 3.9) * 1.1 + k / 2) % 1;
+        s += tag("rect", { x: wx - 7, y: lerp(y0 + 4, y1 - 14, u) - 5, width: 14, height: 10, rx: 2.5, fill: C.lemon, stroke: C.ink, "stroke-width": 1.3, opacity: Math.min(1, Math.sin(Math.PI * u) * 2) });
+      }
+    }
     return s;
   }
 
@@ -281,7 +367,7 @@ window.SCENE = (() => {
     let s = tag("rect", { x: 0, y: 0, width: W, height: H, fill: BG });
     if (t < beats[1].at) s += gpuBeat(t);
     else if (t < beats[2].at) s += roiBeat(t - beats[1].at);
-    else s += reidBeat(t - beats[2].at);
+    else s += streamBeat(t - beats[2].at);
     // 장이 바뀔 때 바탕색으로 잠깐 비운다
     for (const b of beats.slice(1)) {
       const u = clamp((t - (b.at - 0.3)) / 0.6);

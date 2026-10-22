@@ -52,11 +52,11 @@
     </header>
     <ul class="app-facts" aria-label="한눈에 보기">
       <li><span class="fact__label">회사</span><span class="fact__value">패턴앤</span></li>
-      <li><span class="fact__label">기간</span><span class="fact__value">2026</span></li>
+      <li><span class="fact__label">기간</span><span class="fact__value">2026. 1. – 5.</span></li>
       <li><span class="fact__label">맡은 일</span><span class="fact__value">1인 <span class="nobr">풀스택·LLM</span> 개발</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>하청업체 위험성평가표를 담당자가 법령과 직접 대조하고 엑셀로 관리해 검토 시간이 길고 근거 <span class="nobr">누락·오류가</span> 잦던 공공기관 업무를 업로드 → AI 분석 → 보완 → 현장 점검 → 보고서 한 흐름으로 재구성, 기획부터 <span class="nobr">프런트엔드·AI</span> 파이프라인까지 1인 <span class="nobr">설계·구현.</span> <span class="nobr">평가표·내부</span> 문서는 <span class="nobr">LLM·RAG,</span> 현장 <span class="nobr">사진·TBM</span> 회의록은 VLM, 인용 법령은 MCP 조회로 검증하는 역할별 AI 구성.</p>
+      <p>하청업체 위험성평가표를 담당자가 법령과 직접 대조하고 엑셀로 관리해 검토 시간이 길고 근거 <span class="nobr">누락·오류가</span> 잦던 공공기관 업무를 업로드 → AI 분석 → 보완 → 현장 점검 → 보고서 한 흐름으로 재구성, 기획부터 <span class="nobr">프런트엔드·AI</span> 파이프라인까지 1인 <span class="nobr">설계·구현.</span> <span class="nobr">평가표·TBM</span> 회의록은 LLM, 내부 <span class="nobr">문서·법령은</span> RAG, 현장 사진은 VLM, 인용 조문은 MCP 조회로 검증하는 역할별 AI 구성.</p>
     </section>
     <section class="sec" aria-labelledby="h-value">
       <h2 id="h-value">고객 가치와 AI 설계</h2>
@@ -65,21 +65,21 @@
         <tbody role="rowgroup">
           <tr role="row"><th scope="row" role="rowheader"><b>검토 시간 단축</b><span class="dt__sub">수작업 검토 의존</span></th><td role="cell" data-label="AI 설계">업로드 한 번으로 2단계 AI 분석(항목 분류 → 위험 <span class="nobr">등급·보완</span> 평가), 대량 평가표 비동기 처리</td></tr>
           <tr role="row"><th scope="row" role="rowheader"><b>믿을 수 있는 근거</b><span class="dt__sub">법령 근거 <span class="nobr">누락·오류</span> 빈번</span></th><td role="cell" data-label="AI 설계">AI가 인용한 조문을 MCP 법령 조회로 확인해 없는 조문 차단, 내부 문서 RAG로 근거 문서 첨부</td></tr>
-          <tr role="row"><th scope="row" role="rowheader"><b>현장 위험 발굴</b><span class="dt__sub">평가표 밖 위험 요인</span></th><td role="cell" data-label="AI 설계">VLM으로 현장 <span class="nobr">사진·TBM</span> 회의록 분석, 신규 위험 요인 추출</td></tr>
+          <tr role="row"><th scope="row" role="rowheader"><b>현장 위험 발굴</b><span class="dt__sub">평가표 밖 위험 요인</span></th><td role="cell" data-label="AI 설계">VLM으로 현장 사진, LLM으로 TBM 회의록을 분석해 신규 위험 요인 추출</td></tr>
           <tr role="row"><th scope="row" role="rowheader"><b>수작업 관리 제거</b><span class="dt__sub">엑셀 수동 <span class="nobr">대조·정리</span></span></th><td role="cell" data-label="AI 설계"><span class="nobr">엑셀·한글</span> 다중 양식 자동 파싱, 현장 단위 관리, 편집형 <span class="nobr">그리드·PDF·DOCX·XLSX</span> 보고서</td></tr>
         </tbody>
       </table>
     </section>
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
-      <div class="flow"><ol class="flow__steps" style="--n:5"><li class="flow__step"><div class="flow__node flow__node--in"><b>평가표 업로드</b><span>엑셀(.xlsx)&nbsp;· 한글(.hwpx)</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>파싱</b><span>병합 셀&nbsp;· 비정형 칼럼</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">AI 분석&nbsp;· ARQ 워커 2단계</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b>로컬 <span class="nobr">LLM·VLM</span></b><span>vLLM(OpenAI 호환)</span></div><div class="flow__node flow__node--model"><b>내부 문서 RAG</b><span>fastembed&nbsp;· pgvector</span></div><div class="flow__node flow__node--model"><b>법령 조회</b><span>korean-law-mcp</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b><span class="nobr">보완·현장</span> 점검</b><span>현장 사진&nbsp;· TBM 회의록(VLM)</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>보고서</b><span>PDF&nbsp;· DOCX&nbsp;· XLSX</span></div></li></ol><p class="flow__note">Next.js&nbsp;· FastAPI&nbsp;· <span class="nobr">Supabase(PostgreSQL·pgvector)</span></p></div>
+      <div class="flow"><ol class="flow__steps" style="--n:5"><li class="flow__step"><div class="flow__node flow__node--in"><b>평가표 업로드</b><span>엑셀(.xlsx)&nbsp;· 한글(.hwpx)</span></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b>파싱</b><span>병합 셀&nbsp;· 비정형 칼럼</span></div></li><li class="flow__step flow__step--group"><p class="flow__label">AI 분석&nbsp;· ARQ 워커 2단계</p><div class="flow__nodes"><div class="flow__node flow__node--model"><b>로컬 <span class="nobr">LLM·VLM</span></b><span>vLLM(OpenAI 호환)</span></div><div class="flow__node flow__node--model"><b>내부 문서 RAG</b><span>BGE-M3&nbsp;· pgvector</span></div><div class="flow__node flow__node--model"><b>법령 조회</b><span>korean-law-mcp</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--step"><b><span class="nobr">보완·현장</span> 점검</b><span>현장 사진(VLM)&nbsp;· TBM 회의록(LLM)</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>보고서</b><span>PDF&nbsp;· DOCX&nbsp;· XLSX</span></div></li></ol><p class="flow__note">Next.js&nbsp;· FastAPI&nbsp;· <span class="nobr">Supabase(PostgreSQL·pgvector)</span></p></div>
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
       
       <div class="clip">
         <div class="clip__frame">
-          <video class="clip__video" src="/assets/video/risk-review.mp4?v=2a3da541" poster="/assets/video/risk-review.webp?v=88f4da80" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="위험성평가 AI: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+          <video class="clip__video" src="/assets/video/risk-review.mp4?v=7fc40902" poster="/assets/video/risk-review.webp?v=2e34b0f9" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="위험성평가 AI: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
         </div>
         <ol class="solve solve--clip">
           <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>존재하지 않는 조문 인용(할루시네이션)</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>MCP 조문 <span class="nobr">조회·RAG</span> 근거 첨부로 차단</span></button></li>
@@ -91,17 +91,17 @@
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>고객 업무 재설계: 수작업 법령 대조와 엑셀 관리 → 업로드부터 AI 분석, 보완, 현장 점검, 보고서까지 한 흐름으로 통합</li>
-        <li>텍스트와 이미지 AI 파이프라인: vLLM 자체 서빙 LLM 2단계 분석, VLM 현장 사진과 TBM 회의록 분석, ARQ와 Redis 비동기 처리</li>
-        <li>근거 검증: 내부 문서 RAG(fastembed, pgvector)로 근거 첨부, korean-law-mcp로 산업안전보건법 조문을 조회해 없는 조문 인용 차단</li>
+        <li>텍스트와 이미지 AI 파이프라인: vLLM 자체 서빙 LLM으로 평가표 2단계 분석과 TBM 회의록 분석, VLM으로 현장 사진 분석</li>
+        <li>법령 RAG: 조문 계층을 보존한 산업안전보건법령 전처리, 로컬 LLM 4종 비교로 서빙 모델 선정, 답변 충실도 <strong class="gain">98%</strong>, 검색 재현율 <strong class="gain">84%</strong></li>
+        <li>근거 검증: 내부 문서 RAG(BGE-M3, pgvector)로 근거 첨부, korean-law-mcp로 산업안전보건법 조문을 조회해 없는 조문 인용 차단</li>
         <li>판정 일관성: 위험 등급과 점수는 코드로 산출하고 LLM은 근거 서술만 담당, 같은 입력에 항상 같은 판정</li>
-        <li>엑셀(.xlsx)과 한글(.hwpx) 다중 양식 파서, 편집형 그리드, 대시보드, PDF, DOCX, XLSX 보고서</li>
+        <li>엑셀(.xlsx)과 한글(.hwpx) 다중 양식 파서, ARQ와 Redis 비동기 처리, 편집형 그리드, PDF, DOCX, XLSX 보고서</li>
       </ul>
     </section>
     
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
-      <ul class="chips"><li>Next.js · React · TypeScript</li><li>Python · FastAPI</li><li>vLLM(로컬 LLM·VLM)</li><li>RAG · pgvector · fastembed</li><li>MCP</li><li>ARQ · Redis</li><li>Supabase(PostgreSQL)</li></ul>
+      <ul class="chips"><li>Next.js · React · TypeScript</li><li>Python · FastAPI</li><li>vLLM(로컬 LLM·VLM)</li><li>RAG · BGE-M3</li><li>pgvector · ChromaDB</li><li>MCP</li><li>ARQ · Redis</li><li>Supabase(PostgreSQL)</li></ul>
     </section>
     <section class="sec" aria-labelledby="h-media">
       <h2 id="h-media">자료</h2>
@@ -112,9 +112,9 @@
     <section class="sec" aria-labelledby="h-others">
       <h2 id="h-others">다른 회사 프로젝트</h2>
       <ul class="others">
-      <li><a href="/work/parking-ai/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/parking-ai/card-s.webp" width="900" height="600" alt=""></span><span><b>2.5D 차량 하단면 검출</b><span>신라이앤씨 · 2026</span></span><span class="get get--small">보기</span></a></li>
-      <li><a href="/work/labeling-tool/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/labeling-tool/card-s.webp" width="900" height="600" alt=""></span><span><b>라벨링 도구</b><span>신라이앤씨 · 2026</span></span><span class="get get--small">보기</span></a></li>
-      <li><a href="/work/safety-vision/"><span style="--tone:#d4f2e1;--tone-ink:#0b3d24;--accent:#0b3d24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/safety-vision/card-s.webp" width="900" height="600" alt=""></span><span><b>안전 영상 분석</b><span>패턴앤 · 2025</span></span><span class="get get--small">보기</span></a></li>
+      <li><a href="/work/parking-ai/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/parking-ai/card-s.webp" width="900" height="600" alt=""></span><span><b>2.5D 차량 하단면 검출</b><span>신라이앤씨 · 2026. 7. – 9.</span></span><span class="get get--small">보기</span></a></li>
+      <li><a href="/work/labeling-tool/"><span style="--tone:#d6ecff;--tone-ink:#0b2a3d;--accent:#0b2a3d" class="work-thumb work-thumb--photo"><img src="/assets/img/work/labeling-tool/card-s.webp" width="900" height="600" alt=""></span><span><b>라벨링 도구</b><span>신라이앤씨 · 2026. 7. – 9.</span></span><span class="get get--small">보기</span></a></li>
+      <li><a href="/work/safety-vision/"><span style="--tone:#d4f2e1;--tone-ink:#0b3d24;--accent:#0b3d24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/safety-vision/card-s.webp" width="900" height="600" alt=""></span><span><b>안전 영상 분석</b><span>패턴앤 · 2025. 8. – 12.</span></span><span class="get get--small">보기</span></a></li>
       <li><a href="/work/senior-zone/"><span style="--tone:#ece7df;--tone-ink:#2d2a24;--accent:#2d2a24" class="work-thumb work-thumb--photo"><img src="/assets/img/work/senior-zone/card-s.webp" width="900" height="600" alt=""></span><span><b>노인보호구역 입지 분석</b><span>제이솔루션 · 2024 – 2025</span></span><span class="get get--small">보기</span></a></li>
       </ul>
     </section>
