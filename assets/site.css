@@ -3163,6 +3163,13 @@ svg.app-icon {
   border-radius: 0.9rem;
   background: var(--mute);
 }
+/* 그림 없는 용어 풀이는 한 칸, 이어지는 풀이 사이는 좁게 */
+.term.term--plain {
+  grid-template-columns: minmax(0, 1fr);
+}
+.term + .term {
+  margin-top: 0.6rem;
+}
 .term__fig {
   display: block;
   width: 100%;

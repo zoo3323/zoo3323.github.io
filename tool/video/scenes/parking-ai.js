@@ -1,5 +1,5 @@
 // 2.5D 차량 하단면 검출: 높이 단 CCTV 로 본 주차 줄. 다섯 장(2D 상자 → 하단면, 가려진 꼭짓점 → CFQ, 보정값 → 보정 없이,
-// 주차폴 초당 1~2장에서 ID 가 바뀜 → 하단면 트래커 · 차량 교체, 라즈베리파이 처리 속도 → 엔진 최적화 0.77 → 2.12 fps)
+// 한칸주차 카메라 초당 1~2장에서 ID 가 바뀜 → 하단면 트래커 · 차량 교체, 라즈베리파이 처리 속도 → 엔진 최적화 0.77 → 2.12 fps)
 "use strict";
 window.SCENE = (() => {
   const lot = makeLot({
@@ -29,7 +29,7 @@ window.SCENE = (() => {
   const duration = 28.2;
 
 
-  // ── 주차폴(4·5장) ──
+  // ── 한칸주차(4·5장) ──
   const RED = C.red;
   const GREEN = C.green;
   const PEACH = "#ffd8a8";
@@ -55,7 +55,7 @@ window.SCENE = (() => {
   const CW = 732;
   const CH = 316;
 
-  // ── 4장: 초당 1~2장 프레임과 추적 ID, 주차 기록(주차폴 앞뒤 카메라) ──
+  // ── 4장: 초당 1~2장 프레임과 추적 ID, 주차 기록(한칸주차 앞뒤 카메라) ──
   const FR = 7; // 프레임 수(앞 5장 같은 차, 뒤 2장 다른 차)
   const SWAP = 5;
   const OLD = [
@@ -70,7 +70,7 @@ window.SCENE = (() => {
     const k = beats[3].solve;
     const solve = seg(lt, k + 0.15, 0.5);
     let s = card(CX, CY, CW, CH);
-    s += chip(CX + 16, CY + 24, "주차폴 · 초당 1~2장", { size: 13, fill: C.paper });
+    s += chip(CX + 16, CY + 24, "한칸주차 · 초당 1~2장", { size: 13, fill: C.paper });
     const FX = CX + 112;
     const TW = 74;
     const GAP = 6;
@@ -135,7 +135,7 @@ window.SCENE = (() => {
     return s;
   }
 
-  // ── 5장: 라즈베리파이 처리 시간을 구간별로 나눠 줄인다(주차폴 엔진) ──
+  // ── 5장: 라즈베리파이 처리 시간을 구간별로 나눠 줄인다(한칸주차 엔진) ──
   function poleSpeed(lt) {
     const VX = CX + 16;
     const VY = CY + 50;
@@ -143,7 +143,7 @@ window.SCENE = (() => {
     const VH = 171;
     const mini = g({ transform: `translate(${VX} ${VY}) scale(${n2(VW / W)})` }, pole.world({ tint: [, , , , [GREEN, 0.3], [RED, 0.32]], fp: [0, 1] }));
     let s = card(CX, CY, CW, 284);
-    s += chip(CX + 16, CY + 26, "주차폴 라즈베리파이 5 · CPU 상한 80%", { size: 13, fill: C.paper });
+    s += chip(CX + 16, CY + 26, "한칸주차 라즈베리파이 5 · CPU 상한 80%", { size: 13, fill: C.paper });
     s += `<clipPath id="pemini"><rect x="${VX}" y="${VY}" width="${VW}" height="${VH}" rx="10"/></clipPath>` + g({ "clip-path": "url(#pemini)" }, mini);
     s += tag("rect", { x: VX, y: VY, width: VW, height: VH, rx: 10, fill: "none", stroke: C.ink, "stroke-width": 1.5 });
     const BX = 376;
@@ -309,7 +309,7 @@ window.SCENE = (() => {
       }
     }
 
-    // 4장: 주차폴 앞뒤 카메라의 추적 ID(초당 1~2장) → 하단면 트래커 · 차량 교체
+    // 4장: 한칸주차 앞뒤 카메라의 추적 ID(초당 1~2장) → 하단면 트래커 · 차량 교체
     if (t >= beats[3].at && t < beats[4].at) {
       const lt = t - beats[3].at;
       const m = seg(lt, 0.05, 0.75, E.lin);

@@ -1444,7 +1444,7 @@ if ABOUT and ABOUT.get("work"):
                 else ""
             )
             out.append(
-                f'<div class="term" role="note" aria-label="용어 풀이: {esc(t["term"])}">{TERM_FIG.get(t.get("fig"), "")}'
+                f'<div class="term{"" if t.get("fig") in TERM_FIG else " term--plain"}" role="note" aria-label="용어 풀이: {esc(t["term"])}">{TERM_FIG.get(t.get("fig"), "")}'
                 f'<div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>{esc(t["term"])}</b>'
                 f'<span class="term__full">{esc(t.get("full", ""))}</span></p>'
                 f'<p class="term__desc">{keep_dots(t["desc"])}</p>{link}</div></div>'
