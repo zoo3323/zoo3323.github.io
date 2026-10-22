@@ -23,6 +23,7 @@
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
+<script src="/assets/clip.js?v=3f25d75d" defer></script>
 </head>
 <body>
 <a class="skip" href="#app">본문으로 건너뛰기</a>
@@ -65,16 +66,20 @@
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
       
-      <ol class="solve">
-        <li><span class="solve__q"><span class="solve__tag">문제</span>박스 기반 점유가 옆 칸과 가림에 흔들림</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>하단면이 주차면 바닥을 덮은 비율로 판정</span></li>
-        <li><span class="solve__q"><span class="solve__tag">문제</span>초당 1~2장에서 추적 ID가 자주 바뀜</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>하단면 트래커, 앞뒤 카메라 ID로 교체 판정</span></li>
-        <li><span class="solve__q"><span class="solve__tag">문제</span>라즈베리파이에서 느린 엔진 처리</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">INT8·fp16·병목</span> 제거로 0.77&nbsp;→&nbsp;2.12&nbsp;fps</span></li>
-      </ol>
+      <div class="clip">
+        <div class="clip__frame">
+          <video class="clip__video" src="/assets/video/pole-engine.mp4?v=71b760ca" poster="/assets/video/pole-engine.webp?v=43748bbc" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="주차폴 점유 판정 엔진: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+        </div>
+        <ol class="solve solve--clip">
+          <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>박스 기반 점유가 옆 칸과 가림에 흔들림</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>하단면이 주차면 바닥을 덮은 비율로 판정</span></button></li>
+          <li data-at="5.8"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>초당 1~2장에서 추적 ID가 자주 바뀜</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>하단면 트래커, 앞뒤 카메라 ID로 교체 판정</span></button></li>
+          <li data-at="11.8"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>라즈베리파이에서 느린 엔진 처리</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span><span class="nobr">INT8·fp16·병목</span> 제거로 0.77&nbsp;→&nbsp;2.12&nbsp;fps</span></button></li>
+        </ol>
+      </div>
     </section>
     <section class="sec desc" aria-labelledby="h-did">
       <h2 id="h-did">맡은 일</h2>
       <ul>
-        <li>점유 판정 교체: 하단면이 주차면 바닥을 덮은 비율로 판단, 앞뒤 카메라 입차 OR와 출차 AND 규칙</li>
         <li>하단면 트래커: 초당 1~2장에서도 같은 차 ID 유지, 앞뒤 카메라 ID가 함께 바뀌면 차량 교체 판정</li>
         <li>판정값 튜닝: 폴 36대의 하루 낮 영상 재생으로 기준값 선정, 점유 벤치마크 61대 중 <strong class="gain">60대 일치</strong></li>
         <li>엣지 최적화: NCNN INT8 변환과 병목 제거로 모델 추론 <strong class="gain">126&nbsp;→&nbsp;68&nbsp;ms</strong>, 엔진 처리 <strong class="gain">0.77&nbsp;→&nbsp;2.12&nbsp;fps</strong></li>
