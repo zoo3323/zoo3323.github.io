@@ -3434,6 +3434,63 @@ a.cv__art:hover {
   column-gap: 2.5rem;
   margin: 0;
 }
+
+/* 창업 경력 증명: 증명서 첫 쪽(종이처럼)과 설명·보기·내려받기 */
+.cert {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 1.25rem 1.5rem;
+  align-items: center;
+}
+.cert__page {
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 6px 16px rgb(23 23 26 / 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.cert__page:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgb(23 23 26 / 0.16);
+}
+.cert__page img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.sec .cert__body p {
+  margin: 0;
+}
+.cert__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+  font-size: 1.05rem;
+}
+.cert__title span {
+  font-size: 0.85rem;
+  color: var(--sub);
+}
+.sec .cert__desc {
+  margin-top: 0.45rem;
+  color: var(--sub);
+  line-height: 1.6;
+}
+.sec .cert__go {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+@media (max-width: 480px) {
+  .cert {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+}
 .info div {
   display: flex;
   justify-content: space-between;

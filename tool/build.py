@@ -916,6 +916,26 @@ def demo(app):
     return "\n    ".join(out)
 
 
+def certificate(app):
+    """창업 경력 증명서: app.json 의 certificate = {"title", "issuer", "desc", "pdf", "preview", "w", "h", "download"}.
+    첫 쪽 그림을 누르면 PDF 가 새 창에서 열리고, 내려받기는 정해 둔 파일 이름으로 받는다. 공개본은 생년월일을 가린 그림 PDF 다."""
+    c = app.get("certificate")
+    if not c:
+        return ""
+    pdf = f'{c["pdf"]}?v={ver(c["pdf"].lstrip("/"))}'
+    return f"""<section class="sec" aria-labelledby="h-cert">
+      <h2 id="h-cert">창업 경력 증명</h2>
+      <div class="cert">
+        <a class="cert__page" href="{pdf}" target="_blank" rel="noopener" aria-label="{esc(c["title"])} PDF 보기"><img src="{esc(c["preview"])}" width="{c["w"]}" height="{c["h"]}" alt="{esc(c["title"])} 첫 쪽" loading="lazy"></a>
+        <div class="cert__body">
+          <p class="cert__title"><b>{esc(c["title"])}</b><span>{esc(c["issuer"])}</span></p>
+          <p class="cert__desc">{esc(c["desc"])}</p>
+          <p class="cert__go"><a class="get get--line" href="{pdf}" target="_blank" rel="noopener">PDF 보기</a> <a class="get get--line" href="{pdf}" download="{esc(c["download"])}">내려받기</a></p>
+        </div>
+      </div>
+    </section>"""
+
+
 def others(app):
     rows = []
     for other in APPS:
@@ -980,6 +1000,7 @@ for app in APPS:
       </ul>
     </section>
     {news(app)}
+    {certificate(app)}
     <section class="sec" aria-labelledby="h-info">
       <h2 id="h-info">정보</h2>
       <dl class="info">

@@ -48,5 +48,15 @@
       "date": "2026-07-31",
       "notes": "홈을 쇼핑몰로 바꾸고, 맞춤 추천·급여 기록·정기배송·AI 상담을 「우리아이」 탭에 모았습니다."
     }
-  ]
+  ],
+  "certificate": {
+    "title": "모두의 창업 도전자경력증명서",
+    "issuer": "중소벤처기업부 발급",
+    "desc": "1차 가나디야, 2차 스코어랩으로 모두의 창업에 참여해 두 번 모두 1라운드에 도전한 이력입니다. 공개본은 생년월일을 가렸습니다.",
+    "pdf": "/assets/docs/modu-startup-certificate.pdf",
+    "preview": "/assets/img/startup/certificate.webp",
+    "w": 640,
+    "h": 906,
+    "download": "모두의창업_도전자경력증명서_김남주.pdf"
+  }
 }
