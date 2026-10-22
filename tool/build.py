@@ -1427,7 +1427,8 @@ if ABOUT and ABOUT.get("work"):
 
     def problems_html(w):
         """풀어야 했던 문제와 푼 방법: work[].problems = [{"problem", "solution"}]. 한 줄씩 짧게 쓴다.
-        설명 영상이 있으면 영상 옆에 장마다 한 줄씩 두고, 줄을 누르면 그 장으로 건너뛴다(clip.js)."""
+        설명 영상이 있으면 영상 옆에 장마다 한 줄씩 두고, 줄을 누르면 그 장으로 건너뛴다(clip.js).
+        용어 풀이(work[].terms)는 제목 아래, 영상 바로 위에 둔다."""
         rows = w.get("problems")
         if not rows:
             return ""
@@ -1443,6 +1444,7 @@ if ABOUT and ABOUT.get("work"):
             items = "\n        ".join(f"<li>{pair(r)}</li>" for r in rows)
             return f"""<section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
+      {terms_html(w)}
       <ol class="solve">
         {items}
       </ol>
@@ -1456,6 +1458,7 @@ if ABOUT and ABOUT.get("work"):
         poster = f'{clip["poster"]}?v={ver(clip["poster"].lstrip("/"))}'
         return f"""<section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
+      {terms_html(w)}
       <div class="clip">
         <div class="clip__frame">
           <video class="clip__video" src="{src}" poster="{poster}" width="{clip["w"]}" height="{clip["h"]}" muted loop playsinline controls preload="none" aria-label="{esc(w["org"])}: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
@@ -1603,7 +1606,6 @@ if ABOUT and ABOUT.get("work"):
     </ul>
     <section class="sec desc" aria-label="설명">
       <p>{keep_dots(w["notes"])}</p>
-      {terms_html(w)}
     </section>
     {sections_html(w, "top")}
     {flow_html(w)}

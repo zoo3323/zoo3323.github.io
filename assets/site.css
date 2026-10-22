@@ -3199,6 +3199,11 @@ svg.app-icon {
   gap: 1.25rem;
   align-items: start;
 }
+/* 용어 풀이가 영상 바로 위에 올 때 */
+.term + .clip,
+.term + .solve {
+  margin-top: 1.5rem;
+}
 .clip__frame {
   position: relative;
   border-radius: 0.9rem;

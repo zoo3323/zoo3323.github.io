@@ -19,7 +19,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/DoHyeon.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css?v=0e2d3016">
+<link rel="stylesheet" href="/assets/site.css?v=b3c00dfe">
 <script src="/assets/shots.js?v=93bcadc7" defer></script>
 <script src="/assets/light.js?v=543faa9f" defer></script>
 <script src="/assets/grab.js?v=ce9a395d" defer></script>
@@ -57,7 +57,6 @@
     </ul>
     <section class="sec desc" aria-label="설명">
       <p>원본 영상 한 장에서 가려진 부분까지 차량 하단면(footprint) 네 꼭짓점을 바로 출력하는 <span class="nobr">one-stage</span> 2.5D 검출 모델. 옆 칸까지 덮는 2D 상자 대신 바닥에 닿는 영역으로 주차면 점유를 판단하고, 카메라마다 하던 <span class="nobr">캘리브레이션·어안</span> 왜곡 보정 단계 제거. 지하주차장 GPU 서버(카메라 <span class="nobr">207대·주차면</span> 866면)와 라즈베리파이 엣지 장비에 현장 배포.</p>
-      <div class="term" role="note" aria-label="용어 풀이: CFQ"><svg class="term__fig" viewBox="0 0 176 112" aria-hidden="true" focusable="false"><path d="M30 20 136 28 142 76 38 88Z" fill="#ffe55c" fill-opacity=".75" stroke="#17171a" stroke-width="2" stroke-linejoin="round"/><path d="M14 54.5 158 51.5" stroke="#17171a" stroke-width="1.6" stroke-dasharray="5 4"/><path d="M30 20 38 88M136 28 142 76" stroke="#17171a" stroke-width="4" stroke-linecap="round"/><g fill="#fff" stroke="#17171a" stroke-width="1.6"><circle cx="30" cy="20" r="3.4"/><circle cx="136" cy="28" r="3.4"/><circle cx="142" cy="76" r="3.4"/><circle cx="38" cy="88" r="3.4"/></g><g font-size="11" font-weight="700" fill="#17171a" text-anchor="middle"><text x="34" y="105">뒤 변</text><text x="140" y="95">앞 변</text><text x="88" y="45">차량 축</text></g></svg><div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>CFQ</b><span class="term__full">Convex Footprint Quadrilateral</span></p><p class="term__desc">차량 축과 앞뒤 변의 <span class="nobr">폭·기울기로</span> 늘 볼록한 사각형을 내는 하단면 표현.</p><p class="term__more"><a class="get get--line term__go" href="/about/#h-research">논문 바로가기</a></p></div></div>
     </section>
     
     <section class="sec" aria-labelledby="h-flow">
@@ -67,6 +66,7 @@
     </section>
     <section class="sec" aria-labelledby="h-solve">
       <h2 id="h-solve">풀어야 했던 문제</h2>
+      <div class="term" role="note" aria-label="용어 풀이: CFQ"><svg class="term__fig" viewBox="0 0 176 112" aria-hidden="true" focusable="false"><path d="M30 20 136 28 142 76 38 88Z" fill="#ffe55c" fill-opacity=".75" stroke="#17171a" stroke-width="2" stroke-linejoin="round"/><path d="M14 54.5 158 51.5" stroke="#17171a" stroke-width="1.6" stroke-dasharray="5 4"/><path d="M30 20 38 88M136 28 142 76" stroke="#17171a" stroke-width="4" stroke-linecap="round"/><g fill="#fff" stroke="#17171a" stroke-width="1.6"><circle cx="30" cy="20" r="3.4"/><circle cx="136" cy="28" r="3.4"/><circle cx="142" cy="76" r="3.4"/><circle cx="38" cy="88" r="3.4"/></g><g font-size="11" font-weight="700" fill="#17171a" text-anchor="middle"><text x="34" y="105">뒤 변</text><text x="140" y="95">앞 변</text><text x="88" y="45">차량 축</text></g></svg><div><p class="term__head"><span class="solve__tag solve__tag--a">용어</span><b>CFQ</b><span class="term__full">Convex Footprint Quadrilateral</span></p><p class="term__desc">차량 축과 앞뒤 변의 <span class="nobr">폭·기울기로</span> 늘 볼록한 사각형을 내는 하단면 표현.</p><p class="term__more"><a class="get get--line term__go" href="/about/#h-research">논문 바로가기</a></p></div></div>
       <div class="clip">
         <div class="clip__frame">
           <video class="clip__video" src="/assets/video/parking-ai.mp4?v=38f59680" poster="/assets/video/parking-ai.webp?v=3e64d47f" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="2.5D 차량 하단면 검출: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
@@ -91,7 +91,7 @@
     </section>
     <section class="sec" aria-labelledby="h-eval">
       <h2 id="h-eval">정량 평가</h2>
-      <dl class="frame"><div class="frame__row"><dt>데이터셋</dt><dd>CARLA 합성 230,865장&nbsp;· 실제 CCTV 6,779장, 실제는 현장 단위로 <span class="nobr">학습·검증·시험</span> 분할</dd></div><div class="frame__row"><dt>지표</dt><dd><span class="nobr">AP50·AP50:95·꼭짓점</span> <span class="nobr">오차·비정상</span> 사각형 비율, 현장은 찬 칸 <span class="nobr">놓침·청구</span> 시간 오차</dd></div><div class="frame__row"><dt>가드레일</dt><dd>통과 기준 학습 전 고정, 시험셋 1회 개봉, 라즈베리파이 실기기 채점</dd></div><div class="frame__row"><dt>불확실성</dt><dd>학습은 시드 3회 평균 ± <span class="nobr">표준편차·순위</span> 일치 확인, 실제 CCTV 미세조정은 1회</dd></div></dl>
+      <dl class="frame"><div class="frame__row"><dt>데이터셋</dt><dd>CARLA 합성 230,865장&nbsp;· 실제 CCTV 6,779장, 실제는 현장 단위로 <span class="nobr">학습·검증·시험</span> 분할</dd></div><div class="frame__row"><dt>지표</dt><dd><span class="nobr">AP50·AP50:95·꼭짓점</span> <span class="nobr">오차·비정상</span> 사각형 비율, 현장은 찬 칸 <span class="nobr">놓침·청구</span> 시간 오차</dd></div><div class="frame__row"><dt>불확실성</dt><dd>시드 3회 평균 ± 표준편차, 시드 간 순위 일치 확인</dd></div></dl>
     </section>
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
