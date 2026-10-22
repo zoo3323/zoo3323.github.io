@@ -1,4 +1,4 @@
-// 라벨링 도구: 도구 창 안에 같은 주차장 카메라 화면. 세 장(짐작한 바닥 격자가 어긋남 → 주차면 직선·직각·2.5×5 m 로 보정, 네 점을 찍다 가려진 점을 짐작 → 앞변 가운데 한 번 클릭으로 하단면 생성, 같은 장면·손으로 꾸리는 학습 세트 → 중복 제거·규격 맞춤 내보내기·버전 기록)
+// 라벨링 도구: 도구 창 안에 같은 주차장 카메라 화면. 세 장(짐작한 바닥 격자가 어긋남 → 주차면 직선·직각·2.5×5 m 로 보정, 네 점을 찍다 가려진 점을 짐작 → 앞변 가운데 한 번 클릭으로 하단면 생성, 차마다 손으로 → 모델 하단면 추천으로 사전 라벨)
 "use strict";
 window.SCENE = (() => {
   const BG = "#d6ecff";
@@ -23,27 +23,20 @@ window.SCENE = (() => {
   const beats = [
     { at: 0, solve: 2.9 },
     { at: 5.8, solve: 2.9 },
-    { at: 11.6, solve: 2.8 },
+    { at: 11.6, solve: 2.7 },
   ];
-  const duration = 17.8;
+  const duration = 17.6;
   const WIN = { x: 28, y: 80, w: 744, h: 354 };
   const CV = { x: 42, y: 126, w: 494, h: 278 };
   const PN = { x: 552, y: 126, w: 206 };
   const VIEW = { cx: 262, cy: 318, s: 0.93 };
   const CAM_A = { pos: [6.2, -8.4, 9.4], target: [9.4, 2.7, 0] };
-  // 내보내기: 모델 입력(4:3)에 맞춰 레터박스로 줄여 넣은 자리
-  const LB = (() => {
-    const w = (CV.h * 4) / 3;
-    return { x: CV.x + (CV.w - w) / 2, w, s: w / CV.w };
-  })();
 
   // ── 창 ──
-  const TABS = ["수집", "보정", "라벨", "내보내기"];
+  const TABS = ["수집", "보정", "라벨"];
   const SWITCH = [
     [0, 1],
     [5.8, 2],
-    [11.6, 0],
-    [14.95, 3],
   ];
   function tabs(t) {
     let cur = 0;
@@ -123,8 +116,6 @@ window.SCENE = (() => {
     const cam = makeCam(st, VIEW);
     let over = "";
     let under = ""; // 차 아래 바닥에 까는 그림(칸 칠·직각·치수선)
-    let top = ""; // 캔버스 위(레터박스와 함께 줄지 않는) 딱지
-    let lbox = 0; // 3장 내보내기: 레터박스로 줄여 넣은 정도
     let panel = "";
     let cursor = null;
     let clicks = [];
@@ -292,64 +283,49 @@ window.SCENE = (() => {
       panel += g({ opacity: p2 }, p2s);
     }
 
-    // ── 3장 ──
+    // ── 3장: 모델 사전 라벨 ──
     if (t >= beats[2].at) {
       const lt = t - beats[2].at;
-      // 캔버스: 라벨까지 그린 수집 장면. 내보내기에서는 모델 입력 규격(레터박스)으로 줄여 맞춘다
-      st.fp = cars.map((c, i) => (LABELED.includes(i) ? 1 : 0));
-      lbox = seg(lt, 3.4, 0.65, E.inOut);
-      top += chip(LB.x + 10, CV.y + 17.5, "입력 규격 맞춤 · 레터박스", { size: 12, fill: C.lemon, h: 22, pad: 8, opacity: seg(lt, 3.95, 0.3) });
-      // 오른쪽 칸 ①: 모은 프레임. 같은 장면이 쌓이다가 중복이 지워진다
-      const swap = seg(lt, 3.25, 0.35, E.in);
-      const tw = 99;
-      const th = (tw * 9) / 16;
-      const thumb = (i, a, mark) => {
-        const x = PN.x + (i % 2) * (tw + 8);
-        const y = PN.y + 30 + Math.floor(i / 2) * (th + 10);
-        const id = `th${i}`;
-        return g(
-          { opacity: a },
-          `<clipPath id="${id}"><rect x="${x}" y="${y}" width="${tw}" height="${n2(th)}" rx="6"/></clipPath>` +
-            g({ "clip-path": `url(#${id})` }, g({ transform: `translate(${x} ${y}) scale(${n2(tw / W)})` }, world({ camPos: CAM_A.pos, camTarget: CAM_A.target, fp: [] }))) +
-            tag("rect", { x, y, width: tw, height: th, rx: 6, fill: "none", stroke: C.ink, "stroke-width": 1.4 }) +
-            (mark || ""),
-        );
-      };
-      const dup = seg(lt, 2.95, 0.4);
-      let frames = ptitle("수집 프레임");
-      for (let i = 0; i < 6; i++) {
-        const a = seg(lt, 0.2 + i * 0.25, 0.25);
-        const gone = i > 0 ? dup : 0;
-        const x = PN.x + (i % 2) * (tw + 8) + tw / 2;
-        const y = PN.y + 30 + Math.floor(i / 2) * (th + 10) + th / 2;
-        frames += thumb(i, a * (1 - 0.72 * gone), gone > 0.01 ? g({ opacity: gone }, cross(x, y, 1.3)) : "");
-      }
-      frames += chip(PN.x + PN.w, PN.y + 12, "중복 누적", { size: 12, fill: C.red, color: C.paper, stroke: null, anchor: "end", h: 22, pad: 8, opacity: seg(lt, 1.85, 0.3) * (1 - seg(lt, 2.75, 0.25, E.in)) });
-      frames += chip(PN.x + PN.w, PN.y + 12, "중복 제거", { size: 12, fill: C.paper, anchor: "end", h: 22, pad: 8, opacity: seg(lt, 3.0, 0.3) });
-      // 학습 세트는 손으로 꾸린다
-      const yS = PN.y + 30 + 3 * (th + 10) + 12;
-      frames += g(
-        { opacity: seg(lt, 2.05, 0.3) * (1 - seg(lt, 2.75, 0.25, E.in)) },
-        tag("rect", { x: PN.x, y: yS - 16, width: PN.w, height: 32, rx: 9, fill: "none", stroke: C.wire, "stroke-width": 1.5, "stroke-dasharray": "5 4" }) +
-          text(PN.x + 12, yS + 0.5, "학습 세트 정리", { "font-size": 14.5, "font-weight": 700, fill: C.sub }) +
-          chip(PN.x + PN.w - 8, yS, "수작업", { size: 12, fill: C.paper, color: C.red, stroke: C.red, anchor: "end", h: 22, pad: 8 }),
-      );
-      panel += g({ opacity: 1 - swap }, frames);
-      // 오른쪽 칸 ②: 내보낸 학습 세트. 버전마다 입력 규격·라벨·프레임 목록을 남긴다
-      let sets = ptitle("학습 세트");
-      let vx = PN.x;
-      ["v1", "v2", "v3"].forEach((v, i) => {
-        const o = { size: 13, pad: 11, h: 26 };
-        sets += chip(vx, PN.y + 46, v, { ...o, fill: i === 2 ? C.lemon : C.paper, opacity: seg(lt, 3.5 + i * 0.12, 0.25) });
-        vx += chip.width(v, o) + 6;
+      // 문제: 차마다 손으로 한 대씩 찍는다
+      const prob = 1 - seg(lt, 2.6, 0.3, E.in);
+      const HAND = [
+        { j: 1, c: 0.5 },
+        { j: 2, c: 1.3 },
+      ];
+      HAND.forEach(({ j, c }) => (over += oneClick(cam, cars[LABELED[j]], lt, c, prob)));
+      // 해결: 「모델 하단면 추천」을 누르면 화면의 모든 차에 하단면 사전 라벨(점선)이 뜬다
+      const press = 3.0;
+      LABELED.forEach((ci, j) => (over += footprint(cam, cars[ci], seg(lt, press + 0.2 + j * 0.12, 0.3), { style: "pre" })));
+      over += chip(CV.x + 12, CV.y + 22, "모델 사전 라벨", { size: 12.5, fill: "#d9d2ff", opacity: seg(lt, press + 0.15, 0.3) });
+      // 창 오른쪽 칸: 차마다 상태
+      panel += ptitle("라벨");
+      LABELED.forEach((ci, j) => {
+        const y = PN.y + 44 + j * 38;
+        const hand = HAND.find((q) => q.j === j);
+        const done = hand ? seg(lt, hand.c + GROW, 0.2) * prob : 0;
+        const pre = seg(lt, press + 0.25 + j * 0.12, 0.25);
+        const right =
+          ring(PN.x + PN.w - 18, y, 1 - Math.max(done, pre)) +
+          g({ opacity: done }, tick(PN.x + PN.w - 18, y, 0.85)) +
+          chip(PN.x + PN.w - 10, y, "제안", { size: 12, fill: "#d9d2ff", anchor: "end", pad: 8, h: 22, opacity: pre });
+        panel += row(y, "차", right, 1, { swatch: cars[ci].color });
       });
-      ["입력 규격", "라벨", "프레임 목록"].forEach((l, i) => {
-        const y = PN.y + 90 + i * 38;
-        sets += row(y, l, tick(PN.x + PN.w - 18, y, 0.85), seg(lt, 3.8 + i * 0.13, 0.25));
-      });
-      sets += chip(PN.x, PN.y + 90 + 3 * 38 + 4, "버전 기록", { size: 12.5, fill: C.lemon, opacity: seg(lt, 4.3, 0.3) });
-      panel += g({ opacity: swap }, sets);
-      cursor = null;
+      const btn = PN.y + 44 + 4 * 38 + 8;
+      panel += chip(PN.x, btn, "차마다 손으로", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 1.9, 0.3) * prob });
+      panel += chip(PN.x + PN.w / 2, btn, "모델 하단면 추천", { size: 13.5, anchor: "middle", fill: lt > press - 0.05 ? C.lemon : C.paper, h: 32, pad: 16, opacity: seg(lt, 2.75, 0.3) });
+      const M = HAND.map(({ j }) => frontMid(cam, cars[LABELED[j]]));
+      cursor = track(lt, [
+        [0, 440, 372],
+        [0.47, ...M[0]],
+        [0.85, M[0][0] + 30, M[0][1] + 30],
+        [1.27, ...M[1]],
+        [1.8, M[1][0] + 30, M[1][1] + 30],
+        [2.95, PN.x + PN.w / 2 + 20, btn + 4],
+        [3.6, PN.x + PN.w / 2 + 20, btn + 4],
+        [4.4, 440, 372],
+        [6.0, 440, 372],
+      ]);
+      clicks = [...HAND.map((q) => q.c), press].map((tt) => [tt, lt]);
     }
 
     // ── 그리기 ──
@@ -361,27 +337,13 @@ window.SCENE = (() => {
     s += `<clipPath id="cv"><rect x="${CV.x}" y="${CV.y}" width="${CV.w}" height="${CV.h}" rx="9"/></clipPath>`;
     st.under = () => under;
     st.extra = () => over;
-    let view = world(st, VIEW);
-    if (lbox > 0.001) {
-      // 장면을 4:3 입력 폭에 맞춰 줄이고, 위아래 빈 곳은 회색 레터박스, 입력 밖 양옆은 비운다
-      const cx = CV.x + CV.w / 2;
-      const cy = CV.y + CV.h / 2;
-      const sc = lerp(1, LB.s, lbox);
-      view =
-        `<clipPath id="cvimg"><rect x="${CV.x}" y="${CV.y}" width="${CV.w}" height="${CV.h}"/></clipPath>` +
-        tag("rect", { x: CV.x, y: CV.y, width: CV.w, height: CV.h, fill: "#8f8e86" }) +
-        g({ transform: `translate(${n2(cx)} ${n2(cy)}) scale(${n2(sc)}) translate(${n2(-cx)} ${n2(-cy)})` }, g({ "clip-path": "url(#cvimg)" }, view)) +
-        tag("rect", { x: CV.x, y: CV.y, width: LB.x - CV.x, height: CV.h, fill: C.mute, opacity: lbox }) +
-        tag("rect", { x: LB.x + LB.w, y: CV.y, width: CV.x + CV.w - LB.x - LB.w, height: CV.h, fill: C.mute, opacity: lbox }) +
-        tag("rect", { x: LB.x, y: CV.y + 1, width: LB.w, height: CV.h - 2, fill: "none", stroke: C.ink, "stroke-width": 1.5, "stroke-dasharray": "6 4", opacity: lbox });
-    }
+    const view = world(st, VIEW);
     s += g({ "clip-path": "url(#cv)" }, view);
     s += tag("rect", { x: CV.x, y: CV.y, width: CV.w, height: CV.h, rx: 9, fill: "none", stroke: C.ink, "stroke-width": 1.5 });
-    s += top;
     s += panel;
     if (cursor) {
       for (const [tt, lt] of clicks) s += ripple(cursor[0], cursor[1], (lt - tt) / 0.45);
-      s += pointer(cursor[0], cursor[1], { opacity: t >= beats[2].at ? 0 : 1 });
+      s += pointer(cursor[0], cursor[1]);
     }
     return s;
   }
