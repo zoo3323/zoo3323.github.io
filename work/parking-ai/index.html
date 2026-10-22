@@ -56,9 +56,12 @@
       <li><span class="fact__label">맡은 일</span><span class="fact__value">모델 <span class="nobr">연구·개발,</span> <span class="nobr">서버·엣지</span> 배포</span></li>
     </ul>
     <section class="sec desc" aria-label="설명">
-      <p>원본 영상 한 장에서 가려진 부분까지 차량 하단면(footprint) 네 꼭짓점을 바로 출력하는 <span class="nobr">one-stage</span> 2.5D 검출 모델. 옆 칸까지 덮는 2D 상자 대신 바닥에 닿는 영역으로 주차면 점유를 판단하고, 카메라마다 하던 <span class="nobr">캘리브레이션·어안</span> 왜곡 보정 단계 제거. 지하주차장 GPU 서버(카메라 <span class="nobr">207대·주차면</span> 866면)와, 기존 사내 주차폴 엔진을 바탕으로 한 대구 칠곡 주차폴(라즈베리파이 5)에 현장 배포.</p>
+      <p>원본 영상 한 장에서 가려진 부분까지 차량 하단면(footprint) 네 꼭짓점을 바로 출력하는 <span class="nobr">one-stage</span> 2.5D 검출 모델. 옆 칸까지 덮는 2D 상자 대신 바닥에 닿는 영역으로 주차면 점유를 판단하고, 카메라마다 하던 <span class="nobr">캘리브레이션·어안</span> 왜곡 보정 단계 제거. 대구 북구청 주차장 CCTV, 구미 아파트 지하주차장, 대구 칠곡 노상주차장 세 현장에 배포.</p>
     </section>
-    
+    <section class="sec" aria-labelledby="h-sites">
+      <h2 id="h-sites">현장 배포</h2>
+      <dl class="frame"><div class="frame__row"><dt>대구 북구청</dt><dd>주차장 CCTV 2대, 실제 영상 3,169장 <span class="nobr">라벨링·파인튜닝</span> 뒤 배포</dd></div><div class="frame__row"><dt>구미 아파트</dt><dd>지하주차장 카메라 <span class="nobr">207대·주차면</span> 866면, RTX 5080 1대로 동시 추론, 현장 프레임 233장(찬 칸 <span class="nobr">563·빈</span> 칸 228) 칸 판정 오류 0건</dd></div><div class="frame__row"><dt>대구 칠곡</dt><dd>노상주차장 주차폴 39대(라즈베리파이 5, 기존 사내 엔진 기반), 현장 벤치마크 점유 시간 정확도 <span class="nobr">99.69%·주차</span> 1:1 일치 98.4%</dd></div></dl>
+    </section>
     <section class="sec" aria-labelledby="h-flow">
       <h2 id="h-flow">구성</h2>
       <div class="flow"><p class="flow__title">학습</p><ol class="flow__steps" style="--n:4"><li class="flow__step flow__step--group"><p class="flow__label">데이터</p><div class="flow__nodes"><div class="flow__node flow__node--in"><b>합성 데이터</b><span>CARLA 주차장&nbsp;· 어안 렌즈 포함</span></div><div class="flow__node flow__node--in"><b>실제 영상</b><span>라벨링 도구로 만든 하단면 라벨</span></div></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>학습</b><span><span class="nobr">열화·가림·야간</span> 조명 증강, 합동 <span class="nobr">학습·미세조정</span></span></div></li><li class="flow__step"><div class="flow__node flow__node--model"><b>경량화</b><span>지식 증류&nbsp;· INT8 양자화</span></div></li><li class="flow__step"><div class="flow__node flow__node--out"><b>모델 릴리스</b><span><span class="nobr">ONNX·NCNN</span>&nbsp;· 입출력 계약 버전 관리</span></div></li></ol></div>
@@ -86,13 +89,13 @@
         <li>CFQ 표현 설계: 기존 평행사변형 표현 대비 검출 정확도 <strong class="gain">6.6% 향상</strong>, 무효 사각형 <strong class="gain">0건</strong></li>
         <li>중심점 기반 <span class="nobr">one-stage</span> 구조: 2단계 방식(검출 후 꼭짓점 회귀) 대비 파라미터 <strong class="gain">89%</strong>, 추론 시간 <strong class="gain">55% 감소</strong></li>
         <li>amodal 검출과 <span class="nobr">sim-to-real</span> 학습: 꼭짓점 독립 회귀 대비 가려진 차량 검출률 <strong class="gain">47%</strong>, 어안 주변부 검출률 <strong class="gain">17% 향상</strong></li>
-        <li>GPU 서버: 640 입력 지식 증류 모델로 RTX 5080 1대에 카메라 207대와 주차면 866면 동시 추론, GPU 사용률 약 13%</li>
-        <li>주차폴 엔진: 하단면 트래커와 판정값 튜닝, 모델 추론 <strong class="gain">126&nbsp;→&nbsp;68&nbsp;ms</strong>, 엔진 처리 <strong class="gain">0.77&nbsp;→&nbsp;2.12&nbsp;fps</strong></li>
+        <li>구미 아파트 GPU 서버: 지식 증류 모델로 RTX 5080 1대에 카메라 207대와 주차면 866면 동시 추론, GPU 사용률 약 13%</li>
+        <li>주차폴 엔진: 하단면 트래커와 판정값 튜닝, 칠곡 현장 점유 시간 정확도 <strong class="gain">99.69%</strong>, 엔진 <strong class="gain">0.77&nbsp;→&nbsp;2.12&nbsp;fps</strong></li>
       </ul>
     </section>
     <section class="sec" aria-labelledby="h-eval">
       <h2 id="h-eval">정량 평가</h2>
-      <dl class="frame"><div class="frame__row"><dt>데이터셋</dt><dd>CARLA 합성 230,865장&nbsp;· 실제 CCTV 6,779장, 실제는 현장 단위로 <span class="nobr">학습·검증·시험</span> 분할</dd></div><div class="frame__row"><dt>지표</dt><dd><span class="nobr">AP50·AP50:95·꼭짓점</span> <span class="nobr">오차·비정상</span> 사각형 비율, 현장은 찬 칸 <span class="nobr">놓침·청구</span> 시간 오차</dd></div><div class="frame__row"><dt>불확실성</dt><dd>시드 3회 평균 ± 표준편차, 시드 간 순위 일치 확인</dd></div><div class="frame__row"><dt>주차폴 점유</dt><dd>실제 주차 61대 재생, 1:1 일치 60대, 가짜 세션 16건, 판정값은 폴 36대 하루 낮 영상(라벨 194건)으로 선정</dd></div><div class="frame__row"><dt>주차폴 속도</dt><dd>사내 라즈베리파이 5에 실제 폴 구성 재현(CPU 상한 80%), 모델 1회 126&nbsp;→&nbsp;68&nbsp;ms, 엔진 0.77&nbsp;→&nbsp;2.12&nbsp;fps</dd></div></dl>
+      <dl class="frame"><div class="frame__row"><dt>데이터셋</dt><dd>CARLA 합성 230,865장&nbsp;· 실제 CCTV 6,779장, 실제는 현장 단위로 <span class="nobr">학습·검증·시험</span> 분할</dd></div><div class="frame__row"><dt>지표</dt><dd><span class="nobr">AP50·AP50:95·꼭짓점</span> <span class="nobr">오차·비정상</span> 사각형 비율, 현장은 찬 칸 <span class="nobr">놓침·청구</span> 시간 오차</dd></div><div class="frame__row"><dt>불확실성</dt><dd>시드 3회 평균 ± 표준편차, 시드 간 순위 일치 확인</dd></div><div class="frame__row"><dt>칠곡 현장 벤치마크</dt><dd>실제 주차 61대(2일, 5칸) 재생, 점유 시간 정확도 99.69%(경계 ±30초 제외), 주차 1:1 일치 98.4%(61대 중 60대), 요금 대상(10분 넘음) 29대 모두 <span class="nobr">일치·청구</span> 오차 1분</dd></div><div class="frame__row"><dt>판정값 튜닝</dt><dd>폴 36대의 하루 낮 앞뒤 영상, 사람 라벨 194건</dd></div><div class="frame__row"><dt>주차폴 속도</dt><dd>사내 라즈베리파이 5에 실제 폴 구성 재현(CPU 상한 80%), 모델 1회 126&nbsp;→&nbsp;68&nbsp;ms, 엔진 0.77&nbsp;→&nbsp;2.12&nbsp;fps</dd></div></dl>
     </section>
     <section class="sec" aria-labelledby="h-stack">
       <h2 id="h-stack">쓴 기술</h2>
