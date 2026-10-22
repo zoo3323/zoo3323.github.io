@@ -918,7 +918,7 @@ def demo(app):
 
 def certificate(app):
     """창업 경력 증명서: app.json 의 certificate = {"title", "issuer", "desc", "pdf", "preview", "w", "h", "download"}.
-    첫 쪽 그림을 누르면 PDF 가 새 창에서 열리고, 내려받기는 정해 둔 파일 이름으로 받는다. 공개본은 생년월일을 가린 그림 PDF 다."""
+    첫 쪽 그림을 누르면 PDF 가 새 창에서 열리고, 내려받기는 정해 둔 파일 이름으로 받는다. 올린 PDF 는 생년월일만 회색 막대로 가린 그림 PDF 다(설명에는 적지 않는다)."""
     c = app.get("certificate")
     if not c:
         return ""

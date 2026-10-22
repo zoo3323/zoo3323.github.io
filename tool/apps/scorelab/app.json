@@ -103,7 +103,7 @@
   "certificate": {
     "title": "모두의 창업 도전자경력증명서",
     "issuer": "중소벤처기업부 발급",
-    "desc": "1차 가나디야, 2차 스코어랩으로 모두의 창업에 참여해 두 번 모두 1라운드에 도전한 이력입니다. 공개본은 생년월일을 가렸습니다.",
+    "desc": "1차 가나디야, 2차 스코어랩으로 모두의 창업에 참여해 두 번 모두 1라운드에 도전한 이력입니다.",
     "pdf": "/assets/docs/modu-startup-certificate.pdf",
     "preview": "/assets/img/startup/certificate.webp",
     "w": 640,

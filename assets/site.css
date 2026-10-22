@@ -3490,8 +3490,14 @@ a.cv__art:hover {
 .sec .cert__go {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.9rem;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+.cert__go .get {
+  min-height: 2rem;
+  padding: 0 0.85rem;
+  font-size: 0.85rem;
+  box-shadow: inset 0 0 0 1.5px var(--ink);
 }
 @media (max-width: 480px) {
   .cert {
