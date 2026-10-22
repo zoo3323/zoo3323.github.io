@@ -1573,7 +1573,9 @@ if ABOUT and ABOUT.get("work"):
                     f'muted loop playsinline controls preload="metadata" aria-label="{esc(m.get("alt", ""))}"></video>{cap}</li>'
                 )
             else:
-                items.append(f'<li><img src="{esc(m["src"])}" width="{m["w"]}" height="{m["h"]}" alt="{esc(m.get("alt", ""))}" loading="lazy">{cap}</li>')
+                # full: 도식처럼 글이 많은 그림은 두 칸을 다 쓴다
+                cls = ' class="shots__full"' if m.get("full") else ""
+                items.append(f'<li{cls}><img src="{esc(m["src"])}" width="{m["w"]}" height="{m["h"]}" alt="{esc(m.get("alt", ""))}" loading="lazy">{cap}</li>')
         if not items:
             return ""
         return f"""<section class="sec" aria-labelledby="h-media">
