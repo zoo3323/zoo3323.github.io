@@ -17,11 +17,12 @@
     "poster": "/assets/video/labeling-tool.webp",
     "w": 1280,
     "h": 720,
-    "duration": 17.6,
+    "duration": 23.4,
     "at": [
       0,
       5.8,
-      11.4
+      11.6,
+      17.2
     ]
   },
   "safety-vision": {

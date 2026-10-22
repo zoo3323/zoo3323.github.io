@@ -68,12 +68,13 @@
       <h2 id="h-solve">풀어야 했던 문제</h2>
       <div class="clip">
         <div class="clip__frame">
-          <video class="clip__video" src="/assets/video/labeling-tool.mp4?v=9746055e" poster="/assets/video/labeling-tool.webp?v=7ac942cb" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="라벨링 도구: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
+          <video class="clip__video" src="/assets/video/labeling-tool.mp4?v=c83b41ab" poster="/assets/video/labeling-tool.webp?v=a2873d24" width="1280" height="720" muted loop playsinline controls preload="none" aria-label="라벨링 도구: 풀어야 했던 문제와 해결을 그림으로 보여 주는 영상, 소리 없음"></video>
         </div>
         <ol class="solve solve--clip">
           <li data-at="0"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>카메라의 렌즈 <span class="nobr">왜곡·높이·각도를</span> 모름</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>주차면 <span class="nobr">직선·직각·2.5×5</span> m로 보정</span></button></li>
-          <li data-at="5.8"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>전수 수작업 라벨링의 속도 한계</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>모델 사전 라벨 제안, <span class="nobr">검수·수정만</span> 수행</span></button></li>
-          <li data-at="11.4"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>중복 프레임 누적, 학습 세트 수작업 관리</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>중복 제거, 입력 규격 맞춤 <span class="nobr">내보내기·버전</span> 기록</span></button></li>
+          <li data-at="5.8"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>가려진 꼭짓점을 짐작으로 찍음</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>앞 두 점 클릭, 나머지는 지면에서 생성</span></button></li>
+          <li data-at="11.6"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>전수 수작업 라벨링의 속도 한계</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>모델 사전 라벨 제안, <span class="nobr">검수·수정만</span> 수행</span></button></li>
+          <li data-at="17.2"><button type="button" class="solve__go"><span class="solve__q"><span class="solve__tag">문제</span>중복 프레임 누적, 학습 세트 수작업 관리</span><span class="solve__a"><span class="solve__tag solve__tag--a">해결</span>중복 제거, 입력 규격 맞춤 <span class="nobr">내보내기·버전</span> 기록</span></button></li>
         </ol>
       </div>
     </section>
@@ -82,8 +83,8 @@
       <ul>
         <li>현장 카메라 스냅샷과 기둥 카메라 녹화 프레임 수집, 카메라 각도 변경 감지와 화소 변화 기반 중복 제거 구현</li>
         <li>주차면의 가로와 세로 직선, 직각, 크기(2.5×5 m)로 어안 왜곡 계수, 지면 호모그래피, 초점거리, 카메라 높이, 롤 보정 구현</li>
-        <li>지면 좌표계 차급 프리셋 하단면 배치와 원근 재투영, 실측 크기와 비율을 벗어난 라벨 경고 기능 개발</li>
-        <li>배포 모델(ONNX Runtime) 예측 기반 사전 라벨 제안(모델 보조 라벨링)으로 하루 라벨링 <strong class="gain">약 100&nbsp;→&nbsp;2,000장</strong>, 보정 변경 시 라벨 자동 재정렬</li>
+        <li>앞 두 꼭짓점 클릭과 차급 프리셋으로 지면 좌표계 하단면 생성, 실측 크기와 비율을 벗어난 라벨 경고 기능 개발</li>
+        <li>모델 보조 라벨링과 카메라 보정값 기반 라벨링으로 1인 하루 라벨링 <strong class="gain">약 100&nbsp;→&nbsp;2,000장 향상</strong></li>
         <li>모델 입력 규격(레터박스 등) 맞춤 학습 세트 내보내기와 세트 버전 기록 기능 구축</li>
       </ul>
     </section>

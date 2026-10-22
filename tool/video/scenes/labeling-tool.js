@@ -1,4 +1,4 @@
-// 라벨링 도구: 도구 창 안에 같은 주차장 카메라 화면. 세 장(짐작한 바닥 격자가 어긋남 → 주차면 직선·직각·2.5×5 m 로 보정, 다 그리기 → 모델 사전 라벨, 같은 장면·손으로 꾸리는 학습 세트 → 중복 제거·규격 맞춤 내보내기·버전 기록)
+// 라벨링 도구: 도구 창 안에 같은 주차장 카메라 화면. 네 장(짐작한 바닥 격자가 어긋남 → 주차면 직선·직각·2.5×5 m 로 보정, 네 점을 찍다 가려진 점을 짐작 → 앞 두 점 클릭으로 하단면 생성, 차마다 손으로 → 모델 사전 라벨, 같은 장면·손으로 꾸리는 학습 세트 → 중복 제거·규격 맞춤 내보내기·버전 기록)
 "use strict";
 window.SCENE = (() => {
   const BG = "#d6ecff";
@@ -18,14 +18,15 @@ window.SCENE = (() => {
       { space: 7, dx: 0.05, dy: 0.2, yaw: -0.02, color: "#dfe3e8" },
     ],
   });
-  const { cars, FOCUS, parts, footprint, world, makeCam, spaceQuad, SP, DEPTH } = lot;
+  const { cars, FOCUS, parts, footprint, hiddenCorner, world, makeCam, spaceQuad, SP, DEPTH } = lot;
   const LABELED = [2, 3, 4, 5]; // 창 안에 온전히 보이는 차
   const beats = [
     { at: 0, solve: 2.9 },
-    { at: 5.8, solve: 2.7 },
-    { at: 11.4, solve: 2.8 },
+    { at: 5.8, solve: 2.9 },
+    { at: 11.6, solve: 2.7 },
+    { at: 17.2, solve: 2.8 },
   ];
-  const duration = 17.6;
+  const duration = 23.4;
   const WIN = { x: 28, y: 80, w: 744, h: 354 };
   const CV = { x: 42, y: 126, w: 494, h: 278 };
   const PN = { x: 552, y: 126, w: 206 };
@@ -42,8 +43,8 @@ window.SCENE = (() => {
   const SWITCH = [
     [0, 1],
     [5.8, 2],
-    [11.4, 0],
-    [14.75, 3],
+    [17.2, 0],
+    [20.55, 3],
   ];
   function tabs(t) {
     let cur = 0;
@@ -74,6 +75,51 @@ window.SCENE = (() => {
         (right || ""),
     );
   const ring = (x, y, a = 1) => tag("circle", { cx: x, cy: y, r: 7, fill: C.paper, stroke: C.wire, "stroke-width": 1.6, opacity: a });
+  const mark = (y, u) => ring(PN.x + PN.w - 18, y, 1 - u) + g({ opacity: u }, tick(PN.x + PN.w - 18, y, 0.8));
+
+  // 손으로 네 점을 찍으면 가려진 꼭짓점일수록 크게 빗나간다
+  const JIT = [
+    [-9, 7],
+    [8, -6],
+    [15, 11],
+    [-12, -9],
+  ];
+  const clicked = (cam, car, big) => {
+    const rg = parts(car).body.bottom.map(cam.P);
+    const hc = hiddenCorner(cam, car);
+    return rg.map((q, i) => (i === hc ? [q[0] + big[0], q[1] + big[1]] : [q[0] + JIT[i][0], q[1] + JIT[i][1]]));
+  };
+
+  // 두 점 입력: 앞 두 꼭짓점을 찍으면 뒤쪽이 보정한 바닥 위로 펼쳐져 하단면이 된다. cur 는 지금 커서 자리
+  const GROW = 0.45;
+  const frontPair = (cam, car) => parts(car).body.bottom.slice(0, 2).map(cam.P);
+  function twoPoint(cam, car, lt, c1, c2, cur, a = 1, size = true) {
+    if (lt < c1 || a <= 0.002) return "";
+    const rg = parts(car).body.bottom;
+    const [p0, p1] = frontPair(cam, car);
+    const g0 = c2 + 0.07;
+    const u = seg(lt, g0, GROW, E.inOut);
+    const done = seg(lt, g0 + GROW, 0.2);
+    const live = (1 - done) * a;
+    let s = "";
+    if (u > 0.001) {
+      const q = [rg[0], rg[1], v3.lerp(rg[1], rg[2], u), v3.lerp(rg[0], rg[3], u)].map(cam.P);
+      s += tag("path", { d: dpath(q), fill: C.lemon, opacity: 0.62 * live });
+      s += tag("path", { d: dpath([q[1], q[2], q[3], q[0]], false), fill: "none", stroke: C.ink, "stroke-width": 2.4, "stroke-dasharray": "5 5", "stroke-linecap": "round", opacity: live });
+    }
+    // 첫 점에서 커서까지 고무줄, 두 번째 점을 찍으면 앞 변이 된다
+    s += tag("path", { d: dpath([p0, lt < c2 ? cur : p1], false), fill: "none", stroke: C.ink, "stroke-width": 2.4, "stroke-linecap": "round", "stroke-dasharray": lt < c2 ? "4 4" : undefined, opacity: live });
+    s += footprint(cam, car, done * a);
+    const dot = (p) => tag("circle", { cx: p[0], cy: p[1], r: 4.4, fill: C.lemon, stroke: C.ink, "stroke-width": 2, opacity: a * (1 - done) });
+    s += dot(p0);
+    if (lt >= c2) s += dot(p1);
+    if (size) {
+      const pt = cam.P([car.c[0], car.c[1], 1.95]);
+      s += chip(pt[0], pt[1], "1.85 × 4.5 m", { size: 12, h: 22, pad: 8, anchor: "middle", fill: C.paper, opacity: seg(lt, g0 + GROW, 0.25) * a });
+    }
+    return s;
+  }
+  const grown = (lt, c2) => lt >= c2 + 0.07 + GROW;
 
   function draw(t) {
     const st = { camPos: CAM_A.pos, camTarget: CAM_A.target, fp: [], fpStyle: [], tint: [], grid: 0 };
@@ -81,7 +127,7 @@ window.SCENE = (() => {
     let over = "";
     let under = ""; // 차 아래 바닥에 까는 그림(칸 칠·직각·치수선)
     let top = ""; // 캔버스 위(레터박스와 함께 줄지 않는) 딱지
-    let lbox = 0; // 3장 내보내기: 레터박스로 줄여 넣은 정도
+    let lbox = 0; // 4장 내보내기: 레터박스로 줄여 넣은 정도
     let panel = "";
     let cursor = null;
     let clicks = [];
@@ -188,21 +234,81 @@ window.SCENE = (() => {
       clicks = [3.0, 3.72, 4.15].map((tt) => [tt, lt]);
     }
 
-    // ── 2장 ──
+    // ── 2장: 두 점 입력 ──
     if (t >= beats[1].at && t < beats[2].at) {
       const lt = t - beats[1].at;
-      const out = 1 - seg(lt, 5.2, 0.35, E.in);
-      // 문제: 한 대씩 꼭짓점을 찍는다(느리다)
-      const slow = cars[3];
-      const sp = parts(slow).body.bottom.map(cam.P);
-      const times = [0.5, 1.05, 1.6, 2.15];
+      const out = 1 - seg(lt, 5.4, 0.3, E.in);
+      const red = 1 - seg(lt, 2.75, 0.3, E.in);
+      const car = cars[FOCUS];
+      // 문제: 네 꼭짓점을 다 찍다 보니 가려진 꼭짓점은 짐작으로 찍혀 모양이 틀어진다
+      const hc = hiddenCorner(cam, car);
+      const pts = clicked(cam, car, [-30, 20]);
+      const times = [0.5, 0.9, 1.3, 1.7];
       const shown = times.filter((tt) => lt >= tt).length;
-      const prob = 1 - seg(lt, 2.75, 0.3, E.in);
       if (shown) {
-        const poly = sp.slice(0, shown);
-        over += tag("path", { d: dpath(poly, shown === 4), fill: shown === 4 ? C.lemon : "none", "fill-opacity": 0.55, stroke: C.ink, "stroke-width": 2.4, "stroke-linejoin": "round", opacity: prob });
-        poly.forEach((q) => (over += tag("circle", { cx: q[0], cy: q[1], r: 3.8, fill: C.paper, stroke: C.ink, "stroke-width": 1.8, opacity: prob })));
+        const poly = pts.slice(0, shown);
+        const closed = shown === 4;
+        over += tag("path", { d: dpath(poly, closed), fill: closed ? C.red : "none", "fill-opacity": 0.14, stroke: C.red, "stroke-width": 2.4, "stroke-linejoin": "round", opacity: red });
+        poly.forEach((q) => (over += tag("circle", { cx: q[0], cy: q[1], r: 4.2, fill: C.red, stroke: C.paper, "stroke-width": 1.5, opacity: red })));
       }
+      // 해결: 보정한 바닥 위에서 차마다 앞 두 점만 찍는다
+      st.grid = 0.4 * seg(lt, 2.95, 0.4) * out;
+      const SEQ = [
+        { ci: FOCUS, c1: 3.15, c2: 3.55 },
+        { ci: 3, c1: 4.3, c2: 4.65 },
+      ];
+      const A = SEQ.map(({ ci }) => frontPair(cam, cars[ci]));
+      cursor = track(lt, [
+        [0, 440, 372],
+        [0.45, ...pts[0]],
+        [0.85, ...pts[1]],
+        [1.25, ...pts[2]],
+        [1.65, ...pts[3]],
+        [2.3, 440, 372],
+        [2.85, 440, 372],
+        [3.12, ...A[0][0]],
+        [3.52, ...A[0][1]],
+        [3.95, A[0][1][0] + 36, A[0][1][1] + 34],
+        [4.27, ...A[1][0]],
+        [4.62, ...A[1][1]],
+        [5.1, 440, 372],
+        [5.8, 440, 372],
+      ]);
+      clicks = [0.5, 0.9, 1.3, 1.7, 3.15, 3.55, 4.3, 4.65].map((tt) => [tt, lt]);
+      const hq = pts[hc];
+      over += chip(hq[0] + 12, hq[1] - 18, "가려진 점?", { size: 12, h: 22, pad: 8, fill: C.paper, color: C.red, stroke: C.red, opacity: seg(lt, times[hc] + 0.1, 0.25) * red });
+      SEQ.forEach(({ ci, c1, c2 }) => (over += twoPoint(cam, cars[ci], lt, c1, c2, cursor, out)));
+      // 창 오른쪽 칸
+      const p1 = 1 - seg(lt, 2.85, 0.2, E.in);
+      const p2 = seg(lt, 2.95, 0.25);
+      panel += g(
+        { opacity: p1 },
+        ptitle("꼭짓점 직접 입력") + row(PN.y + 44, "네 점 직접 클릭", "") + chip(PN.x, PN.y + 86, "가려진 점 짐작", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 1.9, 0.3) }),
+      );
+      const now = SEQ[lt < SEQ[1].c1 - 0.15 ? 0 : 1];
+      const n = (lt >= now.c1 ? 1 : 0) + (lt >= now.c2 ? 1 : 0);
+      const g1 = now.c2 + 0.07 + GROW;
+      const dots = [0, 1].map((i) => tag("circle", { cx: PN.x + PN.w - 34 + i * 16, cy: PN.y + 44, r: 5, fill: n > i ? C.lemon : C.paper, stroke: n > i ? C.ink : C.wire, "stroke-width": 1.6 })).join("");
+      let p2s = ptitle("두 점 입력");
+      p2s += row(PN.y + 44, "앞 두 점 클릭", dots);
+      p2s += row(PN.y + 82, "뒤쪽 자동 생성", mark(PN.y + 82, seg(lt, g1, 0.2)));
+      p2s += row(PN.y + 120, "실측 크기 표시", mark(PN.y + 120, seg(lt, g1 + 0.1, 0.2)));
+      const doneN = SEQ.filter((q) => grown(lt, q.c2)).length;
+      if (doneN) p2s += chip(PN.x, PN.y + 164, `하단면 ${doneN}개 완료`, { size: 12.5, fill: C.lemon });
+      panel += g({ opacity: p2 }, p2s);
+    }
+
+    // ── 3장 ──
+    if (t >= beats[2].at && t < beats[3].at) {
+      const lt = t - beats[2].at;
+      const out = 1 - seg(lt, 5.2, 0.35, E.in);
+      // 문제: 차마다 두 점씩 손으로 찍는다(한 대씩이라 느리다)
+      const prob = 1 - seg(lt, 2.75, 0.3, E.in);
+      const HAND = [
+        { j: 1, c1: 0.5, c2: 0.85 },
+        { j: 2, c1: 1.5, c2: 1.85 },
+      ];
+      const HP = HAND.map(({ j }) => frontPair(cam, cars[LABELED[j]]));
       // 해결: 모델 예측이 사전 라벨로 한꺼번에 뜬다 → 모두 수락 → 하나만 고친다
       const accept = seg(lt, 3.95, 0.3);
       LABELED.forEach((ci, j) => {
@@ -222,7 +328,8 @@ window.SCENE = (() => {
       panel += ptitle("라벨");
       LABELED.forEach((ci, j) => {
         const y = PN.y + 44 + j * 38;
-        const done = j === 0 ? seg(lt, 2.25, 0.2) * prob : 0;
+        const hand = HAND.find((q) => q.j === j);
+        const done = hand ? seg(lt, hand.c2 + 0.07 + GROW, 0.2) * prob : 0;
         const pre = seg(lt, 3.0 + j * 0.12, 0.25) * (1 - accept);
         const ok = accept;
         const right =
@@ -238,10 +345,12 @@ window.SCENE = (() => {
       const fx2 = cam.P(parts(fixed).body.bottom[3]);
       cursor = track(lt, [
         [0, 440, 372],
-        [0.45, ...sp[0]],
-        [1.0, ...sp[1]],
-        [1.55, ...sp[2]],
-        [2.1, ...sp[3]],
+        [0.47, ...HP[0][0]],
+        [0.82, ...HP[0][1]],
+        [1.2, HP[0][1][0] + 36, HP[0][1][1] + 34],
+        [1.47, ...HP[1][0]],
+        [1.82, ...HP[1][1]],
+        [2.3, HP[1][1][0] + 36, HP[1][1][1] + 34],
         [2.8, 300, 380],
         [3.5, PN.x + PN.w / 2 + 20, btn + 4],
         [3.95, PN.x + PN.w / 2 + 20, btn + 4],
@@ -249,12 +358,13 @@ window.SCENE = (() => {
         [5.1, ...fx2],
         [5.6, ...fx2],
       ]);
-      clicks = [0.5, 1.05, 1.6, 2.15, 3.9, 4.5].map((tt) => [tt, lt]);
+      clicks = [0.5, 0.85, 1.5, 1.85, 3.9, 4.5].map((tt) => [tt, lt]);
+      HAND.forEach(({ j, c1, c2 }) => (over += twoPoint(cam, cars[LABELED[j]], lt, c1, c2, cursor, prob, false)));
     }
 
-    // ── 3장 ──
-    if (t >= beats[2].at) {
-      const lt = t - beats[2].at;
+    // ── 4장 ──
+    if (t >= beats[3].at) {
+      const lt = t - beats[3].at;
       // 캔버스: 라벨까지 그린 수집 장면. 내보내기에서는 모델 입력 규격(레터박스)으로 줄여 맞춘다
       st.fp = cars.map((c, i) => (LABELED.includes(i) ? 1 : 0));
       lbox = seg(lt, 3.4, 0.65, E.inOut);
@@ -341,7 +451,7 @@ window.SCENE = (() => {
     s += panel;
     if (cursor) {
       for (const [tt, lt] of clicks) s += ripple(cursor[0], cursor[1], (lt - tt) / 0.45);
-      s += pointer(cursor[0], cursor[1], { opacity: t >= beats[2].at ? 0 : 1 });
+      s += pointer(cursor[0], cursor[1], { opacity: t >= beats[3].at ? 0 : 1 });
     }
     return s;
   }
