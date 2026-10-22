@@ -1,9 +1,11 @@
-// 라벨링 도구: 도구 창 안에 같은 주차장 카메라 화면. 세 장(손으로 찍기 → 보정·차급 프리셋, 다 그리기 → 모델 사전 라벨, 같은 장면·손으로 꾸리는 학습 세트 → 중복 제거·규격 맞춤 내보내기·버전 기록)
+// 라벨링 도구: 도구 창 안에 같은 주차장 카메라 화면. 세 장(짐작한 바닥 격자가 어긋남 → 주차면 직선·직각·2.5×5 m 로 보정, 다 그리기 → 모델 사전 라벨, 같은 장면·손으로 꾸리는 학습 세트 → 중복 제거·규격 맞춤 내보내기·버전 기록)
 "use strict";
 window.SCENE = (() => {
   const BG = "#d6ecff";
   const lot = makeLot({
     bg: "#dfe7ee",
+    sp: 2.5, // 일반형 주차면 2.5×5 m: 보정에 쓰는 크기와 같게 그린다
+    depth: 5,
     cam: { pos: [6.2, -8.4, 9.4], target: [9.4, 2.7, 0], f: 610, cx: 400, cy: 286 },
     focus: 4,
     cars: [
@@ -16,7 +18,7 @@ window.SCENE = (() => {
       { space: 7, dx: 0.05, dy: 0.2, yaw: -0.02, color: "#dfe3e8" },
     ],
   });
-  const { cars, FOCUS, parts, footprint, hiddenCorner, world, makeCam, SP, DEPTH } = lot;
+  const { cars, FOCUS, parts, footprint, world, makeCam, spaceQuad, SP, DEPTH } = lot;
   const LABELED = [2, 3, 4, 5]; // 창 안에 온전히 보이는 차
   const beats = [
     { at: 0, solve: 2.9 },
@@ -38,9 +40,8 @@ window.SCENE = (() => {
   // ── 창 ──
   const TABS = ["수집", "보정", "라벨", "내보내기"];
   const SWITCH = [
-    [0, 2],
-    [2.95, 1],
-    [4.3, 2],
+    [0, 1],
+    [5.8, 2],
     [11.4, 0],
     [14.75, 3],
   ];
@@ -67,33 +68,18 @@ window.SCENE = (() => {
   const row = (y, label, right, a = 1, o = {}) =>
     g(
       { opacity: a },
-      tag("rect", { x: PN.x, y: y - 16, width: PN.w, height: 32, rx: 9, fill: o.fill || C.mute }) +
+      tag("rect", { x: PN.x, y: y - (o.h || 32) / 2, width: PN.w, height: o.h || 32, rx: 9, fill: o.fill || C.mute }) +
         (o.swatch ? tag("rect", { x: PN.x + 10, y: y - 7, width: 22, height: 14, rx: 4, fill: o.swatch, stroke: C.ink, "stroke-width": 1.4 }) : "") +
         text(PN.x + (o.swatch ? 42 : 12), y + 0.5, label, { "font-size": 14.5, "font-weight": 700, fill: C.ink }) +
         (right || ""),
     );
   const ring = (x, y, a = 1) => tag("circle", { cx: x, cy: y, r: 7, fill: C.paper, stroke: C.wire, "stroke-width": 1.6, opacity: a });
 
-  // 손으로 찍은 꼭짓점: 가려진 꼭짓점일수록 크게 빗나간다
-  const JIT = [
-    [-9, 7],
-    [8, -6],
-    [15, 11],
-    [-12, -9],
-  ];
-  const clicked = (cam, car, big) => {
-    const rg = parts(car).body.bottom.map(cam.P);
-    const hc = hiddenCorner(cam, car);
-    return rg.map((q, i) => (i === hc ? [q[0] + big[0], q[1] + big[1]] : [q[0] + JIT[i][0], q[1] + JIT[i][1]]));
-  };
-
-  // 바닥 위 차급 프리셋이 차 밑으로 미끄러져 들어간다
-  const presetAt = (car, u) => ({ at: [car.c[0] - 1.6 * (1 - u), car.c[1] - 3.4 * (1 - u)], yaw: car.yaw + 0.55 * (1 - u) });
-
   function draw(t) {
     const st = { camPos: CAM_A.pos, camTarget: CAM_A.target, fp: [], fpStyle: [], tint: [], grid: 0 };
     const cam = makeCam(st, VIEW);
     let over = "";
+    let under = ""; // 차 아래 바닥에 까는 그림(칸 칠·직각·치수선)
     let top = ""; // 캔버스 위(레터박스와 함께 줄지 않는) 딱지
     let lbox = 0; // 3장 내보내기: 레터박스로 줄여 넣은 정도
     let panel = "";
@@ -104,66 +90,102 @@ window.SCENE = (() => {
     if (t < beats[1].at) {
       const lt = t;
       const out = 1 - seg(lt, 5.4, 0.3, E.in);
-      const red = 1 - seg(lt, 2.95, 0.3, E.in);
-      const car = cars[FOCUS];
-      const pts = clicked(cam, car, [-30, 20]);
-      const times = [0.5, 0.9, 1.3, 1.7];
-      // 찍은 점과 그 점을 이은 사각형(빨강)
-      const shown = times.filter((tt) => lt >= tt).length;
-      if (shown) {
-        const poly = pts.slice(0, shown);
-        const closed = shown === 4;
-        over += tag("path", { d: dpath(poly, closed), fill: closed ? C.red : "none", "fill-opacity": 0.14, stroke: C.red, "stroke-width": 2.4, "stroke-linejoin": "round", opacity: red });
-        poly.forEach((q) => (over += tag("circle", { cx: q[0], cy: q[1], r: 4.2, fill: C.red, stroke: C.paper, "stroke-width": 1.5, opacity: red })));
+      // 문제: 보정값이 없어 짐작으로 올린 바닥 격자가 주차선과 어긋난다
+      const guess = seg(lt, 0.45, 0.5) * (1 - seg(lt, 2.7, 0.25, E.in));
+      if (guess > 0.002) {
+        const wob = Math.sin(lt * 2.4);
+        const wc = makeCam({ camPos: [6.2 + 1.4 * wob, -8.4, 7.4], camTarget: [9.4 - 0.6 * wob, 3.4, 0] }, VIEW);
+        let gl = "";
+        for (let x = 0; x <= SP * 8 + 0.01; x += 2.5) gl += dpath(wc.line([x, -2.5, 0], [x, DEPTH, 0]), false);
+        for (let y = -2.5; y <= DEPTH + 0.01; y += 2.5) gl += dpath(wc.line([0, y, 0], [SP * 8, y, 0]), false);
+        over += tag("path", { d: gl, fill: "none", stroke: C.red, "stroke-width": 1.8, "stroke-dasharray": "6 5", opacity: 0.85 * guess });
+        over += chip(CV.x + 12, CV.y + 22, "짐작한 바닥 격자", { size: 12.5, fill: C.paper, color: C.red, stroke: C.red, opacity: seg(lt, 0.9, 0.3) * guess });
       }
-      const other = clicked(cam, cars[3], [24, -16]);
-      over += g({ opacity: seg(lt, 2.0, 0.3) * red }, tag("path", { d: dpath(other), fill: C.red, "fill-opacity": 0.14, stroke: C.red, "stroke-width": 2.4, "stroke-linejoin": "round" }));
-      // 보정: 바닥 선을 따라 그은 가로선(초록)·세로선(주황), 그리고 바닥 격자
-      const cal = 1 - seg(lt, 4.35, 0.35, E.in);
-      const lineOn = (a, b, u, color) => drawOn(dpath(cam.line(a, b), false), u, { stroke: color, "stroke-width": 3.2, opacity: cal });
-      over += lineOn([SP * 2, DEPTH, 0], [SP * 6, DEPTH, 0], seg(lt, 3.0, 0.55, E.inOut), "#16a34a");
-      over += lineOn([SP * 2, 0, 0], [SP * 6, 0, 0], seg(lt, 3.2, 0.5, E.inOut), "#16a34a");
-      over += lineOn([SP * 3, 0, 0], [SP * 3, DEPTH, 0], seg(lt, 3.35, 0.4, E.inOut), "#f97316");
-      over += lineOn([SP * 5, 0, 0], [SP * 5, DEPTH, 0], seg(lt, 3.45, 0.4, E.inOut), "#f97316");
-      st.grid = seg(lt, 3.55, 0.5) * out;
-      // 차급 프리셋(중형)을 바닥에 놓고 차 밑으로 끈다
-      const pu = seg(lt, 4.75, 0.6, E.inOut);
-      const pa = seg(lt, 4.62, 0.15) * out;
-      const pr = presetAt(car, pu);
-      over += footprint(cam, car, pa, { at: pr.at, yaw: pr.yaw });
+      // 해결: 주차면의 가로·세로 직선, 네 귀퉁이 직각, 2.5×5 m 크기로 카메라를 보정한다
+      const S = 5; // 크기를 재는 빈 칸
+      const lineOn = (p, q, u, color) => drawOn(dpath(cam.line(p, q), false), u, { stroke: color, "stroke-width": 3.2, opacity: out });
+      over += lineOn([SP * 1, DEPTH, 0], [SP * 8, DEPTH, 0], seg(lt, 3.0, 0.5, E.inOut), "#16a34a");
+      over += lineOn([SP * 1, 0, 0], [SP * 8, 0, 0], seg(lt, 3.15, 0.5, E.inOut), "#16a34a");
+      [3, S, S + 1].forEach((i, j) => (over += lineOn([SP * i, 0, 0], [SP * i, DEPTH, 0], seg(lt, 3.3 + j * 0.08, 0.35, E.inOut), "#f97316")));
+      [
+        [S, 0, 1, 1],
+        [S + 1, 0, -1, 1],
+        [S + 1, 1, -1, -1],
+        [S, 1, 1, -1],
+      ].forEach(([i, k, sx, sy], j) => {
+        const x = SP * i;
+        const y = DEPTH * k;
+        const m = 0.55;
+        const sq = [
+          [x, y, 0],
+          [x + sx * m, y, 0],
+          [x + sx * m, y + sy * m, 0],
+          [x, y + sy * m, 0],
+        ].map(cam.P);
+        const a = seg(lt, 3.72 + j * 0.08, 0.25) * out;
+        under += tag("path", { d: dpath(sq), fill: C.lemon, opacity: 0.9 * a });
+        under += tag("path", { d: dpath(sq.slice(1), false), fill: "none", stroke: C.ink, "stroke-width": 2.2, opacity: a });
+      });
+      const sz = seg(lt, 4.1, 0.3) * out;
+      under += tag("path", { d: dpath(cam.poly(spaceQuad(S, 0.12))), fill: C.lemon, opacity: 0.4 * sz });
+      // 치수선(양끝 짧은 눈금)과 가운데 치수
+      const dimLine = (p, q, n) => {
+        const tk = (r) => dpath(cam.line([r[0] - n[0], r[1] - n[1], 0], [r[0] + n[0], r[1] + n[1], 0]), false);
+        return tag("path", { d: dpath(cam.line([...p, 0], [...q, 0]), false) + tk(p) + tk(q), fill: "none", stroke: C.ink, "stroke-width": 1.8, "stroke-linecap": "round", opacity: sz });
+      };
+      under += dimLine([SP * S, -0.55], [SP * (S + 1), -0.55], [0, 0.25]);
+      under += dimLine([SP * S + 1.85, 0], [SP * S + 1.85, DEPTH], [0.25, 0]);
+      const pw = cam.P([SP * (S + 0.5), -0.55, 0]);
+      const pd = cam.P([SP * S + 1.85, DEPTH * 0.5, 0]);
+      over += chip(pw[0], pw[1], "2.5 m", { size: 12.5, anchor: "middle", fill: C.paper, opacity: seg(lt, 4.2, 0.25) * out });
+      over += chip(pd[0], pd[1], "5 m", { size: 12.5, anchor: "middle", fill: C.paper, opacity: seg(lt, 4.3, 0.25) * out });
+      // 보정한 카메라로 올린 2.5 m 격자는 주차선에 그대로 겹친다
+      st.grid = seg(lt, 4.55, 0.5) * out;
       // 창 오른쪽 칸
+      const RES = ["초점거리", "카메라 높이", "좌우 기울기"];
       const p1 = 1 - seg(lt, 2.85, 0.2, E.in);
-      const p2 = seg(lt, 2.95, 0.25) * (1 - seg(lt, 4.2, 0.2, E.in));
-      const p3 = seg(lt, 4.3, 0.25);
-      panel += g({ opacity: p1 }, ptitle("꼭짓점 수동 입력") + row(PN.y + 44, "네 점 직접 클릭", "", 1) + chip(PN.x, PN.y + 86, "크기·방향 불일치", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 2.15, 0.3) }));
+      const p2 = seg(lt, 2.95, 0.25);
       panel += g(
-        { opacity: p2 },
+        { opacity: p1 },
         ptitle("카메라 보정") +
-          ["초점거리", "카메라 높이", "좌우 기울기"].map((l, i) => row(PN.y + 44 + i * 38, l, tick(PN.x + PN.w - 18, PN.y + 44 + i * 38, 0.85), seg(lt, 3.35 + i * 0.15, 0.25))).join(""),
+          RES.map((l, i) => row(PN.y + 44 + i * 38, l, text(PN.x + PN.w - 18, PN.y + 45 + i * 38, "?", { "font-size": 16, "font-weight": 700, fill: C.sub, "text-anchor": "middle" }))).join("") +
+          chip(PN.x, PN.y + 44 + 3 * 38 + 4, "보정값 없음", { size: 12.5, fill: C.red, color: C.paper, stroke: null, opacity: seg(lt, 1.4, 0.3) }),
       );
-      panel += g(
-        { opacity: p3 },
-        ptitle("차급 프리셋") +
-          ["경차", "소형", "중형", "대형"].map((l, i) => row(PN.y + 44 + i * 38, l, "", 1, { fill: l === "중형" && lt > 4.45 ? C.lemon : C.mute })).join(""),
-      );
-      // 커서
+      const RH = { h: 28 };
+      let p2s = ptitle("주차면 조건");
+      [
+        ["가로·세로 직선", 3.0, 3.6],
+        ["직각", 3.68, 4.05],
+        ["크기 2.5×5 m", 4.1, 4.45],
+      ].forEach(([l, a, b], i) => {
+        const y = PN.y + 42 + i * 33;
+        const done = seg(lt, b, 0.2);
+        p2s += row(y, l, ring(PN.x + PN.w - 18, y, 1 - done) + g({ opacity: done }, tick(PN.x + PN.w - 18, y, 0.8)), seg(lt, a, 0.25), RH);
+      });
+      p2s += text(PN.x + 2, PN.y + 150, "보정값", { "font-size": 13.5, "font-weight": 700, fill: C.sub, opacity: seg(lt, 4.5, 0.25) });
+      RES.forEach((l, i) => {
+        const y = PN.y + 180 + i * 33;
+        p2s += row(y, l, g({ opacity: seg(lt, 4.65 + i * 0.15, 0.25) }, tick(PN.x + PN.w - 18, y, 0.8)), seg(lt, 4.5 + i * 0.1, 0.25), RH);
+      });
+      panel += g({ opacity: p2 }, p2s);
+      // 커서: 가로선을 따라 긋고, 귀퉁이와 폭을 짚는다
+      const L0 = cam.P([SP * 2, DEPTH, 0]);
+      const L1 = cam.P([SP * 8, DEPTH, 0]);
+      const cA = cam.P([SP * S, 0, 0]);
       cursor = track(lt, [
         [0, 330, 380],
-        [0.42, ...pts[0]],
-        [0.82, ...pts[1]],
-        [1.22, ...pts[2]],
-        [1.62, ...pts[3]],
-        [2.3, 440, 372],
-        [2.95, 440, 372],
-        [3.05, ...cam.P([SP * 2, DEPTH, 0])],
-        [3.55, ...cam.P([SP * 6, DEPTH, 0])],
-        [4.3, PN.x + 150, PN.y + 44 + 2 * 38],
-        [4.6, PN.x + 150, PN.y + 44 + 2 * 38],
-        [4.75, ...cam.P([...presetAt(car, 0).at, 0])],
-        [5.35, ...cam.P([...presetAt(car, 1).at, 0])],
-        [5.8, ...cam.P([...presetAt(car, 1).at, 0])],
+        [1.4, 300, 362],
+        [2.6, 300, 362],
+        [3.0, ...L0],
+        [3.5, ...L1],
+        [3.72, ...cA],
+        [4.0, ...cA],
+        [4.15, ...pw],
+        [4.6, ...pw],
+        [5.1, 440, 372],
+        [5.8, 440, 372],
       ]);
-      clicks = [0.5, 0.9, 1.3, 1.7, 4.5].map((tt) => [tt, lt]);
+      clicks = [3.0, 3.72, 4.15].map((tt) => [tt, lt]);
     }
 
     // ── 2장 ──
@@ -297,6 +319,7 @@ window.SCENE = (() => {
     s += tabs(t);
     s += tag("path", { d: `M${WIN.x + 2} ${WIN.y + 34}H${WIN.x + WIN.w - 2}`, stroke: C.rule, "stroke-width": 1.5 });
     s += `<clipPath id="cv"><rect x="${CV.x}" y="${CV.y}" width="${CV.w}" height="${CV.h}" rx="9"/></clipPath>`;
+    st.under = () => under;
     st.extra = () => over;
     let view = world(st, VIEW);
     if (lbox > 0.001) {
@@ -323,5 +346,5 @@ window.SCENE = (() => {
     return s;
   }
 
-  return { beats, duration, draw, bg: BG, poster: 5.5 };
+  return { beats, duration, draw, bg: BG, poster: 5.2 };
 })();

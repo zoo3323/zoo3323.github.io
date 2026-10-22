@@ -95,7 +95,7 @@ function makeLot(opt) {
     return [Math.min(...xs) - 3, Math.min(...ys) - 3, Math.max(...xs) + 3, Math.max(...ys) + 3];
   }
 
-  // 주차장 한 장면. st = { k: 왜곡, zoom, tint: [[색, 진하기]...](주차면 번호), fp: [하단면 진하기...](차 순서), fpStyle, box2d: [그린 몫, 진하기], grid, extra(cam) }
+  // 주차장 한 장면. st = { k: 왜곡, zoom, tint: [[색, 진하기]...](주차면 번호), fp: [하단면 진하기...](차 순서), fpStyle, box2d: [그린 몫, 진하기], grid, under(cam): 차 아래 바닥 그림, extra(cam) }
   function world(st, view = {}) {
     const cam = makeCam(st, view);
     let s = tag("rect", { x: -40, y: -40, width: W + 80, height: H + 80, fill: bg });
@@ -119,6 +119,8 @@ function makeLot(opt) {
       for (let y = -5; y <= DEPTH; y += 2.5) gl += dpath(cam.line([x0, y, 0], [x1, y, 0]), false);
       s += tag("path", { d: gl, fill: "none", stroke: "#3d5a80", "stroke-width": 1.2, opacity: 0.55 * st.grid });
     }
+    // 차보다 아래(바닥)에 깔 그림
+    if (st.under) s += st.under(cam);
     const order = cars.map((c, i) => i).sort((a, b) => Math.hypot(...v3.sub([...cars[b].c, 0], cam.pos)) - Math.hypot(...v3.sub([...cars[a].c, 0], cam.pos)));
     for (const i of order) s += drawCar(cam, cars[i]);
     cars.forEach((car, i) => {
