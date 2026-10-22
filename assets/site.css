@@ -1293,12 +1293,12 @@ a {
   height: auto;
   margin-inline: auto;
 }
-/* 웹 서비스(스코어랩): 브라우저 창 그림을 칸 폭에 가깝게 가로로 넓게 */
-.showcase--web {
+/* 가로로 넓은 그림(스코어랩 그래프 카드)을 칸 폭에 가깝게 */
+.showcase--wide {
   display: grid;
   align-items: center;
 }
-.showcase--web img {
+.showcase--wide img {
   width: calc(var(--p) * 9.4);
 }
 
