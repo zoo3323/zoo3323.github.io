@@ -94,6 +94,12 @@
       "line": "SSH·Eternal Terminal 너머 tmux 세션을 골라 접속·관리하는 대화형 CLI."
     },
     {
+      "name": "cmux-remote-notify",
+      "repo": "https://github.com/zoo3323/cmux-remote-notify",
+      "kind": "Bash · Python · macOS",
+      "line": "SSH·Eternal Terminal 너머 tmux 의 Claude Code·Codex 가 작업을 끝내거나 확인을 기다리면, 다른 탭에서 일하는 중에도 cmux 배너·읽지 않은 배지·사이드바 상태(Running·Needs input·Idle)로 표시하는 도구."
+    },
+    {
       "name": "audioswitch",
       "repo": "https://github.com/zoo3323/audioswitch",
       "kind": "C# · Windows",
