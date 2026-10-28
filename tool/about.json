@@ -88,6 +88,12 @@
       "line": "Claude Code 에이전트가 논문 PDF 원문 블록을 빠짐없이 번역하고 스크립트가 완전성을 검증해 번역본·요약본·용어사전 HTML로 묶는 플러그인. 그림·표·수식은 원문 그대로 유지."
     },
     {
+      "name": "gpu-monitor",
+      "repo": "https://github.com/zoo3323/gpu-monitor",
+      "kind": "Python · Claude Code",
+      "line": "GPU 서버마다 에이전트가 Claude Code 로 지금 돌고 있는 작업을 읽기 전용으로 식별하고, 로그에서 진행률과 종료 예상 시각을 읽어 대시보드 한 곳에 모아 보여 주는 도구. 여러 GPU 에 걸친 학습은 한 작업으로 묶고, Linux·WSL2·Windows 에 한 줄로 설치."
+    },
+    {
       "name": "ezet",
       "repo": "https://github.com/zoo3323/ezet",
       "kind": "Bash · Homebrew",
