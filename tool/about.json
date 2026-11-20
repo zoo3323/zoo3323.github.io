@@ -776,11 +776,11 @@
       "linkLabel": "스코어랩 보기",
       "art": {
         "images": [
-          "/assets/img/scorelab/shot-1.webp"
+          "/assets/img/scorelab/live-1.webp"
         ],
         "size": [
-          1440,
-          900
+          1600,
+          1040
         ],
         "fit": "cover",
         "tone": "#a3e635"
