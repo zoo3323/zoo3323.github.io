@@ -930,8 +930,75 @@ def certificate(app):
         <div class="cert__body">
           <p class="cert__title"><b>{esc(c["title"])}</b><span>{esc(c["issuer"])}</span></p>
           <p class="cert__desc">{esc(c["desc"])}</p>
-          <p class="cert__go"><a class="get get--line" href="{pdf}" target="_blank" rel="noopener">PDF 보기</a> <a class="get get--line" href="{pdf}" download="{esc(c["download"])}">내려받기</a></p>
+          <p class="cert__go"><a href="{pdf}" target="_blank" rel="noopener">PDF 보기</a></p>
         </div>
+      </div>
+    </section>"""
+
+
+def ip(app):
+    """지식재산: app.json 의 ip = {"patent", "trademark"}. 특허는 개요·흐름도·실측 막대·청구항 요점·도면·접수 근거, 상표는 표장·지정 서비스·접수 근거.
+    근거 그림은 특허로 접수 결과 표만 잘라 쓰고, DAS 접근코드는 회색 막대로 가린다(설명에는 적지 않는다)."""
+    d = app.get("ip")
+    if not d:
+        return ""
+    def img(x, alt, cls=""):
+        return f'<img{cls} src="{esc(x["src"])}?v={ver(x["src"].lstrip("/"))}" width="{x["w"]}" height="{x["h"]}" alt="{esc(alt)}" loading="lazy">'
+    def proof(x):
+        src = f'{esc(x["src"])}?v={ver(x["src"].lstrip("/"))}'
+        return f'<figure class="ip__proof"><a href="{src}" target="_blank" rel="noopener">{img(x, x["cap"])}</a><figcaption>{esc(x["cap"])}</figcaption></figure>'
+    def head(kind, no, meta):
+        return f'<p class="ip__head"><span class="ip__kind">{esc(kind)}</span><b class="ip__no">{esc(no)}</b><span class="ip__meta">{esc(meta)}</span></p>'
+    out = []
+    pt = d.get("patent")
+    if pt:
+        def node(n):
+            note = f'<span>{keep_dots(n["note"])}</span>' if n.get("note") else ""
+            return f'<div class="flow__node flow__node--{n.get("kind", "step")}"><b>{keep_dots(n["name"])}</b>{note}</div>'
+        steps = []
+        for st in pt["flow"]:
+            if "nodes" in st:
+                steps.append(f'<li class="flow__step flow__step--group"><p class="flow__label">{keep_dots(st["group"])}</p><div class="flow__nodes">{"".join(node(n) for n in st["nodes"])}</div></li>')
+            else:
+                steps.append(f'<li class="flow__step">{node(st)}</li>')
+        bars = []
+        for s in pt.get("stats", []):
+            parts = "".join(f'<span class="ip__part ip__part--{i}" style="--v:{p["v"]}">{esc(p["t"]) if i == 0 else ""}</span>' for i, p in enumerate(s["parts"]))
+            rest = "".join(f'<span>{esc(p["t"])}</span>' for p in s["parts"][1:])
+            bars.append(f'<div class="ip__stat"><p class="ip__stat-label">{esc(s["label"])}</p><div class="ip__bar" role="img" aria-label="{esc(", ".join(p["t"] for p in s["parts"]))}">{parts}</div><p class="ip__legend">{rest}</p></div>')
+        note = f'<p class="ip__stat-note">{esc(pt["statNote"])}</p>' if pt.get("statNote") else ""
+        points = "".join(f'<li><span class="ip__claim">{esc(k)}</span><span>{keep_dots(v)}</span></li>' for k, v in pt["points"])
+        figs = "".join(
+            f'<figure><a href="{esc(f["src"])}?v={ver(f["src"].lstrip("/"))}" target="_blank" rel="noopener">{img(f, f["cap"])}</a><figcaption>{esc(f["cap"])}</figcaption></figure>'
+            for f in pt["figs"])
+        out.append(f"""<div class="ip__card">
+        {head("특허 출원", pt["no"], f'{pt["date"]} 출원 · {pt["claims"]}')}
+        <p class="ip__name">{esc(pt["name"])}</p>
+        <p class="ip__desc">{esc(pt["desc"])}</p>
+        <div class="flow ip__flow"><ol class="flow__steps" style="--n:{len(steps)}">{"".join(steps)}</ol></div>
+        {"".join(bars)}{note}
+        <ul class="ip__points">{points}</ul>
+        <div class="ip__figs">{figs}</div>
+        {proof(pt["proof"])}
+      </div>""")
+    tm = d.get("trademark")
+    if tm:
+        goods = "".join(f"<li>{esc(g)}</li>" for g in tm["goods"])
+        out.append(f"""<div class="ip__card ip__card--tm">
+        {head("상표 출원", tm["no"], f'{tm["date"]} 출원 · {tm["cls"]}')}
+        <div class="ip__tm">
+          <div class="ip__mark">{img(tm["mark"], "상표 견본: 스코어랩 SCORELAB")}</div>
+          <div>
+            <p class="ip__desc">{esc(tm["desc"])}</p>
+            <ul class="ip__goods" aria-label="지정 서비스">{goods}</ul>
+          </div>
+        </div>
+        {proof(tm["proof"])}
+      </div>""")
+    return f"""<section class="sec" aria-labelledby="h-ip">
+      <h2 id="h-ip">특허·상표 출원</h2>
+      <div class="ip">
+      {"".join(out)}
       </div>
     </section>"""
 
@@ -1000,6 +1067,7 @@ for app in APPS:
       </ul>
     </section>
     {news(app)}
+    {ip(app)}
     {certificate(app)}
     <section class="sec" aria-labelledby="h-info">
       <h2 id="h-info">정보</h2>

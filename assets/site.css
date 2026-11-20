@@ -3500,11 +3500,253 @@ a.cv__art:hover {
   gap: 0.4rem;
   margin-top: 0.8rem;
 }
-.cert__go .get {
-  min-height: 2rem;
-  padding: 0 0.85rem;
-  font-size: 0.85rem;
-  box-shadow: inset 0 0 0 1.5px var(--ink);
+.cert__go a {
+  font-size: 0.8125rem;
+  color: var(--sub);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+.cert__go a:hover {
+  color: var(--ink);
+}
+
+/* 특허·상표 출원: 카드 두 장. 특허는 개요, 흐름도(.flow 재사용), 실측 막대, 청구항 요점, 도면, 접수 근거 */
+.ip {
+  display: grid;
+  gap: 1.25rem;
+}
+.ip__card {
+  padding: 1.25rem 1.35rem 1.35rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 1rem;
+  box-shadow: 0 8px 18px -14px rgb(52 48 70 / 0.6);
+}
+.sec .ip__card p {
+  margin: 0;
+}
+.ip__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+}
+.ip__kind {
+  padding: 0.15rem 0.6rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  background: var(--lemon);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+}
+.ip__card--tm .ip__kind {
+  background: var(--lilac-light);
+}
+.ip__no {
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+.ip__meta {
+  font-size: 0.8125rem;
+  color: var(--sub);
+}
+.sec .ip__name {
+  margin-top: 0.75rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.sec .ip__desc {
+  margin-top: 0.45rem;
+  color: var(--sub);
+  line-height: 1.65;
+}
+.ip__flow {
+  margin-top: 1.1rem;
+}
+.ip__stat {
+  margin-top: 1.25rem;
+}
+.sec .ip__stat-label {
+  margin-bottom: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--sub);
+}
+.ip__bar {
+  display: flex;
+  height: 2.4rem;
+  border: 2px solid var(--ink);
+  border-radius: 0.7rem;
+  overflow: hidden;
+}
+.ip__part {
+  flex: var(--v) 1 0;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  white-space: nowrap;
+  min-width: 0;
+}
+.ip__part--0 {
+  background: var(--lemon);
+}
+.ip__part--1 {
+  padding: 0;
+  background: var(--lilac-light);
+  border-left: 2px solid var(--ink);
+}
+.sec .ip__legend {
+  margin-top: 0.3rem;
+  text-align: right;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.ip__legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+  background: var(--lilac-light);
+  border: 1.5px solid var(--ink);
+  border-radius: 0.2rem;
+}
+.sec .ip__stat-note {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--sub);
+}
+.ip__points {
+  display: grid;
+  gap: 0;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ip__points li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.ip__points li:last-child {
+  border-bottom: 0;
+}
+.ip__claim {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent, var(--ink));
+  padding-top: 0.1rem;
+}
+.ip__figs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.1rem;
+}
+.ip__figs figure,
+.ip__proof {
+  margin: 0;
+}
+.ip__figs a,
+.ip__proof a {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ip__figs a {
+  aspect-ratio: 3 / 4;
+  padding: 0.4rem;
+}
+.ip__figs a:hover,
+.ip__proof a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgb(23 23 26 / 0.14);
+}
+.ip__figs img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.ip__proof img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ip__figs figcaption,
+.ip__proof figcaption {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--sub);
+}
+.ip__proof {
+  margin-top: 1.1rem;
+}
+.ip__tm {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 1rem 1.25rem;
+  align-items: center;
+  margin-top: 0.9rem;
+}
+.ip__mark {
+  padding: 0.9rem;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 0.6rem;
+}
+.ip__mark img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ip__goods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ip__goods li {
+  padding: 0.15rem 0.55rem;
+  font-size: 0.78rem;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+@media (max-width: 860px) {
+  .ip__figs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .ip__card {
+    padding: 1rem;
+  }
+  .ip__points li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+  .ip__tm {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ip__mark {
+    max-width: 12rem;
+  }
 }
 @media (max-width: 480px) {
   .cert {
