@@ -947,8 +947,9 @@ def ip(app):
     def proof(x):
         src = f'{esc(x["src"])}?v={ver(x["src"].lstrip("/"))}'
         return f'<figure class="ip__proof"><a href="{src}" target="_blank" rel="noopener">{img(x, x["cap"])}</a><figcaption>{esc(x["cap"])}</figcaption></figure>'
+    MORE = '<span class="ip__more" aria-hidden="true"><span class="ip__open">자세히 보기</span><span class="ip__close">접기</span></span>'
     def head(kind, no, meta):
-        return f'<p class="ip__head"><span class="ip__kind">{esc(kind)}</span><b class="ip__no">{esc(no)}</b><span class="ip__meta">{esc(meta)}</span></p>'
+        return f'<span class="ip__head"><span class="ip__kind">{esc(kind)}</span><b class="ip__no">{esc(no)}</b><span class="ip__meta">{esc(meta)}</span></span>'
     out = []
     pt = d.get("patent")
     if pt:
@@ -971,21 +972,25 @@ def ip(app):
         figs = "".join(
             f'<figure><a href="{esc(f["src"])}?v={ver(f["src"].lstrip("/"))}" target="_blank" rel="noopener">{img(f, f["cap"])}</a><figcaption>{esc(f["cap"])}</figcaption></figure>'
             for f in pt["figs"])
-        out.append(f"""<div class="ip__card">
-        {head("특허 출원", pt["no"], f'{pt["date"]} 출원 · {pt["claims"]}')}
-        <p class="ip__name">{esc(pt["name"])}</p>
+        out.append(f"""<details class="ip__card">
+        <summary class="ip__sum">{head("특허 출원", pt["no"], f'{pt["date"]} 출원 · {pt["claims"]}')}
+        <span class="ip__name">{esc(pt["name"])}</span>{MORE}</summary>
+        <div class="ip__body">
         <p class="ip__desc">{esc(pt["desc"])}</p>
         <div class="flow ip__flow"><ol class="flow__steps" style="--n:{len(steps)}">{"".join(steps)}</ol></div>
         {"".join(bars)}{note}
         <ul class="ip__points">{points}</ul>
         <div class="ip__figs">{figs}</div>
         {proof(pt["proof"])}
-      </div>""")
+        </div>
+      </details>""")
     tm = d.get("trademark")
     if tm:
         goods = "".join(f"<li>{esc(g)}</li>" for g in tm["goods"])
-        out.append(f"""<div class="ip__card ip__card--tm">
-        {head("상표 출원", tm["no"], f'{tm["date"]} 출원 · {tm["cls"]}')}
+        out.append(f"""<details class="ip__card ip__card--tm">
+        <summary class="ip__sum">{head("상표 출원", tm["no"], f'{tm["date"]} 출원 · {tm["cls"]}')}
+        <span class="ip__name">스코어랩 / SCORELAB</span>{MORE}</summary>
+        <div class="ip__body">
         <div class="ip__tm">
           <div class="ip__mark">{img(tm["mark"], "상표 견본: 스코어랩 SCORELAB")}</div>
           <div>
@@ -994,7 +999,8 @@ def ip(app):
           </div>
         </div>
         {proof(tm["proof"])}
-      </div>""")
+        </div>
+      </details>""")
     return f"""<section class="sec" aria-labelledby="h-ip">
       <h2 id="h-ip">특허·상표 출원</h2>
       <div class="ip">

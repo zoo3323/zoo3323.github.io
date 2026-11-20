@@ -3526,6 +3526,41 @@ a.cv__art:hover {
 .sec .ip__card p {
   margin: 0;
 }
+.ip__sum {
+  display: grid;
+  gap: 0.55rem;
+  list-style: none;
+  cursor: pointer;
+}
+.ip__sum::-webkit-details-marker {
+  display: none;
+}
+.ip__sum:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 6px;
+  border-radius: 0.4rem;
+}
+.ip__more {
+  justify-self: start;
+  font-size: 0.8125rem;
+  color: var(--sub);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+.ip__sum:hover .ip__more {
+  color: var(--ink);
+}
+.ip__close,
+.ip__card[open] .ip__open {
+  display: none;
+}
+.ip__card[open] .ip__close {
+  display: inline;
+}
+.ip__body {
+  margin-top: 0.4rem;
+}
 .ip__head {
   display: flex;
   flex-wrap: wrap;
@@ -3552,8 +3587,8 @@ a.cv__art:hover {
   font-size: 0.8125rem;
   color: var(--sub);
 }
-.sec .ip__name {
-  margin-top: 0.75rem;
+.ip__name {
+  display: block;
   font-size: 1.0625rem;
   font-weight: 700;
   line-height: 1.45;
